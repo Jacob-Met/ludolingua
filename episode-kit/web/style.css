@@ -6,3 +6,14 @@ textarea{font:inherit;resize:vertical;width:100%;min-height:110px;border:1px sol
 /* The interface language is independent of the authored episode language. */
 .toolbar{flex-wrap:wrap}.toolbar>.case-picker{min-width:0;flex:1 1 260px}.toolbar>.language-picker{flex:0 1 170px}.language-picker select{min-width:0;width:100%}.toolbar>.case-picker:not(.language-picker) select{width:100%}.tabs{flex-shrink:0}
 @media(max-width:800px){.toolbar>.case-picker,.toolbar>.language-picker{flex:0 1 auto;width:100%}.tabs{width:100%}.tabs button{flex:1;min-width:0}.intro h1{overflow-wrap:anywhere}}
+
+
+/* Keep complete imported text readable inside constrained author/player layouts. */
+.episode-heading > div { min-width: 0; }
+.episode-heading h2,
+.episode-heading p,
+.comparison-pair h4,
+.comparison-pair p,
+.clues,
+.hints p,
+#semantic-changes { overflow-wrap: anywhere; }

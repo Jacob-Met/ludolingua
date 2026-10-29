@@ -1,4 +1,4 @@
-# LUDOLINGUA episode and comparison kit — 0.2.2
+# LUDOLINGUA episode and comparison kit — 0.2.3
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -137,9 +137,28 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.2.2.
+the enclosing kit version is 0.2.3.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
 Hints, story, provenance, and authored review flags remain bound as episode
 content; an authored review flag is not evidence of a native human playtest.
+
+
+## Long imported content
+
+Long titles, reference URLs, card labels and authored notes wrap within the
+author, comparison and player views. The display keeps the complete content;
+exports retain the original strings and evidence. No schema limit or puzzle
+mechanic changes in version 0.2.3.
+
+The content receiver exercises valid long imported content at 390px and 1280px,
+including captured-source previews, English/Spanish controls, player hints and
+actual export/reopen integrity. Use the same existing Playwright/Chrome setup
+as the other browser receivers and keep its evidence outside the source tree:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/content-evidence \
+node tests/content-receiver.mjs
+```
