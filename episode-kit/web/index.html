@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="An original puzzle episode for testing what survives localization: clues, discovery, and the action hidden in the cards.">
+  <title>LUDOLINGUA · The four keepers</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <header class="masthead"><a class="wordmark" href="./index.html" aria-label="Ludolingua home"><span class="mark" aria-hidden="true">L<span>↗</span></span>LUDOLINGUA</a><span class="edition">THE EPISODE WORKBENCH <span>01 / 2026</span></span></header>
+  <main>
+    <section class="intro"><p class="eyebrow">A PUZZLE, ACROSS LANGUAGES</p><h1>Keep the discovery.<br><em>Change the language.</em></h1><p class="lede">Four keepers. Three clues. One hidden action. Explore what a translation preserves, what it breaks, and what an adaptation changes.</p></section>
+    <section class="workspace" aria-label="Puzzle workbench">
+      <div class="toolbar"><div class="case-picker"><label for="case-select">Choose an episode</label><select id="case-select"></select></div><div class="tabs" role="tablist" aria-label="Workbench mode"><button id="author-tab" type="button" role="tab" aria-selected="true" aria-controls="author">Adapt & check</button><button id="player-tab" type="button" role="tab" aria-selected="false" aria-controls="player" tabindex="-1">Play the episode</button></div></div>
+      <div class="episode-heading"><div><p id="episode-locale" class="eyebrow"></p><h2 id="episode-title"></h2><p id="episode-story"></p></div><span id="revision" class="revision"></span></div>
+      <section id="author" role="tabpanel" aria-labelledby="author-tab">
+        <div class="workbench-grid"><article class="editor panel"><div class="section-title"><span class="step">01</span><div><h3>Words that do work</h3><p>Labels carry both meaning and a hidden letter.</p></div></div><div id="cards-editor" class="cards-editor"></div><label class="toggle"><input id="freeze-labels" type="checkbox"> Freeze these labels</label><p class="small">Unfreezing labels is an explicit change to the author’s constraints.</p><div class="clue-section"><h4>The reasoning chain</h4><ol id="author-clues" class="clues"></ol><p class="small">Clue text follows the encoded relationships and your current labels.</p></div><details class="change-note"><summary>What this adaptation changes</summary><div id="semantic-changes"></div></details></article>
+        <article class="results panel" aria-labelledby="check-heading"><div class="section-title"><span class="step">02</span><div><h3 id="check-heading">Check the discovery</h3><p>Count the possible orders before checking the action.</p></div></div><div id="result" aria-live="polite"></div><button id="check-button" class="primary" type="button">Check this revision <span aria-hidden="true">↗</span></button><div class="evidence-note"><h4>What this check establishes</h4><p>It checks the encoded clues and extraction rule. Language clarity, difficulty, and the pleasure of solving still need human playtests.</p><p>These are authored examples. No model inference or native-language playtest is claimed.</p></div></article></div>
+        <section class="export-strip" aria-label="Keep and reopen your work"><div><h3>Carry the whole puzzle forward.</h3><p>Export the episode, its exact revision, and its current mechanical result. Reopening verifies them together.</p><p id="digest" class="digest"></p></div><div class="export-actions"><button id="export-button" type="button" class="secondary" disabled>Export checked episode</button><button id="import-button" type="button" class="text-button">Reopen an export</button><input id="import-file" type="file" accept="application/json,.json" hidden></div></section>
+      </section>
+      <section id="player" role="tabpanel" aria-labelledby="player-tab" hidden><div class="play-grid"><article class="panel"><div class="section-title"><span class="step">01</span><div><h3 id="player-arrange-heading">Arrange the keepers</h3><p id="player-instructions">Use the clues to find an order. Read the first letter of each label, then enter the action.</p></div></div><ol id="player-order" class="player-order"></ol><div class="player-controls"><button id="reset-order" type="button" class="text-button">Reset the order</button><button id="hint-button" type="button" class="text-button">Show a hint</button></div><div id="hints" class="hints" aria-live="polite"></div></article><article class="panel"><h3 id="player-clue-heading">Your clues</h3><ol id="player-clues" class="clues"></ol><form id="answer-form"><label for="answer" id="answer-label">What action do the keepers spell?</label><div class="answer-row"><input id="answer" name="answer" type="text" autocomplete="off" spellcheck="false" maxlength="80" aria-describedby="player-feedback"><button type="submit" class="primary" id="answer-button">Try action</button></div></form><p id="player-feedback" class="feedback" aria-live="polite"></p><button id="reveal-button" type="button" class="text-button">Reveal the solution</button><div id="reveal" hidden></div></article></div></section>
+      <p id="notice" class="notice" role="status"></p>
+    </section>
+  </main>
+  <footer><span>LUDOLINGUA <span class="footer-dot">●</span> ORIGINAL EPISODE KIT</span><span>Mechanical evidence. Room for human judgment.</span></footer>
+</body>
+</html>
