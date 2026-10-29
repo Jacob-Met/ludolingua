@@ -311,7 +311,7 @@ negative result can still be exported and verified on reopening.
 The clue-diagnostic receiver uses the existing Playwright/Chrome setup:
 
 ```sh
-PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \\
-LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/clue-evidence \\
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/clue-evidence \
 node tests/clue-conflict-receiver.mjs
 ```
