@@ -37,10 +37,14 @@ function clues(target) {
   try { target.replaceChildren(...episode.clues.map(clue => node('li', clueText(episode, clue)))); }
   catch { const fallback = node('li', t('Complete valid card labels before reading the generated clues.')); fallback.lang = uiLocale; target.replaceChildren(fallback); }
 }
-function changed({ reviewHints = false } = {}) {
+function renderWording() {
+  $('episode-title').textContent = episode.title; $('episode-title').lang = episode.locale;
+  $('episode-story').textContent = episode.story; $('episode-story').lang = episode.locale;
+}
+function changed({ reviewHints = false, reviewReason = 'Labels, required action, ordering clues or hints changed.' } = {}) {
   editorHintText = $('hint-editor').value;
-  if (reviewHints) episode.hintReview = { status: 'needs-author-review', kind: 'author-self-declaration', reason: 'Labels, required action, ordering clues or hints changed.' };
-  episode.revision += 1; version += 1; result = null; digest = ''; revision(); renderResult();
+  if (reviewHints) episode.hintReview = { status: 'needs-author-review', kind: 'author-self-declaration', reason: reviewReason };
+  episode.revision += 1; version += 1; result = null; digest = ''; revision(); renderWording(); renderResult();
   $('digest').textContent = ''; $('export-button').disabled = true;
   clues($('author-clues')); refreshClueLabels(); renderHintReview(); comparisonController?.refreshTarget(); resetPlayer(); notice('This revision needs a new check. Previous results do not approve these edits.');
   if (editingImport) { importedEpisode = clone(episode); importedHintText = editorHintText; }
@@ -75,6 +79,7 @@ function renderClueEditor() {
   }));
 }
 function renderEditor() {
+  for (const field of ['title', 'story']) { const input = $('episode-' + field + '-input'); input.value = episode[field]; input.lang = episode.locale; }
   $('cards-editor').replaceChildren(...episode.cards.map((card, i) => {
     const box = node('div', undefined, 'label-card');
     const top = node('div', undefined, 'card-top'); top.append(node('span', t('Keeper {index}', { index: String(i + 1).padStart(2, '0') })), node('span', initial(card.label), 'card-initial'));
@@ -188,8 +193,7 @@ function installEpisode(ep, hintText = ep.hints.join('\n')) {
   editorHintText = hintText;
   episode = clone(ep); version += 1; result = null; digest = ''; revision();
   $('episode-locale').textContent = t(episode.locale === 'es' ? 'SPANISH / ORIGINAL PUZZLE MATERIAL' : 'ENGLISH / ORIGINAL PUZZLE MATERIAL');
-  $('episode-title').textContent = episode.title; $('episode-title').lang = episode.locale; $('episode-story').textContent = episode.story;
-  $('episode-story').lang = episode.locale; $('answer').lang = episode.locale; $('digest').textContent = ''; $('export-button').disabled = true;
+  renderWording(); $('answer').lang = episode.locale; $('digest').textContent = ''; $('export-button').disabled = true;
   renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); notice('');
 }
 function selectEpisode(ep, detached = false, hintText = ep.hints.join('\n')) {
@@ -221,6 +225,14 @@ $('case-select').addEventListener('change', () => {
 });
 $('freeze-labels').addEventListener('change', () => { episode.constraints.labelsFrozen = $('freeze-labels').checked; changed(); renderEditor(); });
 $('required-action').addEventListener('input', () => { episode.action.expected = $('required-action').value; changed({ reviewHints: true }); });
+for (const field of ['title', 'story']) {
+  const input = $('episode-' + field + '-input');
+  input.addEventListener('input', () => {
+    if (input.value === episode[field]) return;
+    episode[field] = input.value;
+    changed({ reviewHints: true, reviewReason: 'Episode title or story changed.' });
+  });
+}
 $('add-clue').addEventListener('click', () => {
   let next = 1; while (episode.clues.some(c => c.id === `authored-${next}`)) next += 1;
   episode.clues.push({ id: `authored-${next}`, kind: 'before', left: episode.cards[0].id, right: episode.cards[1].id });

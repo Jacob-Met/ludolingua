@@ -84,7 +84,7 @@ test('capture persists editable fields and round trips a valid edit', () => {
   const source = fixture(), original=structuredClone(source), edited=structuredClone(source);
   edited.cards[0].label=''; edited.cards[1].label='Renamed'; edited.constraints.labelsFrozen=!source.constraints.labelsFrozen; edited.revision++;
   const record=captureDraft(source,SHA,edited,'capture-test-token');
-  assert.deepEqual(record,{schema:'ludolingua.author-draft.v1',source:{id:source.id,sha256:SHA},token:'capture-test-token',revision:edited.revision,cards:edited.cards.map(({id,label})=>({id,label})),labelsFrozen:edited.constraints.labelsFrozen,clues:edited.clues,hintText:edited.hints.join('\n'),hintReview:edited.hintReview??null,actionExpected:edited.action.expected});
+  assert.deepEqual(record,{schema:'ludolingua.author-draft.v2',source:{id:source.id,sha256:SHA},token:'capture-test-token',revision:edited.revision,cards:edited.cards.map(({id,label})=>({id,label})),labelsFrozen:edited.constraints.labelsFrozen,clues:edited.clues,hintText:edited.hints.join('\n'),hintReview:edited.hintReview??null,actionExpected:edited.action.expected,title:edited.title,story:edited.story});
   const result=readDraft(JSON.stringify(record),source,SHA); assert.equal(result.state,'ready'); assert.deepEqual(result.episode,edited); assert.deepEqual(source,original);
 });
 test('capture rejects changes outside editable author fields and malformed cards', () => {
