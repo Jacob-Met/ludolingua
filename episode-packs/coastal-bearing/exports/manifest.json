@@ -1,0 +1,69 @@
+{
+  "schema": "ludolingua.authored-casepack.v1",
+  "id": "coastal-bearing",
+  "version": "0.1.0",
+  "runtime": {
+    "commit": "18fdb3eb5fc5c1d8d24efb698eff72bc127f72a4",
+    "packageVersion": "0.3.7-authoring.1b623a99"
+  },
+  "files": [
+    {
+      "path": "episodes/01-en-source.json",
+      "bytes": 4109,
+      "sha256": "f179b22635bce6f5f14cbd12e36bf015e8b24a9bc386e4a69e12454699f6499a"
+    },
+    {
+      "path": "episodes/02-es-literal-contrast.json",
+      "bytes": 4544,
+      "sha256": "f4dffde73532bc9db32aafd63019b666171ca248c654abebab0a51b2b29fbf29"
+    },
+    {
+      "path": "episodes/03-es-adapted.json",
+      "bytes": 4772,
+      "sha256": "d24dc2c0a4a9f7a5054e0a8d6340df0a34cc30527944691c0bbcfbafd67bf373"
+    },
+    {
+      "path": "comparisons/source-vs-literal.json",
+      "bytes": 9067,
+      "sha256": "db25d8ff8e4c0c8ed0c29fa150f1db569a067e68493bdfa522d79894e6e3f0f0"
+    },
+    {
+      "path": "comparisons/source-vs-adapted.json",
+      "bytes": 9300,
+      "sha256": "2607a5f8c10149eec1304da44c7654aced5b435ef6550dd783031c80b59716d9"
+    }
+  ],
+  "cases": [
+    {
+      "id": "coastal-bearing-en",
+      "file": "episodes/01-en-source.json",
+      "locale": "en",
+      "intendedUse": "playable-authored-case",
+      "expectedExtraction": "NORTH",
+      "requiredBearing": "NORTH",
+      "mechanicalSuccess": true
+    },
+    {
+      "id": "coastal-bearing-es-literal",
+      "file": "episodes/02-es-literal-contrast.json",
+      "locale": "es",
+      "intendedUse": "intentional-negative-localization-contrast",
+      "expectedExtraction": "NORTP",
+      "requiredBearing": "NORTE",
+      "mechanicalSuccess": false
+    },
+    {
+      "id": "coastal-bearing-es-adapted",
+      "file": "episodes/03-es-adapted.json",
+      "locale": "es",
+      "intendedUse": "playable-authored-case",
+      "expectedExtraction": "NORTE",
+      "requiredBearing": "NORTE",
+      "mechanicalSuccess": true
+    }
+  ],
+  "limits": [
+    "Authored choices, not an automatic repair or model-inference result.",
+    "Mechanical checks do not establish native-language clarity, equal difficulty, human participation or semantic equivalence."
+  ]
+}

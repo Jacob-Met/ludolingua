@@ -1,0 +1,129 @@
+{
+  "schema": "ludolingua.episode-export.v1",
+  "episode": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "NORTH"
+    },
+    "cards": [
+      {
+        "id": "nest",
+        "label": "Nest"
+      },
+      {
+        "id": "sea",
+        "label": "Ocean"
+      },
+      {
+        "id": "river",
+        "label": "River"
+      },
+      {
+        "id": "tower",
+        "label": "Tower"
+      },
+      {
+        "id": "landing",
+        "label": "Harbor"
+      }
+    ],
+    "clues": [
+      {
+        "id": "landing-after-tower",
+        "kind": "after",
+        "left": "landing",
+        "right": "tower"
+      },
+      {
+        "id": "sea-river-pair",
+        "kind": "immediately_before",
+        "left": "sea",
+        "right": "river"
+      },
+      {
+        "id": "nest-before-sea",
+        "kind": "before",
+        "left": "nest",
+        "right": "sea"
+      },
+      {
+        "id": "river-tower-pair",
+        "kind": "immediately_before",
+        "left": "river",
+        "right": "tower"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "“Immediately before” means the two plates must touch.",
+      "Join the two immediate links into one block of three plates. Keep their internal order.",
+      "Use the clue that says “before”, without “immediately”, to place one plate ahead of the block. Put the remaining plate after it, then read the five initials."
+    ],
+    "id": "coastal-bearing-en",
+    "locale": "en",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [],
+      "source": "Original Coastal Bearing case authored with ChatGPT by estate-a10203ad-3c50-4b64-aae6-2b9d1b0c60cf for the existing LUDOLINGUA project; product custody remains with hamon-a19-20261027. No external puzzle assets or NVIDIA/Nebius inference run."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "The chart room has gone dark. One lamp still glows beside the compass. Beneath it lie five wooden plates, each naming a feature from the navigator’s coastal notes. Arrange them in the only order the clues allow. Then read the first letters from left to right: together they recover the bearing missing from the chart.",
+    "title": "The Last Bearing"
+  },
+  "validation": {
+    "engineVersion": "0.1.0",
+    "episodeSha256": "649aa4716efedefde55af8ce5ba9f7481e5471648598567b7a453e264e626524",
+    "result": {
+      "schema": "ludolingua.analysis.v1",
+      "engineVersion": "0.1.0",
+      "valid": true,
+      "errors": [],
+      "permutationCount": 120,
+      "clueOrderCount": 1,
+      "actionMatchCount": 1,
+      "uniqueReasoning": true,
+      "mechanicalSuccess": true,
+      "outcome": "verified",
+      "solutions": [
+        {
+          "order": [
+            "nest",
+            "sea",
+            "river",
+            "tower",
+            "landing"
+          ],
+          "token": "NORTH",
+          "actionMatches": true
+        }
+      ],
+      "frozenWitness": null,
+      "limitations": [
+        "Checks cover encoded ordering and extraction only; native-language clarity, cultural suitability and comparable discovery require human playtests.",
+        "No model inference is evidenced.",
+        "Extraction uses the first Unicode code point after trim and NFC, then locale-independent uppercase; uppercase may expand to multiple code points."
+      ]
+    }
+  },
+  "evidence": {
+    "kind": "authored-fixture",
+    "modelContributionVerified": false,
+    "nativeHumanPlaytestVerified": false,
+    "limitations": [
+      "Mechanical checks certify only the encoded properties.",
+      "No NVIDIA/Nebius model integration or native-language human playtest is established.",
+      "Equivalent difficulty, cultural suitability and linguistic quality remain unverified.",
+      "SHA256 binds content; it does not authenticate an author or attest provenance claims."
+    ]
+  }
+}
