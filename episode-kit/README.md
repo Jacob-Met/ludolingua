@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.7-authoring.1b623a99
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.8-portable.1b623a99
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -21,8 +21,9 @@ node serve.mjs
 ```
 
 Open `http://127.0.0.1:4173` (or the local URL printed by the server). Keep the
-server running while using the receiver; do not open the HTML as a `file:` URL.
-The loopback HTTP origin supports the browser Web Crypto digest operation.
+server running while using the author workbench and source player pages. Open
+those source pages through the printed HTTP URL. A separately downloaded playable
+HTML file supports direct offline opening, as described below.
 Use **Set the scene** to edit the episode title and the story shown to players.
 Wording stays in the episode's language when you switch interface controls.
 Edits advance the revision, clear old checks and exports, reset the embedded
@@ -77,6 +78,76 @@ episode validity, current digest, engine version, recomputed analysis and fixed
 evidence limits. The reader never inherits a supplied pass claim. This is content
 integrity, not a cryptographic signature or independent provenance attestation.
 Edit the episode and export again to create a current result.
+
+## Share a puzzle as one offline HTML file
+
+In the author workbench, choose **Download playable HTML** (Spanish: **Descargar
+HTML para jugar**). The download captures the current valid episode revision
+and the selected interface language. Open that one HTML file directly in a
+browser, or give it to a learner. It includes the player, styling and puzzle;
+the learner does not need Node.js, a server, an internet connection, or other files.
+
+Choose **Start this puzzle** to begin a new record for the included episode.
+English and Spanish controls remain independent of the authored puzzle language.
+The downloaded file keeps its captured revision. Later author edits require a
+new download; if the episode changes while a download is being prepared, that
+download is cancelled with a request to try again.
+
+Choose **Download play record** before closing or reloading. To continue later,
+reopen the HTML and use **Continue a saved play record** with the newest JSON
+record. Continuation opens the exact puzzle captured in that record, which may
+differ from the puzzle originally included in the HTML. It keeps the recorded
+session identifier and earlier events. There is no automatic save or recovery
+of unsubmitted answer text. Continue a record in one window and download again
+to retain the extended history.
+
+Playable HTML is a player copy. Keep the checked episode JSON to reopen and edit
+the puzzle in the author workbench. Both formats contain the complete authored
+puzzle, including its answer. Valid ambiguous or unsuccessful puzzles can still
+be downloaded; a playable file does not certify unique reasoning or puzzle quality.
+Downloaded play records use the same existing verifier and evidence limitations.
+
+The maintained receiving course opens the actual workbench download through
+`file://` in sandboxed Chromium with networking disabled, after moving and
+renaming it. It exercises English/Spanish controls, mobile layout, literal markup
+and Unicode, recorded play, continuation and a stopped author server. Other
+browser engines have not been qualified by that course.
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/portable-evidence \
+node tests/portable-receiver.mjs
+```
+
+### Maintain the generated player
+
+The checked-in `web/portable-player-bundle.json` is generated from the maintained
+player modules, HTML and CSS. Its sorted source inventory binds their exact bytes
+and the build script/toolchain. The exporter verifies the bundle before embedding
+it. This freshness and integrity check is a content binding, not a signature.
+
+Ordinary use, tests, and packaging do not require a compiler or dependency
+installation. Packaging runs the following compiler-free check before creating
+any archive or checksum. A missing or stale bundle stops packaging:
+
+```sh
+node scripts/build-player-bundle.mjs --check
+```
+
+After changing a recorded source, regenerate with the development-only
+`esbuild` version pinned in `scripts/portable-toolchain.json` (currently 0.28.2).
+Keep the compiler and its downloaded package outside this source tree:
+
+```sh
+LUDO_ESBUILD_BINARY=/absolute/path/to/esbuild \
+node scripts/build-player-bundle.mjs
+node scripts/build-player-bundle.mjs --check
+```
+
+The build uses esbuild's browser IIFE output and checks that the dependency graph
+has one JavaScript output, no runtime imports, and no unhandled external assets.
+Player, engine and record source modules remain the maintained implementation.
+Rebuild and repeat the offline receiving course when those inputs change.
 
 ## Create an original episode
 
@@ -264,7 +335,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.7-authoring.1b623a99.
+the enclosing kit version is 0.3.8-portable.1b623a99.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -290,8 +361,8 @@ English puzzle. This choice is not evidence of the player's language proficiency
 
 If the browser blocks the popup, export the checked episode from the workbench,
 open `http://127.0.0.1:4173/web/playtest.html`, and choose that episode export file.
-The standalone page verifies the exported episode before starting. Keep using
-the server URL rather than opening the HTML as a local file.
+The standalone page verifies the exported episode before starting. These source player pages use the server URL. For a player that opens directly
+as a local file, use **Download playable HTML** in the author workbench.
 
 In the player window, try an order and answer, optionally use hints or reveal,
 then choose **Download play record** (Spanish: **Descargar registro de juego**).
@@ -333,8 +404,8 @@ and cannot authenticate the client that authored a consistent record.
 ## Continue a saved play record
 
 Download the play record before closing or reloading the player. To continue,
-open a new, empty player window at the server's `/web/playtest.html` address and
-choose **Continue a saved play record** (Spanish: **Continuar un registro de juego
+open a new, empty player window at the server's `/web/playtest.html` address, or
+reopen a downloaded playable HTML file, and choose **Continue a saved play record** (Spanish: **Continuar un registro de juego
 guardado**). Select your newest downloaded record JSON. An already-open session
 keeps its current episode and history; it cannot be replaced by an import.
 

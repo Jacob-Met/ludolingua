@@ -67,6 +67,19 @@ conflicting set, current labels and direct links to the relevant editor controls
 It clears on edits and leaves analysis, checked exports and captured play sessions
 unchanged. Other conflicts can remain; this does not identify the author's intent.
 
+## Give a learner an offline player
+
+Choose **Download playable HTML** in the author workbench to capture the current
+puzzle as one file. A learner can open that HTML directly in a browser without
+running the author server or installing anything. The file includes the maintained
+player, puzzle and styles, with English or Spanish controls independent of the
+puzzle language. Later author edits need a new download.
+
+Start the included puzzle or continue a downloaded play record. Download the
+newest record before closing or reloading; there is no automatic player save.
+Keep the checked episode JSON as the editable author copy. The kit README covers
+offline receiving, continuation, and the generated player's maintenance checks.
+
 ## Create an original episode
 
 From the workbench, choose **Create an original episode**. Enter a title, story,

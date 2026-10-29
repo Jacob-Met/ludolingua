@@ -1,5 +1,15 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"Download playable HTML":"Descargar HTML para jugar",
+"Open the downloaded HTML directly in a browser. It works offline. Later edits need a new download.":"Abre el HTML descargado directamente en un navegador. Funciona sin conexión. Si haces cambios, descarga una copia nueva.",
+"Preparing a playable copy of this revision…":"Preparando una copia para jugar de esta revisión…",
+"Downloaded revision {revision} as a playable HTML file. Open it directly in a browser.":"Se ha descargado la revisión {revision} como un archivo HTML para jugar. Ábrelo directamente en un navegador.",
+"Cannot download playable file: {message}":"No se puede descargar el archivo para jugar: {message}",
+"The episode changed while the playable file was being prepared. Download the current revision again.":"El episodio cambió mientras se preparaba el archivo para jugar. Descarga de nuevo la revisión actual.",
+"The portable player runtime could not be loaded.":"No se ha podido cargar el reproductor portátil.",
+"The portable player runtime is too large.":"El reproductor portátil es demasiado grande.",
+"The playable HTML file is too large. Reduce episode content before downloading.":"El archivo HTML para jugar es demasiado grande. Reduce el contenido del episodio antes de descargarlo.",
+
 "Create an original episode":"Crear un episodio original",
 "Original · new episode":"Original · episodio nuevo",
 "A verified selection replaces the report. Select all records you want to review together.":"Una selección verificada sustituye el informe. Selecciona todos los registros que quieras revisar juntos.",
