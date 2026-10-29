@@ -1,5 +1,5 @@
 import { EPISODES } from '../fixtures/episodes.mjs';
-import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
+import { analyzeEpisode, clueText, checkAttempt, displayCardLabel } from '../lib/engine.mjs';
 import { explainClueConflict } from '../lib/clue-conflict.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
@@ -181,9 +181,9 @@ function resetPlayer() {
 function drawPlayer() {
   $('player-order').replaceChildren(...order.map((id, i) => {
     const card = episode.cards.find(c => c.id === id), li = node('li'); li.dataset.cardId = id;
-    li.append(node('span', String(i + 1).padStart(2, '0'), 'position'), Object.assign(node('span', card.label, 'keeper-label'), { lang: episode.locale }));
+    li.append(node('span', String(i + 1).padStart(2, '0'), 'position'), Object.assign(node('span', displayCardLabel(episode, card), 'keeper-label'), { lang: episode.locale }));
     for (const [delta, arrow, direction] of [[-1, '↑', 'up'], [1, '↓', 'down']]) {
-      const button = node('button', arrow, 'move-button'); button.type = 'button'; button.disabled = i + delta < 0 || i + delta >= order.length; button.dataset.direction = direction; button.setAttribute('aria-label', t(delta < 0 ? 'Move {label} up' : 'Move {label} down', { label: card.label }));
+      const button = node('button', arrow, 'move-button'); button.type = 'button'; button.disabled = i + delta < 0 || i + delta >= order.length; button.dataset.direction = direction; button.setAttribute('aria-label', t(delta < 0 ? 'Move {label} up' : 'Move {label} down', { label: displayCardLabel(episode, card) }));
       button.addEventListener('click', () => { [order[i], order[i + delta]] = [order[i + delta], order[i]]; playerFeedbackKey = ''; revealedResult = null; $('player-feedback').textContent = ''; $('reveal').hidden = true; drawPlayer(); const row = [...$('player-order').children].find(n => n.dataset.cardId === id); const focus = [...row.querySelectorAll('button')].find(n => n.dataset.direction === direction && !n.disabled) ?? [...row.querySelectorAll('button')].find(n => !n.disabled); focus?.focus(); });
       li.append(button);
     } return li;
