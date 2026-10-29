@@ -18,7 +18,7 @@ try {
   const session = await browser.newBrowserCDPSession();
   const command = await session.send('Browser.getBrowserCommandLine');
   assert.equal(command.arguments.some(a => a === '--no-sandbox' || a === '--disable-setuid-sandbox'), false, 'Sandbox-disabling launch flag');
-  const context = await browser.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true });
+  const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1280, height: 1000 }, acceptDownloads: true });
   page = await context.newPage();
   await page.goto('chrome://sandbox');
   const sandboxText = await page.locator('body').innerText();
@@ -102,6 +102,7 @@ try {
   await page.screenshot({ path: resolve(evidenceDir, 'receiver-narrow.png'), fullPage: true });
   await page.locator('#author-tab').focus(); await page.locator('#author-tab').press('ArrowRight'); assert.equal(await page.locator('#player').isVisible(), true);
   assert.doesNotMatch(await page.locator('body').innerText(), /\bABRE\b/);
+  await page.selectOption('#ui-language', 'es');
   await page.getByRole('button', { name: 'Bajar Estrella', exact: true }).focus();
   for (let i = 0; i < 3; i++) { await page.keyboard.press('Space'); assert.equal(await page.evaluate(() => document.activeElement.getAttribute('aria-label')), i < 2 ? 'Bajar Estrella' : 'Subir Estrella'); }
   await page.fill('#answer', 'abre'); await page.locator('#answer').press('Enter'); await page.locator('#player-feedback').filter({ hasText: 'La acción funciona' }).waitFor();

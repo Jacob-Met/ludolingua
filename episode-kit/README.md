@@ -25,6 +25,15 @@ server running while using the receiver; do not open the HTML as a `file:` URL.
 The loopback HTTP origin supports the browser Web Crypto digest operation.
 The author view supports editing and
 rechecking; player mode separates solving from deliberate answer reveal.
+
+Use the **UI language** selector to choose English or Spanish for the receiver's
+interface independently of the episode's language. Changing UI language does not
+translate or edit authored story, card labels, hints, or provenance. Source and
+target episodes remain their original evidence; changing the interface language
+does not change puzzle answers, comparison mappings, digest-bound exports, or
+mechanical results. A Spanish interface is not evidence that an episode has been
+translated or reviewed by a native speaker.
+
 `check` exits 0 for mechanical success, 2 for valid negative cases, and 1 for
 invalid input. `receive` exits 0 when content and recomputed analysis agree,
 including a faithfully exported negative case. Inspect `mechanicalSuccess` and
@@ -51,6 +60,22 @@ Maintainer verification and deterministic packaging:
 node --test tests/*.test.mjs
 python3 scripts/package.py --output ../ludolingua-episode-kit.zip
 ```
+
+The browser locale receiver requires an existing Playwright package and sandboxed
+Chrome at `/usr/bin/google-chrome-stable`. Run it separately from the unit tests:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/locale-evidence \
+node tests/locale-receiver.mjs
+```
+
+`PLAYWRIGHT_PACKAGE` must contain `index.mjs`. The receiver starts its own loopback
+server and writes `locale-receipt.json`, downloaded exports and screenshots to
+`LUDO_EVIDENCE_DIR`. It checks Spanish browser defaults, English fallback,
+interface switching, preserved draft/player state, pending imports, and export
+integrity. Inspect the receipt and rendered screenshots; an available test script
+alone does not establish browser acceptance or visual quality.
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive
