@@ -1,6 +1,7 @@
 import { EPISODES } from '../fixtures/episodes.mjs';
 import { clueText } from '../lib/engine.mjs';
 import { compareEpisodes } from '../lib/compare.mjs';
+import { suggestOneClueRepair } from '../lib/one-clue-repair.mjs';
 import { createComparisonExport, readComparisonExport } from '../lib/comparison-export.mjs';
 
 const $ = id => document.getElementById(id);
@@ -72,6 +73,22 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
     for (const [witness, label] of [[comparison.sourceOnlyWitness, 'Allowed only by the source'], [comparison.targetOnlyWitness, 'Allowed only by the adaptation']]) {
       if (!witness) continue;
       const box = node('div', undefined, 'witness'); box.append(node('h4', t(label)), node('p', t('Source roles: {order}', { order: orderText(source, witness.sourceOrder) })), node('p', t('Mapped adaptation: {order}', { order: orderText(getEpisode(), witness.targetOrder) }))); root.append(box);
+    }
+    if (!comparison.sameOrderSet) {
+      const proposal = suggestOneClueRepair(source, getEpisode(), comparison.mapping);
+      if (proposal) {
+        const preview = node('section', undefined, 'comparison-repair-preview');
+        const adaptationLabels = new Map(getEpisode().cards.map(c => [c.id, c.label]));
+        const kind = ({before:'comes before', after:'comes after', immediately_before:'comes immediately before'})[proposal.clue.kind];
+        const relation = adaptationLabels.get(proposal.clue.left) + ' ' + t(kind) + ' ' + adaptationLabels.get(proposal.clue.right);
+        preview.append(node('h4', t('A checked clue edit to try')));
+        preview.append(node('p', proposal.operation === 'add'
+          ? t('Try adding this adaptation clue: {relation}', {relation})
+          : t('Try removing adaptation clue {id}: {relation}', {id: proposal.clue.id, relation})));
+        preview.append(node('p', t('Unmatched allowed orders: {before} → {after}. Both sides were recomputed; neither mismatch count increased.', {before:proposal.beforeTotal, after:proposal.afterTotal}), 'small'));
+        preview.append(node('p', t('This preview changes nothing. Review the clue in the editor, compare again, and check the action, hints and human meaning separately.'), 'small'));
+        root.append(preview);
+      }
     }
     const changes = node('details', undefined, 'comparison-changes'); changes.open = changesOpen; changes.append(node('summary', t('Inspect changed labels and encoded clues')));
     const list = node('ul');

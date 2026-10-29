@@ -286,6 +286,22 @@ node tests/content-receiver.mjs
 ```
 
 
+## Recheck a single clue repair before changing the adaptation
+
+When compared source and target have different allowed order sets, the comparison
+can show one advisory single-clue edit that its engine actually rechecked.
+It may recommend adding a translated source relation or removing an overrestrictive
+target clue, using the declared one-to-one role mapping. To qualify for display,
+the edited candidate must reduce the total unmatched order count without
+increasing either side's separate count. The preview does not apply a change;
+make any edit deliberately in the author controls and rerun comparison.
+
+This is deliberately bounded to at most 12 candidate comparison checks. It may
+find no suggestion even when a multi-edit repair exists, and it cannot guarantee
+the required extracted action, stable difficulty, intended meaning, clue quality,
+or native-language acceptance. Exported comparison evidence and engine versions
+remain unchanged; these optional previews are recomputed from checked content.
+
 ## Find a conflicting set of clues
 
 When a valid episode has no clue-consistent order, the author result can show one
