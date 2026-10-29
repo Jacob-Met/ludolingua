@@ -1,5 +1,11 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"These clues conflict when used together.":"Estas pistas se contradicen al aplicarse juntas.",
+"No ordering satisfies this set. Review these clues against the lesson you intend; other conflicts may remain after an edit.":"No existe un orden que cumpla este conjunto. Revisa estas pistas según la lección que quieres crear; después de modificarlas, puede haber otras contradicciones.",
+"Edit clue {index}":"Editar pista {index}",
+"Part of this conflict":"Parte de esta contradicción",
+"A detailed clue explanation is unavailable for this puzzle.":"No hay una explicación detallada de las pistas disponible para este puzle.",
+
 "Local author draft":"Borrador local del autor",
 "Load saved draft":"Cargar borrador guardado",
 "Keep these edits":"Conservar estos cambios",

@@ -1,5 +1,6 @@
 import { EPISODES } from '../fixtures/episodes.mjs';
 import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
+import { explainClueConflict } from '../lib/clue-conflict.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
 import { setupPlaytest } from './playtest-author.mjs';
@@ -12,6 +13,7 @@ const names = { 'en-original': 'English · original episode', 'es-literal': 'Spa
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
 let comparisonController, playtestController;
+let conflictFor = null, conflictExplanation = null;
 let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
 let uiLocale = supportedLocale((navigator.language ?? 'en').split('-')[0].toLowerCase());
 let noticeState = { key: '', error: false, values: {} }, digestKey = 'Checked source · SHA-256 {hash}';
@@ -55,7 +57,7 @@ function refreshClueLabels() {
 }
 function renderClueEditor() {
   $('clue-editor').replaceChildren(...episode.clues.map((clue, index) => {
-    const row = node('div', undefined, 'clue-row'); row.dataset.clueId = clue.id;
+    const row = node('div', undefined, 'clue-row'); row.dataset.clueId = clue.id; row.id = 'clue-row-' + index;
     row.append(node('span', t('Clue {index}', { index: index + 1 }), 'clue-number'));
     for (const [field, labelText] of [['left', 'Left card'], ['kind', 'Relationship'], ['right', 'Right card']]) {
       const label = node('label', t(labelText)), select = node('select'); select.dataset.field = field; select.setAttribute('aria-label', `${t('Clue {index}', { index: index + 1 })} · ${t(labelText)}`);
@@ -97,7 +99,56 @@ const outcomeCopy = {
   'action-mismatch': ['The reasoning survives. The action does not.', 'The clue-consistent order produces a different token from the required action.'],
   verified: ['The encoded discovery holds', 'The order and extraction satisfy this episode’s mechanical requirements. Human language and difficulty review remain open.']
 };
+function clearConflictMarks() {
+  for (const row of $('clue-editor').children) {
+    row.classList.remove('in-conflict');
+    row.querySelector('.clue-conflict-badge')?.remove();
+    for (const select of row.querySelectorAll('select')) {
+      const descriptions = (select.getAttribute('aria-describedby') ?? '').split(/\s+/).filter(id => id && id !== 'clue-conflict-help');
+      if (descriptions.length) select.setAttribute('aria-describedby', descriptions.join(' '));
+      else select.removeAttribute('aria-describedby');
+    }
+  }
+}
+function renderClueConflict(root) {
+  if (conflictExplanation?.state === 'budget-exhausted') {
+    root.append(node('p', t('A detailed clue explanation is unavailable for this puzzle.'), 'small'));
+    return;
+  }
+  if (conflictExplanation?.state !== 'conflict') return;
+  const box = node('section', undefined, 'clue-conflict'); box.id = 'clue-conflict';
+  const heading = node('h4', t('These clues conflict when used together.'));
+  const help = node('p', t('No ordering satisfies this set. Review these clues against the lesson you intend; other conflicts may remain after an edit.'));
+  help.id = 'clue-conflict-help';
+  const list = node('ul');
+  for (const id of conflictExplanation.clueIds) {
+    const index = episode.clues.findIndex(clue => clue.id === id), clue = episode.clues[index];
+    const row = [...$('clue-editor').children].find(item => item.dataset.clueId === id);
+    if (!clue || !row) continue;
+    row.classList.add('in-conflict');
+    row.querySelector('.clue-number').after(node('span', t('Part of this conflict'), 'clue-conflict-badge'));
+    for (const select of row.querySelectorAll('select')) {
+      select.setAttribute('aria-describedby', [select.getAttribute('aria-describedby'), help.id].filter(Boolean).join(' '));
+    }
+    const item = node('li'), text = node('p', clueText(episode, clue));
+    text.lang = episode.locale;
+    const edit = node('button', t('Edit clue {index}', { index: index + 1 }), 'text-button');
+    edit.type = 'button'; edit.dataset.conflictClueId = id; edit.setAttribute('aria-controls', row.id);
+    edit.addEventListener('click', () => {
+      row.scrollIntoView({ block: 'center', behavior: 'auto' });
+      row.querySelector('select[data-field="left"]').focus({ preventScroll: true });
+    });
+    item.append(text, edit); list.append(item);
+  }
+  box.append(heading, help, list); root.append(box);
+}
+
 function renderResult() {
+  clearConflictMarks();
+  if (result !== conflictFor) {
+    conflictFor = result;
+    conflictExplanation = result?.outcome === 'inconsistent' ? explainClueConflict(episode) : null;
+  }
   const root = $('result'); root.replaceChildren();
   if (!result) { const box = node('div', undefined, 'result-state'); box.append(node('h4', t('Ready for a fresh check')), node('p', t('Check this exact revision to see all clue-consistent orders and the action they spell.'))); root.append(box); return; }
   const [heading, description] = outcomeCopy[result.outcome] ?? outcomeCopy.invalid;
@@ -107,6 +158,7 @@ function renderResult() {
   for (const [value, label] of [[result.clueOrderCount, 'Clue-consistent orders'], [result.actionMatchCount, 'Orders spelling the action'], [result.permutationCount, 'Orders examined']]) { const metric = node('div', undefined, 'metric'); metric.append(node('strong', String(value)), node('span', t(label))); metrics.append(metric); } root.append(metrics);
   for (const solution of result.solutions.slice(0, 4)) { root.append(node('p', labels(solution.order), 'path')); const row = node('div', undefined, 'token-row'); row.append(node('span', solution.token, 'token'), node('span', t('Required action: {action}', { action: episode.action.expected }), 'expected')); root.append(row); }
   if (result.solutions.length > 4) root.append(node('p', t('{count} further clue-consistent orders are retained in the export.', { count: result.solutions.length - 4 }), 'small'));
+  renderClueConflict(root);
   if (result.frozenWitness) { const witness = node('div', undefined, 'witness'); witness.append(node('h4', t('A bounded impossibility witness')), node('p', t('Available initials: {available}. Missing required initials: {missing}.', { available: result.frozenWitness.available.join(', '), missing: result.frozenWitness.missing.join(', ') })), node('p', diagnostic(result.frozenWitness.scope))); root.append(witness); }
 }
 async function checkCurrent() {
