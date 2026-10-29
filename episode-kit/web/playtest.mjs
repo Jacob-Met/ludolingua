@@ -1,4 +1,4 @@
-import { analyzeEpisode, clueText } from '../lib/engine.mjs';
+import { analyzeEpisode, clueText, displayCardLabel } from '../lib/engine.mjs';
 import { readExport } from '../lib/export.mjs';
 import { replayPlaytest, MAX_PLAYTEST_EVENTS } from '../lib/playtest.mjs';
 import { createPlaytestRecord } from '../lib/playtest-export.mjs';
@@ -12,7 +12,7 @@ const token = new URL(location.href).searchParams.get('handoff');
 const es = () => uiLocale === 'es';
 function node(tag, text, cls) { const value = document.createElement(tag); if (text !== undefined) value.textContent = text; if (cls) value.className = cls; return value; }
 function words(english, spanish) { return es() ? spanish : english; }
-function labels(order) { return order.map(id => episode.cards.find(card => card.id === id).label).join(' → '); }
+function labels(order) { return order.map(id => displayCardLabel(episode, episode.cards.find(card => card.id === id))).join(' → '); }
 function status(text, state = 'ready') { $('playtest-status').textContent = text; $('playtest-status').dataset.state = state; $('playtest-status').classList.toggle('error', state === 'error'); }
 function localizedCopy() {
   document.documentElement.lang = uiLocale; $('playtest-ui-language').value = uiLocale;
@@ -63,11 +63,11 @@ function render() {
   const state = replay.finalState, summary = replay.summary, full = events.length >= MAX_PLAYTEST_EVENTS;
   $('playtest-cards').replaceChildren(...state.order.map((id, index) => {
     const card = episode.cards.find(value => value.id === id), li = node('li'); li.dataset.cardId = id;
-    li.append(node('span', String(index + 1).padStart(2, '0'), 'position'), node('span', card.label, 'keeper-label'));
+    li.append(node('span', String(index + 1).padStart(2, '0'), 'position'), node('span', displayCardLabel(episode, card), 'keeper-label'));
     for (const [direction, delta, arrow] of [['up', -1, '↑'], ['down', 1, '↓']]) {
       const button = node('button', arrow, 'move-button'); button.type = 'button'; button.dataset.direction = direction;
       button.disabled = full || index + delta < 0 || index + delta >= state.order.length;
-      button.setAttribute('aria-label', words(`Move ${card.label} ${direction}`, `${delta < 0 ? 'Subir' : 'Bajar'} ${card.label}`));
+      button.setAttribute('aria-label', words(`Move ${displayCardLabel(episode, card)} ${direction}`, `${delta < 0 ? 'Subir' : 'Bajar'} ${displayCardLabel(episode, card)}`));
       button.addEventListener('click', () => {
         if (!record({ type: 'move', cardId: id, direction })) return;
         const row = [...$('playtest-cards').children].find(value => value.dataset.cardId === id);

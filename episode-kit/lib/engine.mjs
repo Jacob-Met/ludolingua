@@ -54,12 +54,19 @@ export function extractToken(e, order) {
   if (!validateEpisode(e).valid || !fullOrder(e,order)) throw new Error('Expected a valid episode and full card permutation.');
   return token(e,order);
 }
+export function displayCardLabel(e, card) {
+  if (!obj(e) || !Array.isArray(e.cards) || !obj(card) || typeof card.label !== 'string') return '';
+  const visible = card.label.trim().normalize('NFC');
+  if (!visible || typeof card.id !== 'string') return card.label;
+  const matches = e.cards.filter(other => obj(other) && typeof other.label === 'string' && other.label.trim().normalize('NFC') === visible);
+  return matches.length > 1 ? `${card.label.trim()} (${card.id})` : card.label;
+}
 export function clueText(e,c) {
   if (!validateEpisode(e).valid || !obj(c) || !['before','after','immediately_before'].includes(c.kind) || c.left === c.right) throw new Error('Invalid clue.');
   const left = e.cards.find(x => x.id === c.left), right = e.cards.find(x => x.id === c.right);
   if (!left || !right) throw new Error('Unknown clue card.');
   const relations = e.locale === 'es' ? {before:'va antes de',after:'va después de',immediately_before:'va inmediatamente antes de'} : {before:'comes before',after:'comes after',immediately_before:'comes immediately before'};
-  return `${left.label} ${relations[c.kind]} ${right.label}.`;
+  return `${displayCardLabel(e,left)} ${relations[c.kind]} ${displayCardLabel(e,right)}.`;
 }
 export function checkAttempt(e,order,answer) {
   const fail = {orderValid:false,cluesSatisfied:false,token:'',tokenMatches:false,answerMatches:false,success:false};
