@@ -4,6 +4,7 @@ import { explainClueConflict } from '../lib/clue-conflict.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
 import { setupPlaytest } from './playtest-author.mjs';
+import { setupPlaytestCohort } from './playtest-cohort.mjs';
 import { createFixtureDrafts } from './draft-controller.mjs';
 import { translate, translateDiagnostic, supportedLocale } from './i18n.mjs';
 
@@ -12,7 +13,7 @@ const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
-let comparisonController, playtestController;
+let comparisonController, playtestController, playtestCohortController;
 let conflictFor = null, conflictExplanation = null;
 let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
 let uiLocale = supportedLocale((navigator.language ?? 'en').split('-')[0].toLowerCase());
@@ -286,6 +287,7 @@ $('import-file').addEventListener('change', async () => {
 });
 comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode: ep => selectEpisode(ep, true), rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
 playtestController = setupPlaytest({ getEpisode: () => episode, notice, maxBytes: MAX_EXPORT_BYTES, t, diagnostic, getUILocale: () => uiLocale });
+playtestCohortController = setupPlaytestCohort({ t, diagnostic });
 function renderDigest() { $('digest').textContent = digest ? t(digestKey, { hash: digest }) : ''; }
 function relocalize() {
   // Locale is presentation state: do not alter version, revisions, checks or import epochs.
@@ -310,6 +312,7 @@ function relocalize() {
     renderResult(); renderDigest(); drawPlayer(); renderPlayerFeedback(); renderReveal(); comparisonController?.relocalize();
   }
   playtestController?.relocalize();
+  playtestCohortController?.relocalize();
   renderNotice(); drafts.relocalize();
   let focus = active?.isConnected ? active : focusId ? $(focusId) : null;
   if (!focus && move) focus = [...$('player-order').children].find(row => row.dataset.cardId === move.card)?.querySelector(`[data-direction="${move.direction}"]`);
