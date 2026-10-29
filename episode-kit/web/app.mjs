@@ -1,3 +1,4 @@
+import { receiveAuthoredEpisode } from './author-handoff.mjs';
 import { EPISODES } from '../fixtures/episodes.mjs';
 import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
 import { explainClueConflict } from '../lib/clue-conflict.mjs';
@@ -13,10 +14,11 @@ const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
-let comparisonController, playtestController, playtestCohortController;
+let comparisonController, playtestController, playtestCohortController, authoringReceiver;
 let conflictFor = null, conflictExplanation = null;
 let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
-let uiLocale = supportedLocale((navigator.language ?? 'en').split('-')[0].toLowerCase());
+const handoffQuery = new URL(location.href).searchParams;
+let uiLocale = supportedLocale(handoffQuery.has('author-handoff') ? handoffQuery.get('author-ui') : (navigator.language ?? 'en').split('-')[0].toLowerCase());
 let noticeState = { key: '', error: false, values: {} }, digestKey = 'Checked source · SHA-256 {hash}';
 let playerFeedbackKey = '', revealedResult = null;
 const t = (key, values = {}) => translate(uiLocale, key, values);
@@ -313,7 +315,8 @@ function relocalize() {
   }
   playtestController?.relocalize();
   playtestCohortController?.relocalize();
-  renderNotice(); drafts.relocalize();
+  renderNotice(); drafts.relocalize(); authoringReceiver?.relocalize(uiLocale);
+  $('create-episode-link').href = './create.html?ui=' + uiLocale;
   let focus = active?.isConnected ? active : focusId ? $(focusId) : null;
   if (!focus && move) focus = [...$('player-order').children].find(row => row.dataset.cardId === move.card)?.querySelector(`[data-direction="${move.direction}"]`);
   if (!focus && clue) { const row = [...$('clue-editor').children].find(row => row.dataset.clueId === clue.id); focus = clue.remove ? row?.querySelector('[data-action="remove-clue"]') : [...(row?.querySelectorAll('select') ?? [])].find(select => select.dataset.field === clue.field); }
@@ -322,5 +325,16 @@ function relocalize() {
 $('ui-language').addEventListener('change', () => { uiLocale = supportedLocale($('ui-language').value); relocalize(); });
 const initialEpisode = EPISODES.find(ep => ep.id === drafts.selectedId) ?? EPISODES[0];
 $('case-select').value = initialEpisode.id;
-selectEpisode(initialEpisode);
+// A receiving tab must not write even the remembered fixture selection.
+selectEpisode(initialEpisode, handoffQuery.has('author-handoff'));
 relocalize();
+
+authoringReceiver = receiveAuthoredEpisode({
+  locale: uiLocale, maxBytes: MAX_EXPORT_BYTES,
+  onReceive(received, locale) {
+    uiLocale = locale;
+    selectEpisode(received.episode, true);
+    rememberImportedEpisode(received.episode, 'Original · new episode');
+    tab('author'); relocalize();
+  }
+});

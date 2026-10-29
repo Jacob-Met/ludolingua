@@ -67,6 +67,32 @@ conflicting set, current labels and direct links to the relevant editor controls
 It clears on edits and leaves analysis, checked exports and captured play sessions
 unchanged. Other conflicts can remain; this does not identify the author's intent.
 
+## Create an original episode
+
+From the workbench, choose **Create an original episode**. Enter a title, story,
+required action and two to eight card names, with one name per line. Each name
+must start with a letter. Select English or Spanish as the puzzle's language;
+changing the interface language preserves your writing.
+
+**Create starting episode** prepares a checked export with no clues or hints.
+All card orders are still possible, so its integrity check does not mean the
+puzzle is solved. **Open in a new workbench** gives that episode its own tab,
+ready for clue authoring and a fresh check. The existing workbench, selected
+fixture and saved drafts remain unchanged.
+
+For a small example, use Sun, Apple and Yarn with the action SAY. Add a clue
+that Sun comes before Apple, then a clue that Apple comes before Yarn. The
+workbench narrows six possible orders to three, then one. Try the resulting
+puzzle in the player and export the checked episode to keep the complete work.
+
+New originals stay in their tab rather than becoming bundled fixture drafts.
+Export before closing or reloading. If the new window cannot open, choose
+**Download starting episode**, open a workbench and use **Reopen an export**.
+The downloaded file carries the same starting episode and recomputable result.
+
+Mechanical checks cover encoded ordering and extraction. They do not evaluate
+the writing or establish human playtesting, equivalent difficulty or model use.
+
 ## What is established
 
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.

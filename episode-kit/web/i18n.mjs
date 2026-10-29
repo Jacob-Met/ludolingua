@@ -1,5 +1,7 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"Create an original episode":"Crear un episodio original",
+"Original · new episode":"Original · episodio nuevo",
 "A verified selection replaces the report. Select all records you want to review together.":"Una selección verificada sustituye el informe. Selecciona todos los registros que quieras revisar juntos.",
 "Review multiple play records":"Revisar varios registros de juego",
 "Choose downloaded play records to review together.":"Elige registros de juego descargados para revisarlos juntos.",
