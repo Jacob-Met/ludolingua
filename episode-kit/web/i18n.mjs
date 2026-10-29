@@ -1,5 +1,7 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+'Required action':'Acción requerida',
+'Set the action the ordered initials must spell. Changing it requires a fresh check and a review of the hints.':'Indica la acción que deben formar las iniciales ordenadas. Cambiarla requiere una nueva comprobación y revisar las ayudas.',
 'The order fits the clues. Try the action again using its initials.':'El orden cumple las pistas. Intenta de nuevo la acción usando sus iniciales.',
 "See how the puzzle is played.":"Observa cómo se juega el puzle.",
 "Open this exact revision in a separate player window, then bring its recorded journey back.":"Abre esta revisión exacta en una ventana de juego independiente y después recupera el recorrido registrado.",
