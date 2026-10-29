@@ -17,7 +17,7 @@ async function save(){await page.locator('#draft-status[data-state="saved"]').wa
 async function check(){await page.click('#check-button');await page.locator('#result .inconsistent').waitFor();await page.waitForFunction(()=>document.getElementById('digest').textContent.includes('SHA-256'));}
 async function load(ep){
  const data=await createExport(ep);await page.locator('#import-file').setInputFiles({name:'diagnostic-case.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(data))});
- await page.locator('#draft-status[data-state="detached"]').waitFor();await page.waitForFunction(title=>document.getElementById('episode-title').textContent===title,ep.title);
+ await page.locator('#draft-status[data-state="detached"]').waitFor();await page.locator('#episode-title').filter({hasText:ep.title}).waitFor();assert.equal(await page.locator('#episode-title').textContent(),ep.title);
 }
 try{
  browser=await chromium.launch({headless:true,executablePath:'/usr/bin/google-chrome-stable',chromiumSandbox:true,args:['--disable-dev-shm-usage','--enable-automation']});

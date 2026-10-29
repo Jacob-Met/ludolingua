@@ -1,0 +1,90 @@
+{
+  "schema": "ludolingua.historical-playtest-fixtures.v1",
+  "generated_by": "Actual historical modules, all Git blob hashes verified before generation; every record accepted by historical reader.",
+  "original_playtest_commit": "7bb26c498fff4fd7cd7cec8c8b588a3885a5e5c1",
+  "modules": [
+    {
+      "path": "lib/engine.mjs",
+      "sha": "241b0f0f40bec07a17cc9d15f6d77fb53b82189e"
+    },
+    {
+      "path": "lib/playtest.mjs",
+      "sha": "821d1bb65ce74b5eff6c28214d28df0458d900c3"
+    },
+    {
+      "path": "lib/playtest-export.mjs",
+      "sha": "8a86b676425d28d07e89844d5e504ab876e446ca"
+    },
+    {
+      "path": "lib/export.mjs",
+      "sha": "d808b96f59a0f95f2e074631f4b56b3d41abacf3"
+    },
+    {
+      "path": "fixtures/episodes.mjs",
+      "sha": "19666a5775e193b360aedb0980bc1e3130794111"
+    }
+  ],
+  "fixtures": [
+    {
+      "name": "attempt",
+      "sha256": "76392d45a1ece09e18e435d64ef6d74835b5b4de4ff634568b5b489c30c1c78e",
+      "binding": "bda6845f0f061d6bbbb2f9e7155cb3c2dfa2c6c4edb709ff9e8e92b41ebd0a77",
+      "summary": {
+        "moves": 3,
+        "attempts": 1,
+        "successfulAttempts": 0,
+        "hintsShown": 0,
+        "resets": 0,
+        "revealUsed": false,
+        "firstSuccessMs": null,
+        "elapsedMs": 4
+      },
+      "lastAttempt": {
+        "orderValid": true,
+        "cluesSatisfied": true,
+        "token": "OPEN",
+        "answerMatches": false,
+        "success": false
+      }
+    },
+    {
+      "name": "empty",
+      "sha256": "506ba68a63508ddffbd09c2f297b7ced8b427a3f3dd878c7e449c04a6d75daeb",
+      "binding": "260aa5668d07388db501283539e55188b9ef6debc3529346fe3d99993e446f07",
+      "summary": {
+        "moves": 0,
+        "attempts": 0,
+        "successfulAttempts": 0,
+        "hintsShown": 0,
+        "resets": 0,
+        "revealUsed": false,
+        "firstSuccessMs": null,
+        "elapsedMs": 0
+      },
+      "lastAttempt": null
+    },
+    {
+      "name": "history",
+      "sha256": "28bda2af8f33dd31f35f2bbbaf6693aaeb4b6ac514000caf138c31c463a34b6b",
+      "binding": "a63a4b125b7c3f67c10b3660afeb7a0dbfc26bd8b620d12daa2455ee7ca28174",
+      "summary": {
+        "moves": 3,
+        "attempts": 4,
+        "successfulAttempts": 1,
+        "hintsShown": 1,
+        "resets": 2,
+        "revealUsed": true,
+        "firstSuccessMs": 8,
+        "elapsedMs": 10
+      },
+      "lastAttempt": {
+        "orderValid": true,
+        "cluesSatisfied": false,
+        "token": "NOPE",
+        "answerMatches": true,
+        "success": false
+      }
+    }
+  ],
+  "boundary": "Authored test histories, not human playtests. Generated directly by historical writer, not by dropping a field from current output."
+}

@@ -1,0 +1,128 @@
+{
+  "schema": "ludolingua.playtest-record.v1",
+  "episode": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "OPEN"
+    },
+    "cards": [
+      {
+        "id": "key",
+        "label": "Otter"
+      },
+      {
+        "id": "bell",
+        "label": "Pine"
+      },
+      {
+        "id": "moon",
+        "label": "Eagle"
+      },
+      {
+        "id": "star",
+        "label": "Nest"
+      }
+    ],
+    "clues": [
+      {
+        "id": "pair",
+        "kind": "immediately_before",
+        "left": "bell",
+        "right": "moon"
+      },
+      {
+        "id": "lead",
+        "kind": "before",
+        "left": "key",
+        "right": "bell"
+      },
+      {
+        "id": "tail",
+        "kind": "after",
+        "left": "star",
+        "right": "moon"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "Find the two cards that must stay together.",
+      "Place the card before the pair and the card after the pair.",
+      "Read the first letter of each card in the resulting order."
+    ],
+    "id": "en-original",
+    "locale": "en",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [],
+      "source": "Original isolated LUDOLINGUA episode contribution for integration with hamon-a19-20261027; no external puzzle assets."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "The archive door has four slots. Arrange the cards using the clues. Read their initials from left to right and enter the action that opens the door.",
+    "title": "The Four-Card Archive"
+  },
+  "events": [],
+  "sessionId": "legacy-empty-v0.1.0",
+  "validation": {
+    "engineVersion": "0.1.0",
+    "playtestEngineVersion": "0.1.0",
+    "episodeSha256": "f99fcb604afa473bbb50ce548e0ebe7750a77faa805addf8e856a2fa620da859",
+    "bindingSha256": "260aa5668d07388db501283539e55188b9ef6debc3529346fe3d99993e446f07",
+    "result": {
+      "schema": "ludolingua.playtest-replay.v1",
+      "playtestEngineVersion": "0.1.0",
+      "valid": true,
+      "errors": [],
+      "finalState": {
+        "order": [
+          "star",
+          "key",
+          "bell",
+          "moon"
+        ],
+        "visibleHintCount": 0,
+        "revealed": false,
+        "lastAttempt": null
+      },
+      "summary": {
+        "moves": 0,
+        "attempts": 0,
+        "successfulAttempts": 0,
+        "hintsShown": 0,
+        "resets": 0,
+        "revealUsed": false,
+        "firstSuccessMs": null,
+        "elapsedMs": 0
+      },
+      "limitations": [
+        "Events and elapsed times are client-reported; replay does not attest a real person, identity, wall-clock duration or actual interaction.",
+        "Mechanical success does not establish language clarity, cultural suitability, comparable difficulty or unaided discovery.",
+        "No model inference or native-language human playtest is certified."
+      ]
+    }
+  },
+  "evidence": {
+    "origin": "client-recorded",
+    "timing": "self-reported",
+    "humanIdentityAttested": false,
+    "nativeLanguageAttested": false,
+    "humanQualityVerified": false,
+    "modelContributionVerified": false,
+    "limitations": [
+      "The journal records client events, not independently attested human participation.",
+      "Timings are self-reported; no independent clock or identity verification is performed.",
+      "A missing recorded hint or reveal does not establish unaided solving or exclude outside assistance.",
+      "Replay and hashes do not certify language quality, native-language status, comparable difficulty or model contribution.",
+      "Hashes are content bindings, not signatures; a consistently authored replacement journal is not authenticated."
+    ]
+  }
+}
