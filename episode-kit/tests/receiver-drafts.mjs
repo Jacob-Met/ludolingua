@@ -117,6 +117,9 @@ try{
     const states=await Promise.all([a,b].map(p=>p.locator('#draft-status').getAttribute('data-state')));
     assert.deepEqual([...states].sort(),['conflict','saved']);
     const winner=states[0]==='saved'?a:b,loser=states[0]==='saved'?b:a,winningRaw=await raw(winner);
+    await loser.setViewportSize({width:390,height:844});
+    assert.equal(await loser.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
+    await loser.locator('.draft-strip').screenshot({path:join(evidence,'draft-conflict-mobile.png')});
     assert.equal(await a.inputValue('#label-0'),'Tab A');assert.equal(await b.locator('.clue-row').first().locator('select[data-field=kind]').inputValue(),'after');
     await loser.evaluate(key=>window.dispatchEvent(new StorageEvent('storage',{key,oldValue:null,newValue:'{"stale":true}',storageArea:localStorage,url:location.href})),KEY);
     assert.equal(await raw(winner),winningRaw);
@@ -151,6 +154,17 @@ try{
     await page.locator('#freeze-labels').uncheck();await edit(page,0,'Orange');const changed=await saved(page);assert.equal(changed.hintReview.status,'needs-author-review');
     await page.locator('#label-0').focus();await page.locator('#label-0').evaluate(e=>e.setSelectionRange(2,2));await page.keyboard.type('x');await saved(page);
     assert.deepEqual(await page.locator('#label-0').evaluate(e=>[document.activeElement===e,e.selectionStart,e.selectionEnd]),[true,3,3]);
+  });
+  await group('required-action-restores-with-fresh-check',async context=>{
+    const page=await open(context);
+    await page.fill('#required-action','');await saved(page);
+    await page.selectOption('#case-select','es-adapted');await page.selectOption('#case-select','en-original');
+    assert.equal(await page.inputValue('#required-action'),'');assert.equal(await page.isDisabled('#export-button'),true);
+    await page.click('#check-button');await page.locator('.result-state.invalid').waitFor();
+    await page.fill('#required-action','  PLAY  ');const record=await saved(page);
+    assert.equal(record.actionExpected,'  PLAY  ');assert.equal(record.hintReview.reason,'Labels, required action, ordering clues or hints changed.');
+    await page.reload();await state(page,'restored');assert.equal(await page.inputValue('#required-action'),'  PLAY  ');assert.equal(await page.isDisabled('#export-button'),true);
+    await page.click('#check-button');await page.locator('.result-state.action-mismatch').waitFor();assert.equal(await page.isDisabled('#export-button'),false);
   });
   await group('stale-check-after-draft-discard',async context=>{
     const page=await open(context);await edit(page,0,'Orange');await saved(page);

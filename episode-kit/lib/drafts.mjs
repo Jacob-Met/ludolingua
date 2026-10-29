@@ -23,7 +23,7 @@ function validSource(source) {
   }
   return true;
 }
-const REVIEW_REASON = 'Labels, ordering clues or hints changed.';
+const REVIEW_REASONS = new Set(['Labels, ordering clues or hints changed.', 'Labels, required action, ordering clues or hints changed.']);
 const CLUE_KINDS = new Set(['before', 'after', 'immediately_before']);
 const validHints = hints => Array.isArray(hints) && hints.every(hint => typeof hint === 'string');
 const hintsFromText = text => text.split('\n').filter(line => line.trim().length > 0);
@@ -43,7 +43,7 @@ function validHintReview(review, revision) {
   if (review === null) return true;
   if (!isObject(review)) return false;
   if (review.status === 'needs-author-review') return exactKeys(review, ['status', 'kind', 'reason']) &&
-    review.kind === 'author-self-declaration' && review.reason === REVIEW_REASON;
+    review.kind === 'author-self-declaration' && REVIEW_REASONS.has(review.reason);
   return exactKeys(review, ['status', 'kind', 'revision']) && review.status === 'author-reviewed' &&
     review.kind === 'author-self-declaration' && positiveInteger(review.revision) && review.revision <= revision;
 }

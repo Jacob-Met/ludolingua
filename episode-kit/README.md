@@ -23,8 +23,20 @@ node serve.mjs
 Open `http://127.0.0.1:4173` (or the local URL printed by the server). Keep the
 server running while using the receiver; do not open the HTML as a `file:` URL.
 The loopback HTTP origin supports the browser Web Crypto digest operation.
-The author view supports editing and
-rechecking; player mode separates solving from deliberate answer reveal.
+The author view supports editing labels, the **Required action**, typed ordering
+clues and hints. The action is an explicit author choice: the initials in a
+clue-consistent order must still spell it. Editing the action advances the
+revision, clears previous episode and comparison evidence, resets the player,
+and marks hints for author review. Empty or whitespace-only actions remain
+invalid until the author supplies a value. Recheck before exporting; reopening
+an episode or comparison restores its complete authored action.
+
+For an English authoring example, change the four labels to Pine, Lily, Aspen,
+and Yew. The original clue order now spells PLAY while the old required action
+is OPEN, so the check fails. Explicitly change **Required action** to PLAY and
+check again. The same clue order now passes; the story and hints still require
+human review for the changed action. Player mode hides author controls and
+separates solving from deliberate answer reveal.
 Player feedback distinguishes a clue-order error, initials that do not encode the
 required action, and a mistyped answer. A typo after a valid extraction prompts a
 retry in the chosen UI language without revealing the action.
@@ -107,6 +119,18 @@ server and writes `locale-receipt.json`, downloaded exports and screenshots to
 interface switching, preserved draft/player state, pending imports, and export
 integrity. Inspect the receipt and rendered screenshots; an available test script
 alone does not establish browser acceptance or visual quality.
+
+The action-authoring receiver uses the same environment variables:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright-core \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/action-evidence \
+node tests/action-receiver.mjs
+```
+
+It exercises explicit action edits, player success and failure gates, actual
+export/reopen flows, interface-language preservation, and delayed completions.
+Its receipt and screenshots are evidence only after an actual successful run.
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive

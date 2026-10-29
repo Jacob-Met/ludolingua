@@ -1,5 +1,7 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+'Required action':'Acción requerida',
+'Set the action the ordered initials must spell. Changing it requires a fresh check and a review of the hints.':'Indica la acción que deben formar las iniciales ordenadas. Cambiarla requiere una nueva comprobación y revisar las ayudas.',
 'The order fits the clues. Try the action again using its initials.':'El orden cumple las pistas. Intenta de nuevo la acción usando sus iniciales.',
 "Local author draft":"Borrador local del autor",
 "Load saved draft":"Cargar borrador guardado",

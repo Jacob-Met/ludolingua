@@ -36,7 +36,7 @@ function clues(target) {
 }
 function changed({ reviewHints = false } = {}) {
   editorHintText = $('hint-editor').value;
-  if (reviewHints) episode.hintReview = { status: 'needs-author-review', kind: 'author-self-declaration', reason: 'Labels, ordering clues or hints changed.' };
+  if (reviewHints) episode.hintReview = { status: 'needs-author-review', kind: 'author-self-declaration', reason: 'Labels, required action, ordering clues or hints changed.' };
   episode.revision += 1; version += 1; result = null; digest = ''; revision(); renderResult();
   $('digest').textContent = ''; $('export-button').disabled = true;
   clues($('author-clues')); refreshClueLabels(); renderHintReview(); comparisonController?.refreshTarget(); resetPlayer(); notice('This revision needs a new check. Previous results do not approve these edits.');
@@ -81,6 +81,7 @@ function renderEditor() {
     box.append(top, label, input); return box;
   }));
   $('freeze-labels').checked = episode.constraints.labelsFrozen;
+  $('required-action').value = episode.action.expected; $('required-action').lang = episode.locale;
   clues($('author-clues'));
   renderClueEditor(); $('hint-editor').value = editorHintText; $('hint-editor').lang = episode.locale; renderHintReview();
   const changes = episode.provenance.semanticChanges;
@@ -166,6 +167,7 @@ $('case-select').addEventListener('change', () => {
   if (ep) selectEpisode(ep, detached, detached ? importedHintText : undefined);
 });
 $('freeze-labels').addEventListener('change', () => { episode.constraints.labelsFrozen = $('freeze-labels').checked; changed(); renderEditor(); });
+$('required-action').addEventListener('input', () => { episode.action.expected = $('required-action').value; changed({ reviewHints: true }); });
 $('add-clue').addEventListener('click', () => {
   let next = 1; while (episode.clues.some(c => c.id === `authored-${next}`)) next += 1;
   episode.clues.push({ id: `authored-${next}`, kind: 'before', left: episode.cards[0].id, right: episode.cards[1].id });

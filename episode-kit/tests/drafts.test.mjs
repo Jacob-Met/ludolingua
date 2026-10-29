@@ -181,3 +181,10 @@ test('draft action cannot replace normalization or supply nonstring data', () =>
   assert.throws(()=>captureDraft(source,SHA,edited,'action-token'));
   for(const actionExpected of [null,{},1,[]])assert.equal(readDraft(JSON.stringify(recordFor(source,{actionExpected})),source,SHA).state,'invalid');
 });
+
+test('current action-editor review reason remains an authored input, with no extra claims', () => {
+  const source=fixture(),hintReview={status:'needs-author-review',kind:'author-self-declaration',reason:'Labels, required action, ordering clues or hints changed.'};
+  const record=recordFor(source,{hintReview}),restored=readDraft(JSON.stringify(record),source,SHA);
+  assert.equal(restored.state,'ready');assert.deepEqual(restored.episode.hintReview,hintReview);
+  record.hintReview.approved=true;assert.equal(readDraft(JSON.stringify(record),source,SHA).state,'invalid');
+});
