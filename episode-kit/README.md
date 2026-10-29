@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.2-compat.5b858b51
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.1
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -23,6 +23,15 @@ node serve.mjs
 Open `http://127.0.0.1:4173` (or the local URL printed by the server). Keep the
 server running while using the receiver; do not open the HTML as a `file:` URL.
 The loopback HTTP origin supports the browser Web Crypto digest operation.
+Use **Set the scene** to edit the episode title and the story shown to players.
+Wording stays in the episode's language when you switch interface controls.
+Edits advance the revision, clear old checks and exports, reset the embedded
+preview, and mark hints for author review. Existing separate players retain their
+captured scene; a new launch takes the current title and story. Empty or
+whitespace-only wording can remain in an unfinished draft, but the existing
+validator rejects it until you supply nonempty text. Line breaks and Unicode
+content are preserved. Mechanical checks do not evaluate the writing.
+
 The author view supports editing labels, the **Required action**, typed ordering
 clues and hints. The action is an explicit author choice: the initials in a
 clue-consistent order must still spell it. Editing the action advances the
@@ -71,12 +80,16 @@ Edit the episode and export again to create a current result.
 
 ## Recoverable author drafts
 
-Bundled episodes save label edits, ordering clues, the required action, exact hint
-text, author-declared hint review, the frozen-label flag, and the revision in this
+Bundled episodes save the title, story, label edits, ordering clues, the required
+action, exact hint text, author-declared hint review, the frozen-label flag, and the revision in this
 browser. Wait for **Draft saved in this browser** before closing or reloading.
 Returning to an episode restores its own unfinished draft, including empty labels.
 Every restored revision needs a fresh check; drafts never store verification results.
 **Discard draft** resets only the selected episode to its bundled original.
+Earlier draft records still restore their edits together with their original
+source title and story. Reading them does not rewrite saved bytes; your next edit
+saves the current wording as well. Malformed new records retain the same explicit
+conflict and preservation behavior as earlier drafts.
 
 Drafts belong to the same browser profile and exact origin (scheme, host and port).
 Use the same `http://127.0.0.1:4173` address when returning. They are local convenience,
@@ -136,6 +149,13 @@ It exercises explicit action edits, player success and failure gates, actual
 export/reopen flows, interface-language preservation, and delayed completions.
 Its receipt and screenshots are evidence only after an actual successful run.
 
+The wording browser course uses those environment variables with
+`node tests/wording-receiver.mjs`. It exercises title/story edits, old and new local
+drafts, exact episode and comparison downloads, frozen and newly launched player
+scenes, interface language, and the 390px author flow. The separate
+`tests/wording.test.mjs` covers versioned draft shapes and conflict preservation.
+A maintained test script is not a claim that a receiving run has completed.
+
 The draft browser regression course uses the same runtime requirements:
 
 ```sh
@@ -146,8 +166,10 @@ node tests/receiver-drafts.mjs
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive
-entries use fixed timestamps, ordering and permissions with no compression. Its
-SHA256 is written to a separate `.sha256` file, never into its own manifest.
+entries use fixed timestamps, ordering and permissions with standard ZIP DEFLATE
+level 6 compression. Repeated builds from the same source and Python/zlib runtime
+are byte-identical; different compressor versions may encode the same contents
+differently. Its SHA256 is written to a separate `.sha256` file, never into its own manifest.
 Output must be outside the source directory and must not already exist. Missing
 output parent directories are created. Both archive and sidecar paths must be new.
 Keep receipts, screenshots, downloaded episodes, credentials and other private
@@ -201,7 +223,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.2-compat.5b858b51.
+the enclosing kit version is 0.3.3-compat.5b858b51.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.

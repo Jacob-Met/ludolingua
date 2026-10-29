@@ -6,6 +6,11 @@ export const spanish = Object.freeze({
 "Part of this conflict":"Parte de esta contradicción",
 "A detailed clue explanation is unavailable for this puzzle.":"No hay una explicación detallada de las pistas disponible para este puzle.",
 
+'THE PLAYER’S FIRST IMPRESSION':'LA PRIMERA IMPRESIÓN DE QUIEN JUEGA',
+'Set the scene':'Prepara la escena',
+'Edit the text players see. Checking the puzzle does not review its writing.':'Edita el texto que verá quien juegue. La comprobación del puzle no evalúa su redacción.',
+'Episode title':'Título del episodio',
+'Story for the player':'Historia para quien juega',
 "Local author draft":"Borrador local del autor",
 "Load saved draft":"Cargar borrador guardado",
 "Keep these edits":"Conservar estos cambios",

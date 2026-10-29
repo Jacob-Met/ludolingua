@@ -1,6 +1,9 @@
 import { canonicalJSON } from './export.mjs';
 
-export const DRAFT_SCHEMA = 'ludolingua.author-draft.v1';
+export const DRAFT_SCHEMA = 'ludolingua.author-draft.v2';
+const LEGACY_DRAFT_SCHEMA = 'ludolingua.author-draft.v1';
+const LEGACY_KEYS = ['schema', 'source', 'token', 'revision', 'cards', 'labelsFrozen', 'clues', 'hintText', 'hintReview', 'actionExpected'];
+const WORDING_KEYS = [...LEGACY_KEYS, 'title', 'story'];
 const SHA256 = /^[0-9a-f]{64}$/i;
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const isObject = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -13,6 +16,7 @@ function exactKeys(value, keys) {
 }
 function validSource(source) {
   if (!isObject(source) || !nonemptyString(source.id) || !positiveInteger(source.revision) ||
+      typeof source.title !== 'string' || typeof source.story !== 'string' ||
       !Array.isArray(source.cards) || source.cards.length < 2 || source.cards.length > 8 ||
       !isObject(source.constraints) || typeof source.constraints.labelsFrozen !== 'boolean' ||
       !isObject(source.action) || typeof source.action.expected !== 'string') return false;
@@ -23,7 +27,7 @@ function validSource(source) {
   }
   return true;
 }
-const REVIEW_REASONS = new Set(['Labels, ordering clues or hints changed.', 'Labels, required action, ordering clues or hints changed.']);
+const REVIEW_REASONS = new Set(['Labels, ordering clues or hints changed.', 'Labels, required action, ordering clues or hints changed.', 'Episode title or story changed.']);
 const CLUE_KINDS = new Set(['before', 'after', 'immediately_before']);
 const validHints = hints => Array.isArray(hints) && hints.every(hint => typeof hint === 'string');
 const hintsFromText = text => text.split('\n').filter(line => line.trim().length > 0);
@@ -48,8 +52,12 @@ function validHintReview(review, revision) {
     review.kind === 'author-self-declaration' && positiveInteger(review.revision) && review.revision <= revision;
 }
 function validRecord(record) {
-  if (!exactKeys(record, ['schema', 'source', 'token', 'revision', 'cards', 'labelsFrozen', 'clues', 'hintText', 'hintReview', 'actionExpected']) ||
-      record.schema !== DRAFT_SCHEMA || !exactKeys(record.source, ['id', 'sha256']) ||
+  if (!isObject(record)) return false;
+  const legacy = record.schema === LEGACY_DRAFT_SCHEMA;
+  if ((!legacy && record.schema !== DRAFT_SCHEMA) ||
+      !exactKeys(record, legacy ? LEGACY_KEYS : WORDING_KEYS) ||
+      (!legacy && (typeof record.title !== 'string' || typeof record.story !== 'string')) ||
+      !exactKeys(record.source, ['id', 'sha256']) ||
       !nonemptyString(record.source.id) || !validDigest(record.source.sha256) ||
       !nonemptyString(record.token) || !positiveInteger(record.revision) ||
       typeof record.labelsFrozen !== 'boolean' || typeof record.hintText !== 'string' || typeof record.actionExpected !== 'string' || !Array.isArray(record.cards) ||
@@ -76,6 +84,7 @@ export function draftKey(sourceId) {
 export function captureDraft(sourceEpisode, sourceSha256, editedEpisode, token, hintText) {
   if (!validSource(sourceEpisode) || !validHints(sourceEpisode.hints) || !validDigest(sourceSha256) ||
       !nonemptyString(token) || !isObject(editedEpisode) || !positiveInteger(editedEpisode.revision) ||
+      typeof editedEpisode.title !== 'string' || typeof editedEpisode.story !== 'string' ||
       editedEpisode.revision < sourceEpisode.revision || !Array.isArray(editedEpisode.cards) ||
       !matchingCards(editedEpisode.cards, sourceEpisode.cards) ||
       !editedEpisode.cards.every(card => isObject(card) && typeof card.label === 'string') ||
@@ -90,6 +99,7 @@ export function captureDraft(sourceEpisode, sourceSha256, editedEpisode, token, 
       !validHintReview(hintReview, editedEpisode.revision)) throw new TypeError('Invalid author draft hints or review.');
   const normalized = structuredClone(editedEpisode);
   normalized.revision = sourceEpisode.revision;
+  normalized.title = sourceEpisode.title; normalized.story = sourceEpisode.story;
   normalized.cards.forEach((card, index) => { card.label = sourceEpisode.cards[index].label; });
   normalized.constraints.labelsFrozen = sourceEpisode.constraints.labelsFrozen;
   normalized.clues = structuredClone(sourceEpisode.clues);
@@ -106,7 +116,8 @@ export function captureDraft(sourceEpisode, sourceSha256, editedEpisode, token, 
     cards: editedEpisode.cards.map(card => ({ id: card.id, label: card.label })),
     labelsFrozen: editedEpisode.constraints.labelsFrozen,
     clues: editedEpisode.clues.map(({ id, kind, left, right }) => ({ id, kind, left, right })),
-    hintText, hintReview: hintReview === null ? null : structuredClone(hintReview), actionExpected: editedEpisode.action.expected
+    hintText, hintReview: hintReview === null ? null : structuredClone(hintReview), actionExpected: editedEpisode.action.expected,
+    title: editedEpisode.title, story: editedEpisode.story
   };
 }
 
@@ -128,6 +139,8 @@ export function readDraft(raw, sourceEpisode, sourceSha256) {
     episode.constraints.labelsFrozen = record.labelsFrozen;
     episode.clues = structuredClone(record.clues); episode.hints = hintsFromText(record.hintText);
     episode.action.expected = record.actionExpected;
+    // Legacy drafts inherit wording only from their digest-bound source.
+    if (record.schema === DRAFT_SCHEMA) { episode.title = record.title; episode.story = record.story; }
     if (record.hintReview === null) delete episode.hintReview;
     else episode.hintReview = structuredClone(record.hintReview);
     return { state: 'ready', episode, hintText: record.hintText };
