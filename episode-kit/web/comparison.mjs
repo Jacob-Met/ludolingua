@@ -1,5 +1,5 @@
 import { EPISODES } from '../fixtures/episodes.mjs';
-import { clueText } from '../lib/engine.mjs';
+import { clueText, displayCardLabel } from '../lib/engine.mjs';
 import { compareEpisodes } from '../lib/compare.mjs';
 import { createComparisonExport, readComparisonExport } from '../lib/comparison-export.mjs';
 
@@ -25,7 +25,7 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
   }
   function preview(root, episode, label) {
     root.replaceChildren(node('p', t(label), 'eyebrow'), Object.assign(node('h4', episode.title), { lang: episode.locale }), node('p', t('{locale} · revision {revision}', { locale: episode.locale.toUpperCase(), revision: episode.revision }), 'small'));
-    const words = node('p', episode.cards.map(c => c.label).join(' / '), 'comparison-words');
+    const words = node('p', episode.cards.map(c => displayCardLabel(episode, c)).join(' / '), 'comparison-words');
     words.lang = episode.locale; root.append(words);
     const list = node('ol', undefined, 'clues'); list.lang = episode.locale;
     try { list.append(...episode.clues.map(c => node('li', clueText(episode, c)))); }
@@ -38,11 +38,11 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
     $('mapping-editor').replaceChildren(...source.cards.map((card, index) => {
       const row = node('div', undefined, 'mapping-row'); row.dataset.sourceId = card.id;
       const label = node('label'); label.htmlFor = `mapping-${index}`;
-      label.append(Object.assign(node('span', card.label), { lang: source.locale }), node('small', t('Source role: {id}', { id: card.id })));
+      label.append(Object.assign(node('span', displayCardLabel(source, card)), { lang: source.locale }), node('small', t('Source role: {id}', { id: card.id })));
       const select = node('select'); select.id = `mapping-${index}`;
-      select.setAttribute('aria-label', t('Adaptation role for {label}', { label: card.label }));
+      select.setAttribute('aria-label', t('Adaptation role for {label}', { label: displayCardLabel(source, card) }));
       const empty = node('option', t('Choose a matching role')); empty.value = ''; select.append(empty);
-      for (const c of target.cards) { const option = node('option', `${c.label} (${c.id})`); option.value = c.id; option.lang = target.locale; select.append(option); }
+      for (const c of target.cards) { const option = node('option', displayCardLabel(target, c) || c.id); option.value = c.id; option.lang = target.locale; select.append(option); }
       select.value = mapping.find(p => p.sourceId === card.id)?.targetId ?? '';
       select.addEventListener('change', () => {
         const pair = mapping.find(p => p.sourceId === card.id);
@@ -52,7 +52,7 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
       row.append(label, node('span', '→', 'mapping-arrow'), select); return row;
     }));
   }
-  function orderText(ep, ids) { return ids.map(id => ep.cards.find(c => c.id === id)?.label ?? id).join(' → '); }
+  function orderText(ep, ids) { return ids.map(id => { const card = ep.cards.find(c => c.id === id); return card ? displayCardLabel(ep, card) : id; }).join(' → '); }
   function renderResult() {
     const root = $('comparison-result'); const changesOpen = root.querySelector('details')?.open ?? false; root.replaceChildren();
     const heading = node('h4', t('Ready for a fresh comparison')); heading.id = 'comparison-status'; heading.dataset.preserved = 'unchecked'; root.append(heading);

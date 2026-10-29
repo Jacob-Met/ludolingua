@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.5-cohort-ui.19ac2731
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.6-card-identities.a10203ad
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -369,6 +369,24 @@ node tests/playtest-cohort-receiver.mjs
 It downloads real player journals, passes those files to the maintained CLI,
 checks duplicate and superseded snapshots, and rejects a corrupted record.
 Its receipt and screenshot describe an actual run only after it has completed.
+
+## Distinguishing repeated card names
+
+Clues, authoring choices, player controls, solution paths and recorded moves
+keep repeated card names distinct using their existing role IDs. If those names
+still repeat, a stable card number appears in brackets. These display cues
+follow the card when you move it. The authored label and its extracted initial
+stay unchanged.
+
+The card-identity browser receiver covers generated-name collisions, Unicode
+choices, keyboard movement, exported labels and recorded moves. Use the same
+existing Playwright/Chrome setup as the other browser receivers:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/card-identity-evidence \
+node tests/duplicate-label-receiver.mjs
+```
 
 ## Long imported content
 
