@@ -1,6 +1,6 @@
 {
   "name": "ludolingua-first-episode-contribution",
-  "version": "0.2.3-action.7ebe258e",
+  "version": "0.2.3",
   "private": true,
   "type": "module",
   "engines": { "node": ">=22" },

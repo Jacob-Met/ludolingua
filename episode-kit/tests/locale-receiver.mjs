@@ -118,6 +118,10 @@ try {
   checked('Switching language retains unchecked label/textarea drafts, blank lines, caret and disclosure state without resurrecting validation');
 
   await page.selectOption('#case-select', 'es-adapted');
+  assert.equal(await page.locator('#label-1').inputValue(), 'Bote');
+  await page.click('#discard-draft');
+  await page.locator('#draft-status[data-state="discarded"]').waitFor();
+  assert.equal(await page.locator('#label-1').inputValue(), 'Barco');
   await page.click('#player-tab');
   assert.doesNotMatch(await page.locator('body').innerText(), /\bABRE\b/);
   await page.fill('#answer', 'abre'); await page.locator('#answer').press('Enter');
