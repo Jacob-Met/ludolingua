@@ -14,7 +14,7 @@ Open the printed loopback URL. Start with the English source, compare the litera
 
 See [episode-kit/README.md](episode-kit/README.md) for CLI use, precise normalization rules, verification and packaging. The release archive contains the runnable source and a file manifest.
 
-Version 0.2.2 lets authors explicitly edit the required action alongside labels,
+Version 0.2.3-action.7ebe258e lets authors explicitly edit the required action alongside labels,
 clues and hints. Every action edit clears earlier episode and comparison checks
 and resets the player. Recheck and export to carry the authored action into a
 verified receiving flow; matching mechanics still leaves human review open.

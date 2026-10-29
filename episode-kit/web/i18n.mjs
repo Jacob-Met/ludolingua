@@ -2,6 +2,7 @@
 export const spanish = Object.freeze({
 'Required action':'Acción requerida',
 'Set the action the ordered initials must spell. Changing it requires a fresh check and a review of the hints.':'Indica la acción que deben formar las iniciales ordenadas. Cambiarla requiere una nueva comprobación y revisar las ayudas.',
+'The order fits the clues. Try the action again using its initials.':'El orden cumple las pistas. Intenta de nuevo la acción usando sus iniciales.',
 'LUDOLINGUA · Episode workbench':'LUDOLINGUA · Taller de episodios',
 'An original puzzle episode for testing what survives localization: clues, discovery, and the action hidden in the cards.':'Un episodio original para explorar qué se conserva al localizar un puzle: las pistas, el descubrimiento y la acción oculta en las tarjetas.',
 'Interface language':'Idioma de la interfaz',

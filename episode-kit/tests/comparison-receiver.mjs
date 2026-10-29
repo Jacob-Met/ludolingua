@@ -15,7 +15,7 @@ async function compare(){await page.click('#compare-button');}
 async function metric(name,value){assert.equal((await page.locator(`#comparison-result [data-metric="${name}"]`).innerText()).trim(),String(value));}
 async function addClue(left,kind,right){await page.click('#add-clue');const row=page.locator('#clue-editor .clue-row').last();await row.locator('select[data-field="left"]').selectOption(left);await row.locator('select[data-field="kind"]').selectOption(kind);await row.locator('select[data-field="right"]').selectOption(right);}
 try{
- browser=await chromium.launch({headless:true,executablePath:'/usr/bin/google-chrome-stable',chromiumSandbox:true,args:['--disable-dev-shm-usage']});
+ browser=await chromium.launch({headless:true,executablePath:'/usr/bin/google-chrome-stable',chromiumSandbox:true,args: ['--disable-dev-shm-usage', '--enable-automation']});
  const cdp=await browser.newBrowserCDPSession(),cmd=await cdp.send('Browser.getBrowserCommandLine');assert.equal(cmd.arguments.some(x=>x==='--no-sandbox'||x==='--disable-setuid-sandbox'),false);
  const context=await browser.newContext({viewport:{width:1280,height:1000},acceptDownloads:true});page=await context.newPage();await page.goto('chrome://sandbox');const sandbox=await page.locator('body').innerText();assert.match(sandbox,/Seccomp-BPF sandbox\s+Yes/i);receipt.sandbox=sandbox;
  page.on('pageerror',e=>receipt.errors.push(String(e)));page.on('console',m=>{if(m.type()==='error')receipt.errors.push(m.text());});page.on('requestfailed',r=>receipt.failedRequests.push({url:r.url(),error:r.failure()?.errorText}));

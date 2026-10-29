@@ -167,7 +167,13 @@ function renderReveal() {
 }
 $('answer-form').addEventListener('submit', event => {
   event.preventDefault(); const attempt = checkAttempt(episode, order, $('answer').value);
-  playerFeedbackKey = attempt.success ? 'The action works. Your order fits the clues and its initials match.' : !attempt.cluesSatisfied ? 'This order does not yet satisfy all the clues.' : 'The order fits the clues, but the action does not match. This adaptation may need changes.';
+  playerFeedbackKey = attempt.success
+    ? 'The action works. Your order fits the clues and its initials match.'
+    : !attempt.cluesSatisfied
+      ? 'This order does not yet satisfy all the clues.'
+      : !attempt.tokenMatches
+        ? 'The order fits the clues, but the action does not match. This adaptation may need changes.'
+        : 'The order fits the clues. Try the action again using its initials.';
   renderPlayerFeedback();
 });
 $('reveal-button').addEventListener('click', () => { revealedResult = analyzeEpisode(episode); $('reveal').hidden = false; renderReveal(); });
