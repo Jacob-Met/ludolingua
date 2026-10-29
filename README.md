@@ -50,6 +50,11 @@ Author draft recovery does not save separate player journals: download the play
 record before closing its window. See the kit README for storage limits, conflict
 controls and draft receiving instructions.
 
+Version 0.3.1 adds bounded author guidance for inconsistent clues: one proven
+conflicting set, current labels and direct links to the relevant editor controls.
+It clears on edits and leaves analysis, checked exports and captured play sessions
+unchanged. Other conflicts can remain; this does not identify the author's intent.
+
 ## What is established
 
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.

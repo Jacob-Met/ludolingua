@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.0
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.1
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -201,7 +201,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.0.
+the enclosing kit version is 0.3.1.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -283,4 +283,35 @@ as the other browser receivers and keep its evidence outside the source tree:
 PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
 LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/content-evidence \
 node tests/content-receiver.mjs
+```
+
+
+## Find a conflicting set of clues
+
+When a valid episode has no clue-consistent order, the author result can show one
+proven conflicting set using the current labels and clue numbers. **Edit clue**
+focuses that clue's left-card control; a text badge and outline identify all
+participating rows. Editing clears the explanation and requires a fresh check.
+Interface changes translate the guidance while preserving the authored clue text.
+The explanation is hidden with the other author controls in player mode.
+
+The selected set cannot all hold together. It does not identify the author's
+mistake, prove a globally smallest or unique conflict, or guarantee that one edit
+resolves every contradiction. It uses the same ordering predicate as the verifier,
+including adjacency. Required-action mismatch and ambiguity are separate outcomes.
+Malformed or unfinished clues remain on the ordinary invalid-input path.
+
+Diagnostic work is bounded across all searches (at most 1,000 raw clues, 64 distinct
+constraints, 50,000 visited full orders and 200,000 predicate evaluations). If that
+budget is insufficient, the result keeps the accurate inconsistency finding and
+says that a detailed explanation is unavailable; it does not display a partial
+proof. Analysis and exported verification fields remain unchanged. A checked
+negative result can still be exported and verified on reopening.
+
+The clue-diagnostic receiver uses the existing Playwright/Chrome setup:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/clue-evidence \
+node tests/clue-conflict-receiver.mjs
 ```

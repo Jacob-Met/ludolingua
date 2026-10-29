@@ -39,9 +39,16 @@ function fullOrder(e, order) {
   return Array.isArray(order) && order.length === e.cards.length && new Set(order).size === order.length && order.every(id => e.cards.some(c => c.id === id));
 }
 function token(e, order) { const cards = new Map(e.cards.map(c => [c.id,c.label])); return order.map(id => initial(cards.get(id))).join(''); }
+export function matchesClue(clue, positions) {
+  return clue.kind === 'before'
+    ? positions.get(clue.left) < positions.get(clue.right)
+    : clue.kind === 'after'
+      ? positions.get(clue.left) > positions.get(clue.right)
+      : positions.get(clue.left) + 1 === positions.get(clue.right);
+}
 function satisfies(e, order) {
-  const pos = new Map(order.map((id,i) => [id,i]));
-  return e.clues.every(c => c.kind === 'before' ? pos.get(c.left) < pos.get(c.right) : c.kind === 'after' ? pos.get(c.left) > pos.get(c.right) : pos.get(c.left) + 1 === pos.get(c.right));
+  const positions = new Map(order.map((id, index) => [id, index]));
+  return e.clues.every(clue => matchesClue(clue, positions));
 }
 export function extractToken(e, order) {
   if (!validateEpisode(e).valid || !fullOrder(e,order)) throw new Error('Expected a valid episode and full card permutation.');
