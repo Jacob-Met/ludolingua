@@ -14,6 +14,12 @@ Open the printed loopback URL. Start with the English source, compare the litera
 
 See [episode-kit/README.md](episode-kit/README.md) for CLI use, precise normalization rules, verification and packaging. The release archive contains the runnable source and a file manifest.
 
+The author workbench also lets you edit the episode title and story directly.
+Wording edits preserve their exact text in drafts and exports, clear prior checks,
+and leave an already-open player's captured scene unchanged. Earlier local drafts
+still reopen with the wording of their original bundled episode. Empty wording can
+be saved as an unfinished draft, but needs completion before episode verification.
+
 The integrated action-authoring controls let authors explicitly edit the required
 action alongside labels, clues and hints. Every action edit clears earlier
 episode and comparison checks and resets the workbench player. An already-open
