@@ -35,13 +35,12 @@ def main():
     if any(name == 'MANIFEST.json' for name, _ in files):
         raise ValueError('MANIFEST.json is generated; remove pre-existing copy')
     files.append(('MANIFEST.json', (json.dumps(manifest, sort_keys=True, indent=2) + '\n').encode()))
-    with zipfile.ZipFile(output, 'x', compression=zipfile.ZIP_STORED) as archive:
+    with zipfile.ZipFile(output, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
         for name, data in sorted(files):
             info = zipfile.ZipInfo('episode-kit/' + name, date_time=(1980, 1, 1, 0, 0, 0))
             info.create_system = 3
             info.external_attr = 0o100644 << 16
-            info.compress_type = zipfile.ZIP_STORED
-            archive.writestr(info, data)
+            archive.writestr(info, data, compress_type=zipfile.ZIP_DEFLATED, compresslevel=6)
     digest = hashlib.sha256(output.read_bytes()).hexdigest()
     with sidecar.open('x') as stream:
         stream.write(digest + '  ' + output.name + '\n')
