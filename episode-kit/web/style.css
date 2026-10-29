@@ -30,3 +30,5 @@ textarea{font:inherit;resize:vertical;width:100%;min-height:110px;border:1px sol
 
 /* A demonstrated conflict is author guidance, distinct from puzzle validation. */
 .clue-conflict{margin:22px 0;padding:18px;border:1px solid #b76d54;border-radius:12px;background:var(--white);overflow-wrap:anywhere}.clue-conflict h4{margin-top:0}.clue-conflict ul{margin:16px 0 0;padding-left:20px}.clue-conflict li+li{margin-top:16px}.clue-conflict li p{margin:0 0 5px}.clue-row.in-conflict{outline:2px solid #a44e36;outline-offset:1px}.clue-conflict-badge{display:inline-block;grid-column:1/-1;font-size:12px;font-weight:600;color:#7c3222;overflow-wrap:anywhere}
+
+.playtest-events .playtest-order{margin:2px 0 1px;font-size:12px;overflow-wrap:anywhere;color:var(--ink)}.playtest-events .playtest-attempt-result{margin:2px 0 8px;font-size:12px;font-weight:600;color:var(--green)}
