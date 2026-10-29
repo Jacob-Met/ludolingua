@@ -5,6 +5,7 @@ import { explainClueConflict } from '../lib/clue-conflict.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
 import { setupPlaytest } from './playtest-author.mjs';
+import { setupPortableAuthor } from './portable-author.mjs';
 import { setupPlaytestCohort } from './playtest-cohort.mjs';
 import { createFixtureDrafts } from './draft-controller.mjs';
 import { translate, translateDiagnostic, supportedLocale } from './i18n.mjs';
@@ -290,6 +291,7 @@ $('import-file').addEventListener('change', async () => {
 comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode: ep => selectEpisode(ep, true), rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
 playtestController = setupPlaytest({ getEpisode: () => episode, notice, maxBytes: MAX_EXPORT_BYTES, t, diagnostic, getUILocale: () => uiLocale });
 playtestCohortController = setupPlaytestCohort({ t, diagnostic });
+setupPortableAuthor({ getEpisode: () => episode, getUILocale: () => uiLocale, notice, maxBytes: MAX_EXPORT_BYTES });
 function renderDigest() { $('digest').textContent = digest ? t(digestKey, { hash: digest }) : ''; }
 function relocalize() {
   // Locale is presentation state: do not alter version, revisions, checks or import epochs.

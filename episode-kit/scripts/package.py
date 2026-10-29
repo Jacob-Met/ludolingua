@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Produce deterministic ZIP plus a sidecar archive hash; Python stdlib only."""
+"""Produce a deterministic ZIP plus sidecar hash after the Node.js bundle check."""
 import argparse
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 import zipfile
 
@@ -17,6 +18,16 @@ def main():
     sidecar = output.with_name(output.name + '.sha256')
     if output.exists() or sidecar.exists():
         parser.error('Archive and hash sidecar must both be new paths')
+    try:
+        checked = subprocess.run(
+            ['node', 'scripts/build-player-bundle.mjs', '--check'],
+            cwd=root, capture_output=True, text=True, check=False,
+        )
+    except OSError as error:
+        parser.error('Cannot check the portable player bundle. Node.js 22 or later must be available: ' + str(error))
+    if checked.returncode != 0:
+        detail = checked.stderr.strip() or checked.stdout.strip() or ('checker exited with status ' + str(checked.returncode))
+        parser.error('Portable player bundle check failed: ' + detail)
     output.parent.mkdir(parents=True, exist_ok=True)
     files = []
     for path in sorted(root.rglob('*')):
