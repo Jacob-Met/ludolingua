@@ -55,10 +55,10 @@ export function clueText(e,c) {
   return `${left.label} ${relations[c.kind]} ${right.label}.`;
 }
 export function checkAttempt(e,order,answer) {
-  const fail = {orderValid:false,cluesSatisfied:false,token:'',answerMatches:false,success:false};
+  const fail = {orderValid:false,cluesSatisfied:false,token:'',tokenMatches:false,answerMatches:false,success:false};
   if (!validateEpisode(e).valid || !fullOrder(e,order) || typeof answer !== 'string') return fail;
-  const t = token(e,order), cluesSatisfied = satisfies(e,order), answerMatches = norm(answer) === norm(e.action.expected);
-  return {orderValid:true,cluesSatisfied,token:t,answerMatches,success:cluesSatisfied && answerMatches && t === norm(e.action.expected)};
+  const t = token(e,order), cluesSatisfied = satisfies(e,order), tokenMatches = t === norm(e.action.expected), answerMatches = norm(answer) === norm(e.action.expected);
+  return {orderValid:true,cluesSatisfied,token:t,tokenMatches,answerMatches,success:cluesSatisfied && answerMatches && tokenMatches};
 }
 export function analyzeEpisode(e) {
   const validation = validateEpisode(e);

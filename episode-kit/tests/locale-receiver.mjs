@@ -44,7 +44,7 @@ async function releaseFileRead() {
   await page.evaluate(() => { window.releaseLocaleImport(); delete window.releaseLocaleImport; });
 }
 try {
-  browser = await chromium.launch({ headless: true, executablePath: '/usr/bin/google-chrome-stable', chromiumSandbox: true, args: ['--disable-dev-shm-usage'] });
+  browser = await chromium.launch({ headless: true, executablePath: '/usr/bin/google-chrome-stable', chromiumSandbox: true, args: ['--disable-dev-shm-usage', '--enable-automation'] });
   const cdp = await browser.newBrowserCDPSession(), command = await cdp.send('Browser.getBrowserCommandLine');
   assert.equal(command.arguments.some(x => x === '--no-sandbox' || x === '--disable-setuid-sandbox'), false);
   const context = await browser.newContext({ locale: 'es-MX', viewport: { width: 1280, height: 1000 }, acceptDownloads: true });
@@ -127,7 +127,7 @@ try {
   for (let i = 0; i < 3; i++) await page.keyboard.press('Space');
   assert.deepEqual(await page.locator('.keeper-label').allTextContents(), ['Agua', 'Barco', 'Roca', 'Estrella']);
   await page.fill('#answer', 'cerrar'); await page.locator('#answer').press('Enter');
-  await page.locator('#player-feedback').filter({ hasText: 'acción no coincide' }).waitFor();
+  assert.equal(await page.locator('#player-feedback').innerText(), 'El orden cumple las pistas. Intenta de nuevo la acción usando sus iniciales.');
   await page.click('#hint-button');
   const hint = await page.locator('#hints').innerText();
   await page.locator('#answer').focus();
@@ -139,7 +139,7 @@ try {
   assert.equal(await page.locator('#answer').inputValue(), 'cerrar');
   assert.equal(await page.locator('#hints').innerText(), hint);
   assert.deepEqual(await page.locator('.keeper-label').allTextContents(), ['Agua', 'Barco', 'Roca', 'Estrella']);
-  assert.match(await page.locator('#player-feedback').innerText(), /action does not match/);
+  assert.equal(await page.locator('#player-feedback').innerText(), 'The order fits the clues. Try the action again using its initials.');
   assert.equal(await page.locator('#reveal').isVisible(), false);
   await language('es');
   await page.fill('#answer', 'abre'); await page.locator('#answer').press('Enter');

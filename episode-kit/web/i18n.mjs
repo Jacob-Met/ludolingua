@@ -1,5 +1,6 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+'The order fits the clues. Try the action again using its initials.':'El orden cumple las pistas. Intenta de nuevo la acción usando sus iniciales.',
 'LUDOLINGUA · Episode workbench':'LUDOLINGUA · Taller de episodios',
 'An original puzzle episode for testing what survives localization: clues, discovery, and the action hidden in the cards.':'Un episodio original para explorar qué se conserva al localizar un puzle: las pistas, el descubrimiento y la acción oculta en las tarjetas.',
 'Interface language':'Idioma de la interfaz',
