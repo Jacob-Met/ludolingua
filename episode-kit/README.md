@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.0
+# LUDOLINGUA episode, comparison and playtest kit — 0.4.0
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -201,7 +201,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.0.
+the enclosing kit version is 0.4.0.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -284,3 +284,54 @@ PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
 LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/content-evidence \
 node tests/content-receiver.mjs
 ```
+
+## Search your supplied vocabulary
+
+Version 0.4.0 adds **Try your own vocabulary choices** to the author view. It
+searches label alternatives you supply while preserving the episode's roles,
+typed clues, extraction rules and required action. It does not generate words
+or translate content with a model.
+
+1. Enter additional labels for each role, one per line. The current label is
+   included automatically; blank-only lines are ignored and exact duplicates
+   removed. Nonblank label strings are not silently trimmed or normalized by
+   this editor, so whitespace differences still count as changed strings.
+2. Lock any role whose current label must stay. **Freeze these labels** applies
+   globally: all role locks appear checked and disabled, and the search permits
+   only current labels. Explicitly unfreeze through the existing author control
+   to consider changes; your individual lock choices are retained.
+3. Set **Maximum changed labels**, an integer from zero to the number of roles.
+   Cost counts labels that differ as exact strings from the current revision.
+   It does not measure semantic distance, translation quality or difficulty.
+4. Choose **Search supplied choices**. Inspect the counts, proposed labels and
+   token. Use **Use these labels as a fresh revision** only when you want to
+   adopt that complete assignment.
+
+The search supports at most **16 distinct labels per role**, including the
+automatically included baseline, and **4,096 complete assignments after locks**.
+It requires exactly one clue-consistent order before looking at the action:
+an expected answer cannot resolve ambiguous clues. Above the assignment limit,
+the search returns a limit result without partial candidates. Reduce choices
+or lock roles; a limit result is not evidence that no solution exists.
+
+Within those bounds the search examines the full supplied space. It retains
+all mechanically feasible alternatives within the edit budget, ordered first
+by changed-string count and then by deterministic label ordering. The minimum
+changed-label count is reported separately. The UI shows 20 candidates at a
+time; **Show next 20 candidates** reveals more without narrowing the search.
+An infeasible result applies only to this supplied vocabulary, locks and budget,
+not to every possible vocabulary. Global freeze may still yield an unchanged
+working baseline, or no feasible assignment if that baseline fails the action.
+
+Applying is explicit and creates a new authored revision. It invalidates prior
+episode/comparison checks, resets the workbench player, and marks hints for
+author review. Review story, meanings and hints; run a fresh episode check and
+comparison, then export or open a new separate playtest. An already-open
+playtest retains its captured revision. A mechanical candidate is not approval
+of meaning, language quality, cultural suitability or comparable difficulty.
+
+Candidate menus, locks and budgets are ephemeral UI state, not saved author
+drafts or exported search evidence. Edits invalidate old results; same-episode
+refreshes retain your menu, while a different episode/role set resets it.
+Applied episode changes follow the existing author draft/export rules. No
+model inference or human qualification is established by this search.

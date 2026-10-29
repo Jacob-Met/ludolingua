@@ -1,5 +1,43 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"Try your own vocabulary choices":"Prueba tus propias opciones de vocabulario",
+"The encoded clues admit no order. Repair the clues before searching vocabulary.":"Las pistas codificadas no admiten ningún orden. Corrige las pistas antes de buscar vocabulario.",
+"Episode labels are frozen. Unfreeze them explicitly before applying changed labels.":"Las etiquetas del episodio están bloqueadas. Desbloquéalas explícitamente antes de aplicar etiquetas diferentes.",
+"Keep the clues and action fixed. Supply labels you are willing to consider, lock roles, and limit changed strings.":"Conserva las pistas y la acción. Propón etiquetas, bloquea roles y limita los cambios de texto.",
+"Maximum changed labels":"Máximo de etiquetas modificadas",
+"Search supplied choices":"Buscar entre las opciones propuestas",
+"Current label is included automatically: {label}":"La etiqueta actual se incluye automáticamente: {label}",
+"Additional choices · one label per line":"Opciones adicionales · una etiqueta por línea",
+"Keep this role’s current label":"Conservar la etiqueta actual de este rol",
+"Supply choices, then search this revision. Previous candidates do not approve new edits.":"Propón opciones y busca en esta revisión. Los candidatos anteriores no validan cambios nuevos.",
+"Mechanical candidates found within your supplied choices":"Candidatos mecánicos encontrados entre tus opciones",
+"No candidate satisfies these supplied choices, locks and budget":"Ningún candidato cumple estas opciones, bloqueos y presupuesto",
+"The clues must determine one order before this search":"Las pistas deben determinar un único orden antes de esta búsqueda",
+"This candidate space exceeds the bounded search limit":"Estas opciones superan el límite de búsqueda",
+"Check the episode and candidate inputs":"Revisa el episodio y las opciones introducidas",
+"Assignments: {total} · examined: {examined} · within budget: {eligible}":"Combinaciones: {total} · examinadas: {examined} · dentro del presupuesto: {eligible}",
+"Complete only for the supplied vocabulary, locks and budget.":"Completa solo para el vocabulario, los bloqueos y el presupuesto indicados.",
+"Search incomplete or unsupported; no general impossibility claim.":"Búsqueda incompleta o no admitida; no demuestra una imposibilidad general.",
+"Reduce choices or lock roles: at most {count} assignments after locks.":"Reduce las opciones o bloquea roles: máximo de {count} combinaciones tras los bloqueos.",
+"{count} candidates; minimum changed labels: {cost}. Cost counts changed strings, not semantic distance or quality.":"{count} candidatos; mínimo de etiquetas modificadas: {cost}. El coste cuenta textos cambiados, no distancia semántica ni calidad.",
+"{count} changed labels · token {token}":"{count} etiquetas modificadas · resultado {token}",
+"Use these labels as a fresh revision":"Usar estas etiquetas en una revisión nueva",
+"Show next 20 candidates":"Mostrar los próximos 20 candidatos",
+"These are mechanical alternatives, not translations or language-quality recommendations. Review story, meanings and hints; compare and playtest the chosen revision.":"Son alternativas mecánicas, no traducciones ni recomendaciones de calidad lingüística. Revisa la historia, los significados y las pistas; compara y prueba la revisión elegida.",
+"At most {labels} distinct labels per role, including its current label; {assignments} assignments after locks.":"Máximo de {labels} etiquetas distintas por rol, incluida la actual; {assignments} combinaciones tras los bloqueos.",
+"The episode changed. Search its current revision again.":"El episodio ha cambiado. Vuelve a buscar en la revisión actual.",
+"Enter a whole-number edit budget within the role count.":"Introduce un presupuesto entero entre cero y el número de roles.",
+"Vocabulary choices stay in this tab. Apply a candidate, then use the episode’s usual save or export path to keep its labels.":"Las opciones de vocabulario se conservan en esta pestaña. Aplica un candidato y usa el guardado o la exportación habitual del episodio para conservar sus etiquetas.",
+"Candidate labels must cover every current role exactly once.":"Las etiquetas candidatas deben cubrir cada rol actual exactamente una vez.",
+"Request must contain exactly domains, lockedCardIds and maxChangedLabels.":"La solicitud debe contener exactamente domains, lockedCardIds y maxChangedLabels.",
+"Supply exactly one domain for every card role.":"Propón exactamente un conjunto de opciones para cada rol.",
+"Each domain must have exactly cardId and labels and refer to a distinct existing role.":"Cada conjunto debe contener exactamente cardId y labels y referirse a un rol existente distinto.",
+"Each role needs 1..16 candidate labels.":"Cada rol necesita entre 1 y 16 etiquetas candidatas.",
+"Candidate labels must be distinct exact strings within each role.":"Las etiquetas candidatas de cada rol deben ser textos distintos.",
+"Candidate labels must start with a Unicode letter after trimming and NFC normalization.":"Las etiquetas candidatas deben comenzar por una letra Unicode después de quitar espacios externos y normalizar a NFC.",
+"Domains do not cover every role.":"Las opciones no cubren todos los roles.",
+"lockedCardIds must contain distinct existing role IDs.":"lockedCardIds debe contener identificadores distintos de roles existentes.",
+"maxChangedLabels must be an integer from zero to the card count.":"maxChangedLabels debe ser un entero entre cero y el número de tarjetas.",
 "Local author draft":"Borrador local del autor",
 "Load saved draft":"Cargar borrador guardado",
 "Keep these edits":"Conservar estos cambios",
@@ -114,7 +152,7 @@ export function translateDiagnostic(locale, message) {
   if (supportedLocale(locale) === 'en') return text;
   if (Object.hasOwn(spanish, text)) return spanish[text];
   // Only parse explicitly emitted diagnostic prefixes; preserve unknown engine/browser text.
-  for (const [prefix, translated] of [['Invalid episode: ', 'Episodio no válido: '], ['Invalid comparison: ', 'Comparación no válida: '], ['Source: ', 'Origen: '], ['Target: ', 'Destino: ']]) {
+  for (const [prefix, translated] of [['Episode: ', 'Episodio: '], ['Invalid episode: ', 'Episodio no válido: '], ['Invalid comparison: ', 'Comparación no válida: '], ['Source: ', 'Origen: '], ['Target: ', 'Destino: ']]) {
     if (text.startsWith(prefix)) return translated + text.slice(prefix.length).split('; ').map(part => translateDiagnostic(locale, part)).join('; ');
   }
   const field = /^(id|title|story) must be nonempty text\.$/.exec(text);

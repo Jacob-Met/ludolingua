@@ -52,6 +52,16 @@ controls and draft receiving instructions.
 
 ## What is established
 
+Version 0.4.0 adds bounded search over vocabulary choices supplied by the author.
+Keep current labels available, lock roles and set a changed-label budget, then
+inspect all mechanically feasible assignments in that finite space. The search
+requires a unique clue order, permits at most 16 labels per role and 4,096
+assignments after locks, and orders results by changed-string count rather than
+meaning or quality. Applying a candidate creates a fresh revision that needs
+the existing review, check, comparison, export and playtest flow. Vocabulary
+menus are ephemeral; this is not model-generated translation or a claim of
+semantic equivalence. See the kit README for global freeze, limits and pagination.
+
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.
 
 This is a first-episode contribution, not the full LUDOLINGUA product. The examples are authored; NVIDIA/Nebius inference, native-language human playtests, cultural suitability and comparable difficulty are not established. The Spanish adaptation changes the card referents explicitly. Mechanical success is narrower than a successful localization.

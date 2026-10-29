@@ -117,6 +117,7 @@ try{
     const states=await Promise.all([a,b].map(p=>p.locator('#draft-status').getAttribute('data-state')));
     assert.deepEqual([...states].sort(),['conflict','saved']);
     const winner=states[0]==='saved'?a:b,loser=states[0]==='saved'?b:a,winningRaw=await raw(winner);
+    await loser.bringToFront();
     await loser.setViewportSize({width:390,height:844});
     assert.equal(await loser.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);
     await loser.locator('.draft-strip').screenshot({path:join(evidence,'draft-conflict-mobile.png')});

@@ -1,8 +1,10 @@
 import { EPISODES } from '../fixtures/episodes.mjs';
 import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
+import { validateEpisode } from '../lib/engine.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
 import { setupPlaytest } from './playtest-author.mjs';
+import { setupAdaptation } from './adaptation.mjs';
 import { createFixtureDrafts } from './draft-controller.mjs';
 import { translate, translateDiagnostic, supportedLocale } from './i18n.mjs';
 
@@ -11,7 +13,7 @@ const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
-let comparisonController, playtestController;
+let comparisonController, playtestController, adaptationController;
 let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
 let uiLocale = supportedLocale((navigator.language ?? 'en').split('-')[0].toLowerCase());
 let noticeState = { key: '', error: false, values: {} }, digestKey = 'Checked source · SHA-256 {hash}';
@@ -40,7 +42,7 @@ function changed({ reviewHints = false } = {}) {
   if (reviewHints) episode.hintReview = { status: 'needs-author-review', kind: 'author-self-declaration', reason: 'Labels, required action, ordering clues or hints changed.' };
   episode.revision += 1; version += 1; result = null; digest = ''; revision(); renderResult();
   $('digest').textContent = ''; $('export-button').disabled = true;
-  clues($('author-clues')); refreshClueLabels(); renderHintReview(); comparisonController?.refreshTarget(); resetPlayer(); notice('This revision needs a new check. Previous results do not approve these edits.');
+  clues($('author-clues')); refreshClueLabels(); renderHintReview(); comparisonController?.refreshTarget(); adaptationController?.refreshEpisode(); resetPlayer(); notice('This revision needs a new check. Previous results do not approve these edits.');
   if (editingImport) { importedEpisode = clone(episode); importedHintText = editorHintText; }
   else drafts.changed(episode, editorHintText);
 }
@@ -138,7 +140,7 @@ function installEpisode(ep, hintText = ep.hints.join('\n')) {
   $('episode-locale').textContent = t(episode.locale === 'es' ? 'SPANISH / ORIGINAL PUZZLE MATERIAL' : 'ENGLISH / ORIGINAL PUZZLE MATERIAL');
   $('episode-title').textContent = episode.title; $('episode-title').lang = episode.locale; $('episode-story').textContent = episode.story;
   $('episode-story').lang = episode.locale; $('answer').lang = episode.locale; $('digest').textContent = ''; $('export-button').disabled = true;
-  renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); notice('');
+  renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); adaptationController?.refreshEpisode(); notice('');
 }
 function selectEpisode(ep, detached = false, hintText = ep.hints.join('\n')) {
   editingImport = detached;
@@ -246,6 +248,7 @@ function relocalize() {
     renderResult(); renderDigest(); drawPlayer(); renderPlayerFeedback(); renderReveal(); comparisonController?.relocalize();
   }
   playtestController?.relocalize();
+  adaptationController?.relocalize();
   renderNotice(); drafts.relocalize();
   let focus = active?.isConnected ? active : focusId ? $(focusId) : null;
   if (!focus && move) focus = [...$('player-order').children].find(row => row.dataset.cardId === move.card)?.querySelector(`[data-direction="${move.direction}"]`);
@@ -256,4 +259,27 @@ $('ui-language').addEventListener('change', () => { uiLocale = supportedLocale($
 const initialEpisode = EPISODES.find(ep => ep.id === drafts.selectedId) ?? EPISODES[0];
 $('case-select').value = initialEpisode.id;
 selectEpisode(initialEpisode);
+adaptationController = setupAdaptation({
+  getEpisode: () => episode,
+  getRevisionToken: () => version,
+  notice, t, diagnostic,
+  applyCandidate(candidate) {
+    // Validate the complete proposed labels before the first mutation. The UI
+    // separately binds this choice to the current revision and source snapshot.
+    if (!candidate || !Array.isArray(candidate.labels) || candidate.labels.length !== episode.cards.length) throw new Error('Candidate labels must cover every current role exactly once.');
+    const roles = new Set(episode.cards.map(card => card.id)), replacements = new Map();
+    for (const entry of candidate.labels) {
+      if (!entry || typeof entry !== 'object' || Array.isArray(entry) || typeof entry.cardId !== 'string' || !roles.has(entry.cardId) || replacements.has(entry.cardId) || typeof entry.label !== 'string') throw new Error('Candidate labels must cover every current role exactly once.');
+      replacements.set(entry.cardId,entry.label);
+    }
+    const cards = episode.cards.map(card => ({...card,label:replacements.get(card.id)}));
+    if (episode.constraints.labelsFrozen && cards.some((card,index) => card.label !== episode.cards[index].label)) throw new Error('Episode labels are frozen. Unfreeze them explicitly before applying changed labels.');
+    const validation = validateEpisode({...episode,cards});
+    if (!validation.valid) throw new Error(validation.errors.join('; '));
+    episode.cards = cards;
+    changed({reviewHints:true});
+    renderEditor();
+    $('editor-heading').focus();
+  }
+});
 relocalize();
