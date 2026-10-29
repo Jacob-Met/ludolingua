@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.1
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.4-cohort.19ac2731
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -223,7 +223,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.3-compat.5b858b51.
+the enclosing kit version is 0.3.4-cohort.19ac2731.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -288,6 +288,57 @@ credential. Even a journal without a recorded reveal does not establish an
 unaided attempt or rule out assistance outside the player window. Hashes make
 content changes detectable against their retained binding; they are not signatures
 and cannot authenticate the client that authored a consistent record.
+
+## Summarize downloaded play records
+
+Keep each player's downloaded record JSON, then summarize the files through the
+maintained CLI:
+
+```sh
+node cli.mjs playtest-cohort player-a.json player-b.json
+```
+
+The standalone `node playtest-cohort.mjs <record1.json> [record2.json ...]`
+entry point produces the same report. Every input passes through the maintained
+record reader, including its narrow support for historical 0.1.0 records.
+Altered bindings, replay results, or evidence claims reject the entire request.
+Exit 0 means every input was verified; it does not mean a player succeeded.
+Exit 1 emits an error without a partial cohort report.
+
+Reports group the exact captured episode content by SHA-256. Two episodes with
+the same displayed ID or revision but different content remain separate.
+Repeated downloads of one session count once. If one download extends an earlier
+journal from that session, the longest valid history supplies its totals;
+`duplicateFiles` counts additional copies of the same verified normalized
+journal, including equivalent historical and current encodings.
+`supersededSnapshots` counts distinct shorter prefixes that did not add sessions.
+Conflicting histories or episode content under one session ID reject the entire
+report. Session IDs are client-created labels, so distinct IDs do not establish
+distinct people.
+
+Each group reports recorded attempts, successful attempts, moves, hints and
+resets, plus the number of sessions containing a success, hint or reveal. An
+earlier success still counts when a later attempt failed; a reset does not erase
+recorded assistance. Empty journals remain valid unfinished sessions with zero
+attempts. Self-reported elapsed times are deliberately excluded.
+
+The CLI accepts 1–100 regular files and checks their sizes before reading:
+at most 20 MB per file and 40 MB combined. Keep the downloaded files unchanged
+during the command. The exported report preserves explicit limitations: these
+client-recorded outcomes do not establish human identity, unaided solving,
+native-language proficiency, translation quality or comparable difficulty.
+Use the original record files to inspect individual journeys.
+
+The maintained browser course uses the same existing Playwright/Chrome setup and
+`PLAYWRIGHT_PACKAGE` / `LUDO_EVIDENCE_DIR` variables described above:
+
+```sh
+node tests/playtest-cohort-receiver.mjs
+```
+
+It downloads real player journals, passes those files to the maintained CLI,
+checks duplicate and superseded snapshots, and rejects a corrupted record.
+Its receipt and screenshot describe an actual run only after it has completed.
 
 ## Long imported content
 
