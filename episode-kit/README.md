@@ -289,6 +289,24 @@ unaided attempt or rule out assistance outside the player window. Hashes make
 content changes detectable against their retained binding; they are not signatures
 and cannot authenticate the client that authored a consistent record.
 
+## Distinguishing repeated card names
+
+Clues, authoring choices, player controls, solution paths and recorded moves
+keep repeated card names distinct using their existing role IDs. If those names
+still repeat, a stable card number appears in brackets. These display cues
+follow the card when you move it. The authored label and its extracted initial
+stay unchanged.
+
+The card-identity browser receiver covers generated-name collisions, Unicode
+choices, keyboard movement, exported labels and recorded moves. Use the same
+existing Playwright/Chrome setup as the other browser receivers:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/card-identity-evidence \
+node tests/duplicate-label-receiver.mjs
+```
+
 ## Long imported content
 
 Long titles, reference URLs, card labels and authored notes wrap within the
