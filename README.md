@@ -14,6 +14,12 @@ Open the printed loopback URL. Start with the English source, compare the litera
 
 See [episode-kit/README.md](episode-kit/README.md) for CLI use, precise normalization rules, verification and packaging. The release archive contains the runnable source and a file manifest.
 
+Version 0.2.0 adds comparison of a source episode with a target through an explicit
+card mapping and typed clue relations. Comparison exports bind both complete
+episodes, their mapping and the comparison engine version, then recompute on
+receive. This supports inspecting encoded preservation and failures; it does
+not turn mechanical agreement into a claim of human or model validation.
+
 ## What is established
 
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.

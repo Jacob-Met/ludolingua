@@ -1,22 +1,54 @@
 import { EPISODES } from '../fixtures/episodes.mjs';
 import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
+import { setupComparison } from './comparison.mjs';
 
 const $ = id => document.getElementById(id);
 const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
+let comparisonController;
+let importedEpisode = null;
 function node(tag, text, cls) { const n = document.createElement(tag); if (text !== undefined) n.textContent = text; if (cls) n.className = cls; return n; }
 function notice(text, error = false) { $('notice').textContent = text; $('notice').classList.toggle('error', error); }
 function initial(label) { return Array.from(label.trim().normalize('NFC'))[0]?.toUpperCase() ?? ''; }
 function revision() { $('revision').textContent = `Revision ${episode.revision}`; }
 function labels(ids) { return ids.map(id => episode.cards.find(card => card.id === id)?.label ?? id).join(' → '); }
 function clues(target) { try { target.replaceChildren(...episode.clues.map(clue => node('li', clueText(episode, clue)))); } catch { target.replaceChildren(node('li', 'Complete valid card labels before reading the generated clues.')); } }
-function changed() {
+function changed({ reviewHints = false } = {}) {
+  if (reviewHints) episode.hintReview = { status: 'needs-author-review', kind: 'author-self-declaration', reason: 'Labels, ordering clues or hints changed.' };
   episode.revision += 1; version += 1; result = null; digest = ''; revision(); renderResult();
   $('digest').textContent = ''; $('export-button').disabled = true;
-  clues($('author-clues')); resetPlayer(); notice('This revision needs a new check. Previous results do not approve these edits.');
+  clues($('author-clues')); refreshClueLabels(); renderHintReview(); comparisonController?.refreshTarget(); resetPlayer(); notice('This revision needs a new check. Previous results do not approve these edits.');
+}
+function renderHintReview() {
+  const review = episode.hintReview;
+  $('hints-review-note').textContent = review?.status === 'needs-author-review' ? 'These edits may make the existing hints misleading. Review their wording and reveal order before sharing the puzzle.' : review?.status === 'author-reviewed' ? `Author-declared hint review recorded at revision ${review.revision}. Native-language playtesting remains unverified.` : 'These are authored fixture hints. Review them when changing the puzzle.';
+}
+function refreshClueLabels() {
+  for (const select of $('clue-editor').querySelectorAll('select[data-field="left"],select[data-field="right"]')) {
+    for (const option of select.options) { const card = episode.cards.find(c => c.id === option.value); if (card) option.textContent = `${card.label} (${card.id})`; }
+  }
+}
+function renderClueEditor() {
+  $('clue-editor').replaceChildren(...episode.clues.map((clue, index) => {
+    const row = node('div', undefined, 'clue-row'); row.dataset.clueId = clue.id;
+    row.append(node('span', `Clue ${index + 1}`, 'clue-number'));
+    for (const [field, labelText] of [['left', 'Left card'], ['kind', 'Relationship'], ['right', 'Right card']]) {
+      const label = node('label', labelText), select = node('select'); select.dataset.field = field; select.setAttribute('aria-label', `Clue ${index + 1} · ${labelText.toLowerCase()}`);
+      const options = field === 'kind' ? [['before', 'comes before'], ['immediately_before', 'comes immediately before'], ['after', 'comes after']] : episode.cards.map(c => [c.id, `${c.label} (${c.id})`]);
+      for (const [value, text] of options) { const option = node('option', text); option.value = value; select.append(option); }
+      select.value = clue[field]; select.addEventListener('change', () => { clue[field] = select.value; changed({ reviewHints: true }); });
+      label.append(select); row.append(label);
+    }
+    const remove = node('button', 'Remove', 'text-button'); remove.type = 'button'; remove.dataset.action = 'remove-clue'; remove.setAttribute('aria-label', `Remove clue ${index + 1}`);
+    remove.addEventListener('click', () => {
+      episode.clues = episode.clues.filter(c => c !== clue); changed({ reviewHints: true }); renderClueEditor();
+      const next = $('clue-editor').children[Math.min(index, episode.clues.length - 1)]; (next?.querySelector('select') ?? $('add-clue')).focus();
+    });
+    row.append(remove); return row;
+  }));
 }
 function renderEditor() {
   $('cards-editor').replaceChildren(...episode.cards.map((card, i) => {
@@ -24,11 +56,12 @@ function renderEditor() {
     const top = node('div', undefined, 'card-top'); top.append(node('span', `Keeper ${String(i + 1).padStart(2, '0')}`), node('span', initial(card.label), 'card-initial'));
     const label = node('label', 'Card label'); label.htmlFor = `label-${i}`;
     const input = node('input'); input.type = 'text'; input.id = `label-${i}`; input.value = card.label; input.maxLength = 100; input.dataset.cardId = card.id; input.disabled = episode.constraints.labelsFrozen;
-    input.addEventListener('input', () => { card.label = input.value; top.lastChild.textContent = initial(card.label); changed(); });
+    input.addEventListener('input', () => { card.label = input.value; top.lastChild.textContent = initial(card.label); changed({ reviewHints: true }); });
     box.append(top, label, input); return box;
   }));
   $('freeze-labels').checked = episode.constraints.labelsFrozen;
   clues($('author-clues'));
+  renderClueEditor(); $('hint-editor').value = episode.hints.join('\n'); renderHintReview();
   const changes = episode.provenance.semanticChanges;
   $('semantic-changes').replaceChildren(changes.length ? Object.assign(node('ul'), { }) : node('p', 'This authored source episode has no recorded adaptation changes.'));
   if (changes.length) $('semantic-changes').firstChild.append(...changes.map(text => node('li', text)));
@@ -88,14 +121,26 @@ function selectEpisode(ep) {
   $('episode-locale').textContent = `${episode.locale === 'es' ? 'SPANISH' : 'ENGLISH'} / ORIGINAL PUZZLE MATERIAL`;
   $('episode-title').textContent = episode.title; $('episode-story').textContent = episode.story;
   $('episode-story').lang = episode.locale; $('digest').textContent = ''; $('export-button').disabled = true;
-  renderEditor(); renderResult(); resetPlayer(); notice('');
+  renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); notice('');
+}
+function rememberImportedEpisode(ep, label = 'Reopened · verified export') {
+  importedEpisode = clone(ep);
+  $('case-select').querySelector('option[value="imported"]')?.remove();
+  const option = node('option', label); option.value = 'imported'; $('case-select').append(option); $('case-select').value = 'imported';
 }
 function tab(mode) {
   for (const name of ['author', 'player']) { const active = mode === name; $(name).hidden = !active; $(`${name}-tab`).setAttribute('aria-selected', String(active)); $(`${name}-tab`).tabIndex = active ? 0 : -1; }
 }
 for (const ep of EPISODES) { const option = node('option', names[ep.id] ?? ep.title); option.value = ep.id; $('case-select').append(option); }
-$('case-select').addEventListener('change', () => { const ep = EPISODES.find(value => value.id === $('case-select').value); if (ep) selectEpisode(ep); });
+$('case-select').addEventListener('change', () => { const ep = $('case-select').value === 'imported' ? importedEpisode : EPISODES.find(value => value.id === $('case-select').value); if (ep) selectEpisode(ep); });
 $('freeze-labels').addEventListener('change', () => { episode.constraints.labelsFrozen = $('freeze-labels').checked; changed(); renderEditor(); });
+$('add-clue').addEventListener('click', () => {
+  let next = 1; while (episode.clues.some(c => c.id === `authored-${next}`)) next += 1;
+  episode.clues.push({ id: `authored-${next}`, kind: 'before', left: episode.cards[0].id, right: episode.cards[1].id });
+  changed({ reviewHints: true }); renderClueEditor(); $('clue-editor').lastChild.querySelector('select').focus();
+});
+$('hint-editor').addEventListener('input', () => { episode.hints = $('hint-editor').value.split('\n').filter(line => line.trim().length); changed({ reviewHints: true }); });
+$('review-hints').addEventListener('click', () => { episode.hintReview = { status: 'author-reviewed', kind: 'author-self-declaration', revision: episode.revision + 1 }; changed(); notice('Recorded the author’s hint-review declaration. Mechanical checks and native-language playtests remain separate.'); });
 $('check-button').addEventListener('click', checkCurrent);
 $('author-tab').addEventListener('click', () => tab('author')); $('player-tab').addEventListener('click', () => tab('player'));
 for (const mode of ['author', 'player']) $(`${mode}-tab`).addEventListener('keydown', event => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) { event.preventDefault(); const next = event.key === 'Home' ? 'author' : event.key === 'End' ? 'player' : mode === 'author' ? 'player' : 'author'; tab(next); $(`${next}-tab`).focus(); } });
@@ -122,11 +167,11 @@ $('import-file').addEventListener('change', async () => {
     if (sequence !== importSequence) return;
     if (checkpoint !== version) throw new Error('The episode changed while this file was being verified. Reopen it again to replace the current revision.');
     selectEpisode(received.episode);
-    const old = [...$('case-select').options].find(o => o.value === 'imported'); old?.remove();
-    const option = node('option', 'Reopened · verified export'); option.value = 'imported'; $('case-select').append(option); $('case-select').value = 'imported';
+    rememberImportedEpisode(received.episode);
     result = received.validation.result; digest = received.integrity.episodeSha256; renderResult(); $('export-button').disabled = false;
     $('digest').textContent = `Reopened source · SHA-256 ${digest}`; tab('author'); notice(`Reopened revision ${episode.revision}. Source digest and mechanical result verified.`);
   } catch (error) { if (sequence === importSequence) notice(`Cannot reopen: ${error.message}`, true); }
   finally { if (sequence === importSequence) $('import-file').value = ''; }
 });
+comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode, rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES });
 selectEpisode(EPISODES[0]);
