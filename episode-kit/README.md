@@ -146,8 +146,10 @@ node tests/receiver-drafts.mjs
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive
-entries use fixed timestamps, ordering and permissions with no compression. Its
-SHA256 is written to a separate `.sha256` file, never into its own manifest.
+entries use fixed timestamps, ordering and permissions with standard ZIP DEFLATE
+level 6 compression. Repeated builds from the same source and Python/zlib runtime
+are byte-identical; different compressor versions may encode the same contents
+differently. Its SHA256 is written to a separate `.sha256` file, never into its own manifest.
 Output must be outside the source directory and must not already exist. Missing
 output parent directories are created. Both archive and sidecar paths must be new.
 Keep receipts, screenshots, downloaded episodes, credentials and other private
