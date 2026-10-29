@@ -26,6 +26,14 @@ the author receiver and CLI recompute its summary. It can retain failed attempts
 hints and reveals. These client records and self-reported timings do not attest
 human identity, native-language proficiency, unaided solving or model use.
 
+The workbench and separate player each let you choose English or Spanish
+interface controls independently of the authored puzzle. A launched player
+inherits the author's interface choice; standalone play defaults from the
+browser. Switching controls leaves the episode, comparison evidence and recorded
+play journal unchanged. It does not translate authored content or establish
+native-language review. See the kit README for the complete launch, download,
+reopen and locale verification instructions.
+
 ## What is established
 
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.

@@ -10,10 +10,11 @@
   <script type="module" src="./playtest.mjs"></script>
 </head>
 <body class="playtest-page">
-  <header class="masthead"><span class="wordmark"><span class="mark" aria-hidden="true">L<span>↗</span></span>LUDOLINGUA</span><span class="edition">ONE EPISODE <span>YOUR DISCOVERY</span></span></header>
+  <header class="masthead"><span class="wordmark"><span class="mark" aria-hidden="true">L<span>↗</span></span>LUDOLINGUA</span><span class="edition"><span id="playtest-edition">ONE EPISODE</span><span id="playtest-edition-detail">YOUR DISCOVERY</span></span></header>
   <main>
+    <div class="playtest-toolbar"><div class="case-picker language-picker"><label id="playtest-language-label" for="playtest-ui-language">UI language</label><select id="playtest-ui-language"><option value="en" lang="en">English</option><option value="es" lang="es">Español</option></select></div></div>
     <section class="intro playtest-intro"><p class="eyebrow" id="playtest-eyebrow">A PUZZLE TO DISCOVER</p><h1 id="playtest-title">Meet the keepers.</h1><p id="playtest-story" class="lede">Open an episode export to begin. This window keeps one revision and records your attempts, hints and reveals.</p><p id="playtest-revision" class="small"></p></section>
-    <section id="playtest-import" class="panel playtest-import"><label for="playtest-file">Open an episode export</label><input id="playtest-file" type="file" accept="application/json,.json"><p id="playtest-import-status" class="small" role="status">Choose a checked episode JSON exported from the workbench.</p></section>
+    <section id="playtest-import" class="panel playtest-import"><label id="playtest-file-label" for="playtest-file">Open an episode export</label><input id="playtest-file" type="file" accept="application/json,.json"><p id="playtest-import-status" class="small" role="status">Choose a checked episode JSON exported from the workbench.</p></section>
     <p id="playtest-status" class="notice" role="status" data-state="waiting">Waiting for an episode.</p>
     <section id="playtest-session" class="workspace" hidden>
       <div class="play-grid">
@@ -25,6 +26,6 @@
       <p id="playtest-evidence-note" class="small">This records actions and elapsed times reported by this browser. It does not verify who played, unaided solving, native-language fluency or puzzle quality.</p>
     </section>
   </main>
-  <footer><span>LUDOLINGUA <span class="footer-dot">●</span> A CHOSEN REVISION</span><span id="playtest-footer">Follow the clues. Keep your own pace.</span></footer>
+  <footer><span>LUDOLINGUA <span class="footer-dot">●</span> <span id="playtest-footer-edition">A CHOSEN REVISION</span></span><span id="playtest-footer">Follow the clues. Keep your own pace.</span></footer>
 </body>
 </html>

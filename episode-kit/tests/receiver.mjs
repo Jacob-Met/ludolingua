@@ -14,11 +14,11 @@ let browser, page;
 const receipt = { schema: 'ludolingua.browser-receiving.v1', startedAt: new Date().toISOString(), url, checks: [], errors: [], failedRequests: [], sandbox: null, passed: false };
 const check = name => receipt.checks.push(name);
 try {
-  browser = await chromium.launch({ headless: true, executablePath: '/usr/bin/google-chrome-stable', chromiumSandbox: true, args: ['--disable-dev-shm-usage'] });
+  browser = await chromium.launch({ headless: true, executablePath: '/usr/bin/google-chrome-stable', chromiumSandbox: true, args: ['--disable-dev-shm-usage', '--enable-automation'] });
   const session = await browser.newBrowserCDPSession();
   const command = await session.send('Browser.getBrowserCommandLine');
   assert.equal(command.arguments.some(a => a === '--no-sandbox' || a === '--disable-setuid-sandbox'), false, 'Sandbox-disabling launch flag');
-  const context = await browser.newContext({ viewport: { width: 1280, height: 1000 }, acceptDownloads: true });
+  const context = await browser.newContext({ locale: 'en-US', viewport: { width: 1280, height: 1000 }, acceptDownloads: true });
   page = await context.newPage();
   await page.goto('chrome://sandbox');
   const sandboxText = await page.locator('body').innerText();
@@ -46,12 +46,64 @@ try {
   for (let i = 0; i < 3; i++) { await page.keyboard.press('Space'); assert.equal(await page.evaluate(() => document.activeElement.getAttribute('aria-label')), i < 2 ? 'Move Nest down' : 'Move Nest up'); }
   assert.deepEqual(await page.locator('.keeper-label').allTextContents(), ['Otter', 'Pine', 'Eagle', 'Nest']);
   await page.fill('#answer', 'CLOSE'); await page.locator('#answer').press('Enter');
-  await page.locator('#player-feedback').filter({ hasText: 'action does not match' }).waitFor();
+  assert.equal(await page.locator('#player-feedback').textContent(), 'The order fits the clues. Try the action again using its initials.');
   assert.doesNotMatch(await page.locator('body').innerText(), /\bOPEN\b/);
   await page.fill('#answer', 'open'); await page.locator('#answer').press('Enter');
   await page.locator('#player-feedback').filter({ hasText: 'The action works' }).waitFor();
   await page.click('#hint-button'); assert.equal(await page.locator('#hints p').count(), 1);
   check('Player hides solution across visible page; wrong order and wrong action rejected; keyboard focus retained; normalized answer and deliberate hint work');
+  {
+    const enRetry = 'The order fits the clues. Try the action again using its initials.';
+    const esRetry = 'El orden cumple las pistas. Intenta de nuevo la acción usando sus iniciales.';
+    const esMismatch = 'El orden cumple las pistas, pero la acción no coincide. Esta adaptación puede necesitar cambios.';
+    const feedback = async () => (await page.locator('#player-feedback').innerText()).trim();
+    const choosePlayerCase = async id => { await page.selectOption('#case-select', id); await page.selectOption('#ui-language', id.startsWith('es-') ? 'es' : 'en'); await page.click('#player-tab'); };
+    const submitAnswer = async answer => { await page.fill('#answer', answer); await page.locator('#answer').press('Enter'); };
+    const solveFromInitialOrder = async (buttonName, expectedLabels) => {
+      await page.getByRole('button', { name: buttonName, exact: true }).focus();
+      for (let move = 0; move < 3; move += 1) await page.keyboard.press('Space');
+      assert.deepEqual(await page.locator('.keeper-label').allTextContents(), expectedLabels);
+    };
+    const assertTargetConcealed = async target => assert.equal(new RegExp('\\b' + target + '\\b').test(await page.locator('body').innerText()), false, target + ' must remain concealed before success or reveal');
+    await choosePlayerCase('en-original');
+    assert.equal(await feedback(), '');
+    await submitAnswer('OPEN');
+    assert.equal(await feedback(), 'This order does not yet satisfy all the clues.');
+    check('Clue-invalid English order retains clue guidance before answer retry');
+    await page.click('#reset-order'); assert.equal(await feedback(), '');
+    await solveFromInitialOrder('Move Nest down', ['Otter', 'Pine', 'Eagle', 'Nest']);
+    for (const answer of ['CLOSE', '']) {
+      await submitAnswer(answer); assert.equal(await feedback(), enRetry); await assertTargetConcealed('OPEN');
+    }
+    check('English wrong or empty typed answers receive retry guidance without target disclosure');
+    await page.screenshot({ path: resolve(evidenceDir, 'feedback-english-desktop.png'), fullPage: true });
+    await page.click('#reset-order'); assert.equal(await feedback(), '');
+    assert.deepEqual(await page.locator('.keeper-label').allTextContents(), ['Nest', 'Otter', 'Pine', 'Eagle']);
+    await submitAnswer('OPEN'); assert.equal(await feedback(), 'This order does not yet satisfy all the clues.');
+    check('Order reset clears retry feedback and restores clue-first evaluation');
+    await choosePlayerCase('es-adapted'); assert.equal(await feedback(), ''); await assertTargetConcealed('ABRE');
+    await solveFromInitialOrder('Bajar Estrella', ['Agua', 'Barco', 'Roca', 'Estrella']);
+    await submitAnswer('ABRA'); assert.equal(await feedback(), esRetry); await assertTargetConcealed('ABRE');
+    check('Adapted Spanish wrong answer receives localized retry without target disclosure');
+    await page.setViewportSize({ width: 390, height: 844 });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth), true, 'Retry feedback overflows the narrow player');
+    await page.screenshot({ path: resolve(evidenceDir, 'feedback-spanish-narrow.png'), fullPage: true });
+    await page.setViewportSize({ width: 1280, height: 1000 });
+    await submitAnswer(' abre '); assert.equal(await feedback(), 'La acción funciona. El orden cumple las pistas y sus iniciales coinciden.');
+    check('Corrected normalized Spanish answer succeeds after retry');
+    await choosePlayerCase('es-literal'); assert.equal(await feedback(), '');
+    await solveFromInitialOrder('Bajar Nido', ['Nutria', 'Pino', 'Águila', 'Nido']);
+    await submitAnswer('ABRE'); assert.equal(await feedback(), esMismatch);
+    await submitAnswer('NPÁN'); assert.equal(await feedback(), esMismatch);
+    check('Literal Spanish keeps its adaptation diagnosis for both intended action and mismatched initials');
+    await page.click('#reset-order'); assert.equal(await feedback(), '');
+    assert.deepEqual(await page.locator('.keeper-label').allTextContents(), ['Nido', 'Nutria', 'Pino', 'Águila']);
+    await submitAnswer('ABRE'); assert.equal(await feedback(), 'Este orden todavía no cumple todas las pistas.');
+    check('Literal Spanish clue-invalid order retains clue guidance before adaptation diagnosis');
+    await choosePlayerCase('en-original'); assert.equal(await feedback(), ''); await assertTargetConcealed('OPEN');
+    assert.deepEqual(await page.locator('.keeper-label').allTextContents(), ['Nest', 'Otter', 'Pine', 'Eagle']);
+    check('Case switch clears stale feedback and restores concealed English state');
+  }
   await page.click('#author-tab'); await page.selectOption('#case-select', 'es-literal'); await page.click('#check-button');
   await page.locator('.result-state.action-mismatch').waitFor();
   assert.deepEqual(await page.locator('.metric strong').allTextContents(), ['1', '0', '24']);
@@ -102,6 +154,7 @@ try {
   await page.screenshot({ path: resolve(evidenceDir, 'receiver-narrow.png'), fullPage: true });
   await page.locator('#author-tab').focus(); await page.locator('#author-tab').press('ArrowRight'); assert.equal(await page.locator('#player').isVisible(), true);
   assert.doesNotMatch(await page.locator('body').innerText(), /\bABRE\b/);
+  await page.selectOption('#ui-language', 'es');
   await page.getByRole('button', { name: 'Bajar Estrella', exact: true }).focus();
   for (let i = 0; i < 3; i++) { await page.keyboard.press('Space'); assert.equal(await page.evaluate(() => document.activeElement.getAttribute('aria-label')), i < 2 ? 'Bajar Estrella' : 'Subir Estrella'); }
   await page.fill('#answer', 'abre'); await page.locator('#answer').press('Enter'); await page.locator('#player-feedback').filter({ hasText: 'La acción funciona' }).waitFor();
