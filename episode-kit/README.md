@@ -1,4 +1,4 @@
-# LUDOLINGUA episode and comparison kit — 0.2.4
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.0
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -26,10 +26,11 @@ The loopback HTTP origin supports the browser Web Crypto digest operation.
 The author view supports editing labels, the **Required action**, typed ordering
 clues and hints. The action is an explicit author choice: the initials in a
 clue-consistent order must still spell it. Editing the action advances the
-revision, clears previous episode and comparison evidence, resets the player,
-and marks hints for author review. Empty or whitespace-only actions remain
-invalid until the author supplies a value. Recheck before exporting; reopening
-an episode or comparison restores its complete authored action.
+revision, clears previous episode and comparison evidence, resets the workbench
+player, and marks hints for author review. An already-open separate playtest
+keeps its captured revision. Empty or whitespace-only actions remain invalid
+until the author supplies a value. Recheck before exporting; reopening an
+episode or comparison restores its complete authored action.
 
 For an English authoring example, change the four labels to Pine, Lily, Aspen,
 and Yew. The original clue order now spells PLAY while the old required action
@@ -48,7 +49,6 @@ target episodes remain their original evidence; changing the interface language
 does not change puzzle answers, comparison mappings, digest-bound exports, or
 mechanical results. A Spanish interface is not evidence that an episode has been
 translated or reviewed by a native speaker.
-
 `check` exits 0 for mechanical success, 2 for valid negative cases, and 1 for
 invalid input. `receive` exits 0 when content and recomputed analysis agree,
 including a faithfully exported negative case. Inspect `mechanicalSuccess` and
@@ -71,8 +71,8 @@ Edit the episode and export again to create a current result.
 
 ## Recoverable author drafts
 
-Bundled episodes save label edits, ordering clues, the required action, exact hint text, author-declared hint review,
-the frozen-label flag, and the revision in this
+Bundled episodes save label edits, ordering clues, the required action, exact hint
+text, author-declared hint review, the frozen-label flag, and the revision in this
 browser. Wait for **Draft saved in this browser** before closing or reloading.
 Returning to an episode restores its own unfinished draft, including empty labels.
 Every restored revision needs a fresh check; drafts never store verification results.
@@ -93,9 +93,13 @@ the current edits or discard that draft. Loading such data never grants approval
 Reopened exports retain full digest and mechanical verification. They are separate
 from bundled drafts even when episode IDs match; edits to reopened content remain
 in this tab when switching episodes. Export the checked revision to keep those
-changes after closing. Comparison sources and role maps still require a checked comparison export to
-keep them after closing. Draft restoration clears both episode and comparison
-checks. Drafts do not change the CLI or exported episode format.
+changes after closing. Comparison sources and role maps still require a checked
+comparison export to keep them after closing. Draft restoration clears both episode
+and comparison checks. Drafts do not change the CLI or exported episode format.
+
+Author draft recovery does not persist a separate player session or its journal.
+Download the play record before closing that window; restoring an author draft
+does not update an already-open player's captured episode.
 
 Maintainer verification and deterministic packaging:
 
@@ -131,6 +135,14 @@ node tests/action-receiver.mjs
 It exercises explicit action edits, player success and failure gates, actual
 export/reopen flows, interface-language preservation, and delayed completions.
 Its receipt and screenshots are evidence only after an actual successful run.
+
+The draft browser regression course uses the same runtime requirements:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/draft-evidence \
+node tests/receiver-drafts.mjs
+```
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive
@@ -189,28 +201,78 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.2.4.
+the enclosing kit version is 0.3.0.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
 Hints, story, provenance, and authored review flags remain bound as episode
 content; an authored review flag is not evidence of a native human playtest.
 
-Draft browser regression course (same runtime requirements as the locale receiver):
+## Keep and receive a player session record
+
+Start the local server with `node serve.mjs`, then open the author workbench at
+`http://127.0.0.1:4173/` (use the printed port if different). Select an episode,
+make the desired edits, and choose **Open a separate playtest**. This captures
+the current valid episode revision at the moment you click. Later author edits
+do not change the already-open session. Each player window accepts one episode
+and creates its own session identifier.
+
+The separate player also has its own **UI language** selector. A window launched
+from the author workbench starts with the author's selected interface language;
+a standalone window defaults from the browser. Changing this selector changes
+presentation only: it does not translate the authored puzzle, replace the fixed
+episode revision, clear the recorded journal, or change its evidence. You can
+therefore use English controls for a Spanish puzzle, or Spanish controls for an
+English puzzle. This choice is not evidence of the player's language proficiency.
+
+If the browser blocks the popup, export the checked episode from the workbench,
+open `http://127.0.0.1:4173/web/playtest.html`, and choose that episode export file.
+The standalone page verifies the exported episode before starting. Keep using
+the server URL rather than opening the HTML as a local file.
+
+In the player window, try an order and answer, optionally use hints or reveal,
+then choose **Download play record** (Spanish: **Descargar registro de juego**).
+Download before closing or reloading: sessions have no persistent browser
+storage. Resetting keeps earlier attempts, hints and reveals in the journal;
+it does not erase their history. Open a new player window for a fresh session.
+
+Back in the author workbench, choose **Reopen a play record** and select the
+downloaded record JSON. Its replayed summary and journey refer to the recorded
+revision and do not replace your current authored episode. You can also inspect
+the record with the CLI:
 
 ```sh
-PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \\
-LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/draft-evidence \\
-node tests/receiver-drafts.mjs
+node cli.mjs playtest-receive playtest-record.json
 ```
 
+Receiving snapshots the full episode, session identifier and event journal,
+replays the journal, and checks the recomputed result and version-bound hashes.
+Exit 0 means the record passes integrity and replay checks; exit 1 means malformed,
+stale or forged data was rejected. A valid record may show failures, hints or a
+solution reveal. Successful receiving does not mean successful solving.
+
+Keep the downloaded JSON file itself, then reopen that file in the author
+receiver or pass its path to `playtest-receive`; a screenshot of the summary is
+not a replayable record. The record refers to its captured episode revision,
+not any later author edits. Records are bounded to 10,000 events and the episode
+engine's two-to-eight-card limit. `successfulAttempts` counts individual attempts
+that satisfy the encoded clues and answer, not certification that the entire
+episode has unique reasoning or that a person solved it unaided.
+
+These are client-recorded events with self-reported timing. They do not attest
+human identity, native-language status, independent participation, linguistic
+quality or model contribution. A session identifier is a label, not an identity
+credential. Even a journal without a recorded reveal does not establish an
+unaided attempt or rule out assistance outside the player window. Hashes make
+content changes detectable against their retained binding; they are not signatures
+and cannot authenticate the client that authored a consistent record.
 
 ## Long imported content
 
 Long titles, reference URLs, card labels and authored notes wrap within the
 author, comparison and player views. The display keeps the complete content;
-exports retain the original strings and evidence. No schema limit or puzzle
-mechanic changes in version 0.2.4.
+exports retain the original strings and evidence. This display improvement
+does not change schema limits or puzzle mechanics.
 
 The content receiver exercises valid long imported content at 390px and 1280px,
 including captured-source previews, English/Spanish controls, player hints and

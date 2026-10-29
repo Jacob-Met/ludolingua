@@ -2,6 +2,7 @@ import { EPISODES } from '../fixtures/episodes.mjs';
 import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
+import { setupPlaytest } from './playtest-author.mjs';
 import { createFixtureDrafts } from './draft-controller.mjs';
 import { translate, translateDiagnostic, supportedLocale } from './i18n.mjs';
 
@@ -10,7 +11,7 @@ const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
-let comparisonController;
+let comparisonController, playtestController;
 let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
 let uiLocale = supportedLocale((navigator.language ?? 'en').split('-')[0].toLowerCase());
 let noticeState = { key: '', error: false, values: {} }, digestKey = 'Checked source · SHA-256 {hash}';
@@ -220,6 +221,7 @@ $('import-file').addEventListener('change', async () => {
   finally { if (sequence === importSequence) $('import-file').value = ''; }
 });
 comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode: ep => selectEpisode(ep, true), rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
+playtestController = setupPlaytest({ getEpisode: () => episode, notice, maxBytes: MAX_EXPORT_BYTES, t, diagnostic, getUILocale: () => uiLocale });
 function renderDigest() { $('digest').textContent = digest ? t(digestKey, { hash: digest }) : ''; }
 function relocalize() {
   // Locale is presentation state: do not alter version, revisions, checks or import epochs.
@@ -243,6 +245,7 @@ function relocalize() {
     if (!episode.provenance.semanticChanges.length) { $('semantic-changes').firstChild.textContent = t('This authored source episode has no recorded adaptation changes.'); $('semantic-changes').lang = uiLocale; }
     renderResult(); renderDigest(); drawPlayer(); renderPlayerFeedback(); renderReveal(); comparisonController?.relocalize();
   }
+  playtestController?.relocalize();
   renderNotice(); drafts.relocalize();
   let focus = active?.isConnected ? active : focusId ? $(focusId) : null;
   if (!focus && move) focus = [...$('player-order').children].find(row => row.dataset.cardId === move.card)?.querySelector(`[data-direction="${move.direction}"]`);

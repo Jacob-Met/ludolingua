@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Play one chosen puzzle revision and keep a record of attempts and hints.">
+  <title>LUDOLINGUA · Play an episode</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./playtest.mjs"></script>
+</head>
+<body class="playtest-page">
+  <header class="masthead"><span class="wordmark"><span class="mark" aria-hidden="true">L<span>↗</span></span>LUDOLINGUA</span><span class="edition"><span id="playtest-edition">ONE EPISODE</span><span id="playtest-edition-detail">YOUR DISCOVERY</span></span></header>
+  <main>
+    <div class="playtest-toolbar"><div class="case-picker language-picker"><label id="playtest-language-label" for="playtest-ui-language">UI language</label><select id="playtest-ui-language"><option value="en" lang="en">English</option><option value="es" lang="es">Español</option></select></div></div>
+    <section class="intro playtest-intro"><p class="eyebrow" id="playtest-eyebrow">A PUZZLE TO DISCOVER</p><h1 id="playtest-title">Meet the keepers.</h1><p id="playtest-story" class="lede">Open an episode export to begin. This window keeps one revision and records your attempts, hints and reveals.</p><p id="playtest-revision" class="small"></p></section>
+    <section id="playtest-import" class="panel playtest-import"><label id="playtest-file-label" for="playtest-file">Open an episode export</label><input id="playtest-file" type="file" accept="application/json,.json"><p id="playtest-import-status" class="small" role="status">Choose a checked episode JSON exported from the workbench.</p></section>
+    <p id="playtest-status" class="notice" role="status" data-state="waiting">Waiting for an episode.</p>
+    <section id="playtest-session" class="workspace" hidden>
+      <div class="play-grid">
+        <article class="panel"><div class="section-title"><span class="step">01</span><div><h2 id="playtest-arrange-heading">Arrange the keepers</h2><p id="playtest-instructions">Use the clues to find an order. Read the first letter of each label, then enter the action.</p></div></div><ol id="playtest-cards" class="player-order"></ol><div class="player-controls"><button id="playtest-reset" type="button" class="text-button">Reset the order</button><button id="playtest-hint" type="button" class="text-button">Show a hint</button></div><div id="playtest-hints" class="hints" aria-live="polite"></div></article>
+        <article class="panel"><h2 id="playtest-clue-heading">Your clues</h2><ol id="playtest-clues" class="clues"></ol><form id="playtest-answer-form"><label id="playtest-answer-label" for="playtest-answer">What action do the keepers spell?</label><div class="answer-row"><input id="playtest-answer" type="text" autocomplete="off" spellcheck="false" maxlength="80" aria-describedby="playtest-feedback"><button id="playtest-attempt" type="submit" class="primary">Try action</button></div></form><p id="playtest-feedback" class="feedback" aria-live="polite"></p><button id="playtest-reveal" type="button" class="text-button">Reveal the solution</button><div id="playtest-solution" hidden></div></article>
+      </div>
+      <section class="playtest-record-strip" aria-labelledby="playtest-record-heading"><div><h2 id="playtest-record-heading">Keep a record of the journey.</h2><p id="playtest-journal-summary" class="small" aria-live="polite"></p><p id="playtest-record-note" class="small">Resetting keeps the earlier attempts, hints and reveals in the record. Download before closing this window; the session is not saved after you leave.</p></div><button id="playtest-download" type="button" class="secondary">Download play record</button></section>
+      <p id="playtest-download-status" class="notice" role="status"></p>
+      <p id="playtest-evidence-note" class="small">This records actions and elapsed times reported by this browser. It does not verify who played, unaided solving, native-language fluency or puzzle quality.</p>
+    </section>
+  </main>
+  <footer><span>LUDOLINGUA <span class="footer-dot">●</span> <span id="playtest-footer-edition">A CHOSEN REVISION</span></span><span id="playtest-footer">Follow the clues. Keep your own pace.</span></footer>
+</body>
+</html>
