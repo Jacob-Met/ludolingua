@@ -1,4 +1,4 @@
-# LUDOLINGUA episode and comparison kit — 0.2.3
+# LUDOLINGUA episode and comparison kit — 0.2.4
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -23,8 +23,20 @@ node serve.mjs
 Open `http://127.0.0.1:4173` (or the local URL printed by the server). Keep the
 server running while using the receiver; do not open the HTML as a `file:` URL.
 The loopback HTTP origin supports the browser Web Crypto digest operation.
-The author view supports editing and
-rechecking; player mode separates solving from deliberate answer reveal.
+The author view supports editing labels, the **Required action**, typed ordering
+clues and hints. The action is an explicit author choice: the initials in a
+clue-consistent order must still spell it. Editing the action advances the
+revision, clears previous episode and comparison evidence, resets the player,
+and marks hints for author review. Empty or whitespace-only actions remain
+invalid until the author supplies a value. Recheck before exporting; reopening
+an episode or comparison restores its complete authored action.
+
+For an English authoring example, change the four labels to Pine, Lily, Aspen,
+and Yew. The original clue order now spells PLAY while the old required action
+is OPEN, so the check fails. Explicitly change **Required action** to PLAY and
+check again. The same clue order now passes; the story and hints still require
+human review for the changed action. Player mode hides author controls and
+separates solving from deliberate answer reveal.
 Player feedback distinguishes a clue-order error, initials that do not encode the
 required action, and a mistyped answer. A typo after a valid extraction prompts a
 retry in the chosen UI language without revealing the action.
@@ -57,6 +69,34 @@ evidence limits. The reader never inherits a supplied pass claim. This is conten
 integrity, not a cryptographic signature or independent provenance attestation.
 Edit the episode and export again to create a current result.
 
+## Recoverable author drafts
+
+Bundled episodes save label edits, ordering clues, the required action, exact hint text, author-declared hint review,
+the frozen-label flag, and the revision in this
+browser. Wait for **Draft saved in this browser** before closing or reloading.
+Returning to an episode restores its own unfinished draft, including empty labels.
+Every restored revision needs a fresh check; drafts never store verification results.
+**Discard draft** resets only the selected episode to its bundled original.
+
+Drafts belong to the same browser profile and exact origin (scheme, host and port).
+Use the same `http://127.0.0.1:4173` address when returning. They are local convenience,
+not a backup or server sync; clearing browser data removes them. With blocked storage,
+quota errors, or no Web Locks support, edits remain in the current tab only and the
+workbench says so. Browser tab memory survives episode switches but not closing.
+
+If another tab saves the same episode, automatic saving pauses. **Load saved draft**
+replaces this tab's content with the saved version and clears its old check.
+**Keep these edits** explicitly replaces the saved version with this tab's content.
+Malformed or source-incompatible saved data is preserved until you choose to keep
+the current edits or discard that draft. Loading such data never grants approval.
+
+Reopened exports retain full digest and mechanical verification. They are separate
+from bundled drafts even when episode IDs match; edits to reopened content remain
+in this tab when switching episodes. Export the checked revision to keep those
+changes after closing. Comparison sources and role maps still require a checked comparison export to
+keep them after closing. Draft restoration clears both episode and comparison
+checks. Drafts do not change the CLI or exported episode format.
+
 Maintainer verification and deterministic packaging:
 
 ```sh
@@ -79,6 +119,18 @@ server and writes `locale-receipt.json`, downloaded exports and screenshots to
 interface switching, preserved draft/player state, pending imports, and export
 integrity. Inspect the receipt and rendered screenshots; an available test script
 alone does not establish browser acceptance or visual quality.
+
+The action-authoring receiver uses the same environment variables:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright-core \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/action-evidence \
+node tests/action-receiver.mjs
+```
+
+It exercises explicit action edits, player success and failure gates, actual
+export/reopen flows, interface-language preservation, and delayed completions.
+Its receipt and screenshots are evidence only after an actual successful run.
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive
@@ -137,12 +189,20 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.2.3.
+the enclosing kit version is 0.2.4.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
 Hints, story, provenance, and authored review flags remain bound as episode
 content; an authored review flag is not evidence of a native human playtest.
+
+Draft browser regression course (same runtime requirements as the locale receiver):
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \\
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/draft-evidence \\
+node tests/receiver-drafts.mjs
+```
 
 
 ## Long imported content
@@ -150,7 +210,7 @@ content; an authored review flag is not evidence of a native human playtest.
 Long titles, reference URLs, card labels and authored notes wrap within the
 author, comparison and player views. The display keeps the complete content;
 exports retain the original strings and evidence. No schema limit or puzzle
-mechanic changes in version 0.2.3.
+mechanic changes in version 0.2.4.
 
 The content receiver exercises valid long imported content at 390px and 1280px,
 including captured-source previews, English/Spanish controls, player hints and
