@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.4-cohort.19ac2731
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.5-cohort-ui.19ac2731
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -223,7 +223,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.4-cohort.19ac2731.
+the enclosing kit version is 0.3.5-cohort-ui.19ac2731.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -291,8 +291,36 @@ and cannot authenticate the client that authored a consistent record.
 
 ## Summarize downloaded play records
 
-Keep each player's downloaded record JSON, then summarize the files through the
-maintained CLI:
+Keep each player's downloaded record JSON. In the author workbench, go to
+**See how the puzzle is played.** and choose **Review multiple play records**
+(Spanish: **Revisar varios registros de juego**). Select the downloaded JSON files
+together in the file picker. The workbench verifies every selected record and
+displays totals for each exact captured episode revision. The selection replaces
+the previous batch; it does not append to it. Select all the files you want in
+the report each time.
+
+The summary shows the number of verified files, distinct recorded session IDs,
+repeated downloads excluded, and earlier snapshots replaced. Each episode group
+shows its title, ID, revision, content language, full SHA-256 and recorded totals.
+These belong to the imported records, even if you are currently editing a
+different episode. Reviewing a batch does not change your authored episode,
+draft, revision or checks. Switching **UI language** translates the review
+controls and labels without translating the captured content or regrouping it.
+
+While a new selection is checked, the previous verified report remains visible
+with a notice identifying it as the previous report. If any selected file fails,
+the whole new batch is rejected: the previous report stays visible and explicitly
+excludes the rejected selection. If there is no previous report, no totals are
+shown. A later selection supersedes an unfinished earlier selection; an old read
+finishing afterward cannot replace the newer result. Reloading or closing the tab clears the displayed report. Keep the original
+downloaded files to recreate it.
+
+**Reopen a play record** remains a separate, independent review for one session's
+event journey. Opening or replacing that single-record review does not replace
+the multi-file report, and reviewing a batch does not replace the single-record
+journey. Use it to inspect the attempts and assistance behind an aggregate count.
+
+The same aggregation is available through the maintained CLI:
 
 ```sh
 node cli.mjs playtest-cohort player-a.json player-b.json
@@ -322,9 +350,11 @@ earlier success still counts when a later attempt failed; a reset does not erase
 recorded assistance. Empty journals remain valid unfinished sessions with zero
 attempts. Self-reported elapsed times are deliberately excluded.
 
-The CLI accepts 1–100 regular files and checks their sizes before reading:
-at most 20 MB per file and 40 MB combined. Keep the downloaded files unchanged
-during the command. The exported report preserves explicit limitations: these
+Both routes accept 1–100 files, with at most 20,000,000 bytes (20 MB) per file
+and 40,000,000 bytes (40 MB) combined. The browser checks the entire selection's
+file count and sizes before reading any contents. The CLI requires regular files
+and checks each file's size and the running total before reading that file.
+Keep the downloaded files unchanged during the command. The report preserves explicit limitations: these
 client-recorded outcomes do not establish human identity, unaided solving,
 native-language proficiency, translation quality or comparable difficulty.
 Use the original record files to inspect individual journeys.
