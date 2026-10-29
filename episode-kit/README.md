@@ -1,4 +1,4 @@
-# LUDOLINGUA episode and comparison kit — 0.2.0
+# LUDOLINGUA episode and comparison kit — 0.2.2
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -23,8 +23,20 @@ node serve.mjs
 Open `http://127.0.0.1:4173` (or the local URL printed by the server). Keep the
 server running while using the receiver; do not open the HTML as a `file:` URL.
 The loopback HTTP origin supports the browser Web Crypto digest operation.
-The author view supports editing and
-rechecking; player mode separates solving from deliberate answer reveal.
+The author view supports editing labels, the **Required action**, typed ordering
+clues and hints. The action is an explicit author choice: the initials in a
+clue-consistent order must still spell it. Editing the action advances the
+revision, clears previous episode and comparison evidence, resets the player,
+and marks hints for author review. Empty or whitespace-only actions remain
+invalid until the author supplies a value. Recheck before exporting; reopening
+an episode or comparison restores its complete authored action.
+
+For an English authoring example, change the four labels to Pine, Lily, Aspen,
+and Yew. The original clue order now spells PLAY while the old required action
+is OPEN, so the check fails. Explicitly change **Required action** to PLAY and
+check again. The same clue order now passes; the story and hints still require
+human review for the changed action. Player mode hides author controls and
+separates solving from deliberate answer reveal.
 
 Use the **UI language** selector to choose English or Spanish for the receiver's
 interface independently of the episode's language. Changing UI language does not
@@ -76,6 +88,18 @@ server and writes `locale-receipt.json`, downloaded exports and screenshots to
 interface switching, preserved draft/player state, pending imports, and export
 integrity. Inspect the receipt and rendered screenshots; an available test script
 alone does not establish browser acceptance or visual quality.
+
+The action-authoring receiver uses the same environment variables:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright-core \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/action-evidence \
+node tests/action-receiver.mjs
+```
+
+It exercises explicit action edits, player success and failure gates, actual
+export/reopen flows, interface-language preservation, and delayed completions.
+Its receipt and screenshots are evidence only after an actual successful run.
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive
@@ -134,7 +158,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.2.0.
+the enclosing kit version is 0.2.2.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
