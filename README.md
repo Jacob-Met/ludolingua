@@ -39,6 +39,12 @@ the author receiver and CLI recompute its summary. It can retain failed attempts
 hints and reveals. These client records and self-reported timings do not attest
 human identity, native-language proficiency, unaided solving or model use.
 
+A new empty player window can continue a verified saved play record. It restores
+the captured puzzle and recorded state, preserves the session identifier and prior
+events, and appends later actions to that history. Use the newest download in one
+window and download again before leaving. Closed or unrecorded time and unsubmitted
+answers are not recovered; there is no automatic save or cross-window merge.
+
 The workbench and separate player each let you choose English or Spanish
 interface controls independently of the authored puzzle. A launched player
 inherits the author's interface choice; standalone play defaults from the

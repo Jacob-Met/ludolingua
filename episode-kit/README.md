@@ -289,6 +289,46 @@ unaided attempt or rule out assistance outside the player window. Hashes make
 content changes detectable against their retained binding; they are not signatures
 and cannot authenticate the client that authored a consistent record.
 
+## Continue a saved play record
+
+Download the play record before closing or reloading the player. To continue,
+open a new, empty player window at the server's `/web/playtest.html` address and
+choose **Continue a saved play record** (Spanish: **Continuar un registro de juego
+guardado**). Select your newest downloaded record JSON. An already-open session
+keeps its current episode and history; it cannot be replaced by an import.
+
+The player verifies the complete record before opening it. It restores the exact
+captured episode, card order, visible hints, revealed solution and previous
+attempt feedback. It retains the same session identifier and every earlier event.
+Unsubmitted answer text was never recorded and does not return. Interface language
+remains separate from the captured puzzle's language.
+
+New actions append to the existing journal. Their elapsed time continues from the
+last recorded event plus time in the reopened window; closed time and any earlier
+unrecorded time are not recovered. These timings remain client-reported. Download
+again to keep the extended record. There is no automatic save or cross-window sync.
+
+Continue a given record in only one window. Earlier downloads and a later prefix
+extension count as one session in cohort review, while divergent continuations of
+the same session are rejected as conflicting histories. A record already at the
+10,000-event limit can be reopened and downloaded, with play controls disabled.
+
+Malformed, oversized, altered or unsupported records are refused before a session
+is adopted. The existing narrow support for original 0.1.0 play records also
+applies to continuation. A failed import leaves both file choices available.
+
+The maintained receiving course uses a real player download, closes that player,
+continues its record in a fresh window, downloads the extension and verifies the
+existing cohort interpretation. It also covers explicit synthetic boundary cases:
+
+```sh
+node tests/playtest-continuation-receiver.mjs \
+  --app-root /absolute/path/to/episode-kit \
+  --playwright /absolute/path/to/playwright/index.mjs \
+  --browser /absolute/path/to/chrome \
+  --out /absolute/path/outside/episode-kit/continuation-evidence
+```
+
 ## Summarize downloaded play records
 
 Keep each player's downloaded record JSON. In the author workbench, go to
@@ -431,8 +471,9 @@ remain unchanged. An earlier failed attempt remains a failed attempt.
 This is a narrow compatibility rule. An explicitly supplied incorrect or null
 `tokenMatches`, an altered result or evidence claim, a mismatched digest, or an
 unsupported version is still rejected. Returning current validation does not
-modify the original downloaded file. The record viewer remains a review of the
-saved journey; it does not resume that journal as a new live player session.
+modify the original downloaded file. The author record viewer remains a review
+of the saved journey. To append new actions, use **Continue a saved play record**
+in a new, empty player window; it preserves the original session identifier.
 
 Hashes establish consistency with the supplied episode and events, not who
 authored them. A fully consistent replacement history can still be authored by
