@@ -1,4 +1,4 @@
-# LUDOLINGUA episode and comparison kit — 0.2.0
+# LUDOLINGUA episode and comparison kit — 0.2.2
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -25,6 +25,9 @@ server running while using the receiver; do not open the HTML as a `file:` URL.
 The loopback HTTP origin supports the browser Web Crypto digest operation.
 The author view supports editing and
 rechecking; player mode separates solving from deliberate answer reveal.
+Player feedback distinguishes a clue-order error, initials that do not encode the
+required action, and a mistyped answer. A typo after a valid extraction prompts a
+retry in the chosen UI language without revealing the action.
 
 Use the **UI language** selector to choose English or Spanish for the receiver's
 interface independently of the episode's language. Changing UI language does not
@@ -134,7 +137,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.2.0.
+the enclosing kit version is 0.2.2.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
