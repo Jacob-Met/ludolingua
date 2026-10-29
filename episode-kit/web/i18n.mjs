@@ -1,5 +1,9 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"Order after this step: {order}":"Orden tras este paso: {order}",
+"The recorded order and action satisfied the encoded checks.":"El orden y la acción registrados cumplieron las comprobaciones codificadas.",
+"The recorded order did not satisfy every clue.":"El orden registrado no cumplía todas las pistas.",
+"The clues matched, but the entered action did not.":"Las pistas coincidían, pero no la acción introducida.",
 "These clues conflict when used together.":"Estas pistas se contradicen al aplicarse juntas.",
 "No ordering satisfies this set. Review these clues against the lesson you intend; other conflicts may remain after an edit.":"No existe un orden que cumpla este conjunto. Revisa estas pistas según la lección que quieres crear; después de modificarlas, puede haber otras contradicciones.",
 "Edit clue {index}":"Editar pista {index}",
