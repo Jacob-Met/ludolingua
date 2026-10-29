@@ -31,7 +31,7 @@ function renderNotice() {
 }
 function initial(label) { return Array.from(label.trim().normalize('NFC'))[0]?.toUpperCase() ?? ''; }
 function revision() { $('revision').textContent = t('Revision {revision}', { revision: episode.revision }); }
-function labels(ids) { return ids.map(id => episode.cards.find(card => card.id === id)?.label ?? id).join(' → '); }
+function labels(ids) { return ids.map(id => { const card = episode.cards.find(card => card.id === id); return card ? displayCardLabel(episode, card) : id; }).join(' → '); }
 function clues(target) {
   target.lang = episode.locale;
   try { target.replaceChildren(...episode.clues.map(clue => node('li', clueText(episode, clue)))); }
@@ -56,7 +56,7 @@ function renderHintReview() {
 }
 function refreshClueLabels() {
   for (const select of $('clue-editor').querySelectorAll('select[data-field="left"],select[data-field="right"]')) {
-    for (const option of select.options) { const card = episode.cards.find(c => c.id === option.value); if (card) option.textContent = `${card.label} (${card.id})`; }
+    for (const option of select.options) { const card = episode.cards.find(c => c.id === option.value); if (card) option.textContent = displayCardLabel(episode, card) || card.id; }
   }
 }
 function renderClueEditor() {
@@ -65,7 +65,7 @@ function renderClueEditor() {
     row.append(node('span', t('Clue {index}', { index: index + 1 }), 'clue-number'));
     for (const [field, labelText] of [['left', 'Left card'], ['kind', 'Relationship'], ['right', 'Right card']]) {
       const label = node('label', t(labelText)), select = node('select'); select.dataset.field = field; select.setAttribute('aria-label', `${t('Clue {index}', { index: index + 1 })} · ${t(labelText)}`);
-      const options = field === 'kind' ? [['before', 'comes before'], ['immediately_before', 'comes immediately before'], ['after', 'comes after']] : episode.cards.map(c => [c.id, `${c.label} (${c.id})`]);
+      const options = field === 'kind' ? [['before', 'comes before'], ['immediately_before', 'comes immediately before'], ['after', 'comes after']] : episode.cards.map(c => [c.id, displayCardLabel(episode, c) || c.id]);
       for (const [value, text] of options) { const option = node('option', field === 'kind' ? t(text) : text); if (field !== 'kind') option.lang = episode.locale; option.value = value; select.append(option); }
       select.value = clue[field]; select.addEventListener('change', () => { clue[field] = select.value; changed({ reviewHints: true }); });
       label.append(select); row.append(label);

@@ -1,5 +1,4 @@
-import { displayCardLabel } from '../lib/engine.mjs';
-import { validateEpisode } from '../lib/engine.mjs';
+import { displayCardLabel, validateEpisode } from '../lib/engine.mjs';
 import { createExport } from '../lib/export.mjs';
 import { readPlaytestRecord } from '../lib/playtest-export.mjs';
 
