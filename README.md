@@ -66,3 +66,9 @@ This is a first-episode contribution, not the full LUDOLINGUA product. The examp
 The selected LUDOLINGUA direction and original product ownership of `hamon-a19-20261027` are preserved. This isolated `episode-kit/` contribution does not modify the original prepared source tree or adopt the retired OFFCUT experiment. Its task is `ludolingua-first-episode-receiver-bd63af23`; the source-recovery checkpoint remains recorded separately.
 
 No public release or competition submission is implied by this private contribution.
+
+## The Signal Panel
+
+A second authored English/Spanish episode uses five cards, including two English cards with the same initial. Play its complete source and coordinated adaptation, then inspect the missing-clue version: two different layouts can spell the same word while the author check correctly reports ambiguous reasoning. The literal Spanish version is an intentional negative example.
+
+Choose a Signal Panel entry in the episode selector. [The episode guide](episode-kit/SIGNAL-PANEL.md) explains the four versions, player-versus-author distinction, CLI course and evidence limits. The existing six episodes and engine remain unchanged.
