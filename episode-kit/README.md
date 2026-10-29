@@ -315,3 +315,14 @@ PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
 LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/clue-evidence \
 node tests/clue-conflict-receiver.mjs
 ```
+
+
+## Inspect a recorded player's route
+
+Reopen a verified play-record in the author workbench and expand **Recorded journey**.
+Each bounded step shows the ordering *after* the recorded action; attempted
+answers also show the recomputed clue/action check, without changing the
+episode, journal or source binding. Distinguish a wrong order from a wrong
+action, including after hints, resets and solution reveals. The history is
+computed from a verified event record, not an attestation of human solving,
+timing or language quality. Large records remain in 100-event display batches.
