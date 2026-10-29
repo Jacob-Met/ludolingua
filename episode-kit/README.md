@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.5-cohort-ui.19ac2731
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.7-authoring.1b623a99
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -77,6 +77,47 @@ episode validity, current digest, engine version, recomputed analysis and fixed
 evidence limits. The reader never inherits a supplied pass claim. This is content
 integrity, not a cryptographic signature or independent provenance attestation.
 Edit the episode and export again to create a current result.
+
+## Create an original episode
+
+From the workbench, choose **Create an original episode**. Enter a title, story,
+required action and two to eight card names, with one name per line. Each name
+must start with a letter. Select English or Spanish as the puzzle's language;
+changing the interface language preserves your writing.
+
+**Create starting episode** prepares a checked export with no clues or hints.
+All card orders are still possible, so its integrity check does not mean the
+puzzle is solved. **Open in a new workbench** gives that episode its own tab,
+ready for clue authoring and a fresh check. The existing workbench, selected
+fixture and saved drafts remain unchanged.
+
+For a small example, use Sun, Apple and Yarn with the action SAY. Add a clue
+that Sun comes before Apple, then a clue that Apple comes before Yarn. The
+workbench narrows six possible orders to three, then one. Try the resulting
+puzzle in the player and export the checked episode to keep the complete work.
+
+New originals stay in their tab rather than becoming bundled fixture drafts.
+Export before closing or reloading. If the new window cannot open, choose
+**Download starting episode**, open a workbench and use **Reopen an export**.
+The downloaded file carries the same starting episode and recomputable result.
+
+Mechanical checks cover encoded ordering and extraction. They do not evaluate
+the writing or establish human playtesting, equivalent difficulty or model use.
+
+The original-authoring browser course uses the same existing runtime:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/original-authoring-evidence \
+node tests/authoring-receiver.mjs
+```
+
+It exercises real original creation, independent workbenches and saved-draft
+preservation, clue editing, player attempts, downloads and reopening. It also
+checks popup fallback, English/Spanish controls, narrow layout, card-count
+boundaries, stale form results and one-time receiving under delayed or invalid
+messages. Read its receipt and inspect the screenshots after execution; the
+script itself is not a claim of completed browser or human acceptance.
 
 ## Recoverable author drafts
 
@@ -223,7 +264,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.5-cohort-ui.19ac2731.
+the enclosing kit version is 0.3.7-authoring.1b623a99.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.

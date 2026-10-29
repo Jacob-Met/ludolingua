@@ -46,3 +46,6 @@ textarea{font:inherit;resize:vertical;width:100%;min-height:110px;border:1px sol
 
 /* Keep each player entry choice with its associated file control. */
 .playtest-import-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;width:100%}.playtest-import-choice{display:flex;flex-direction:column;gap:12px;min-width:0}.playtest-import-choice input{width:100%;min-width:0}.playtest-import-choice label{line-height:1.5}@media(max-width:800px){.playtest-import-choices{grid-template-columns:1fr;gap:24px}}
+
+/* Original episode entry and isolated handoff status. */
+.original-entry{margin:-1rem 0 2rem;font-size:1rem}.original-entry a{color:var(--ink);text-underline-offset:.3em;font-weight:650}.author-handoff-notice{padding:1rem 1.2rem;margin:0 0 1rem;border:1px solid currentColor;border-radius:.35rem}

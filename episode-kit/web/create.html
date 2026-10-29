@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LUDOLINGUA · Create an original episode</title>
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./create.css">
+  <script type="module" src="./create.mjs"></script>
+</head>
+<body>
+  <header class="masthead"><a class="wordmark" href="./index.html"><span class="mark" aria-hidden="true">L<span>↗</span></span>LUDOLINGUA</a><span class="edition" data-copy="edition">AN ORIGINAL EPISODE</span></header>
+  <main class="creator">
+    <section class="intro creator-intro">
+      <p class="eyebrow" data-copy="eyebrow">YOUR WORDS. YOUR DISCOVERY.</p>
+      <h1 data-copy="heading">Start with your own cards.</h1>
+      <p class="lede" data-copy="lede">Give your puzzle a scene, two to eight card names, and an action. Then write its ordering clues in a fresh workbench.</p>
+      <label class="creator-language" for="creator-ui-language"><span data-copy="uiLanguage">Interface language</span><select id="creator-ui-language"><option value="en" lang="en">English</option><option value="es" lang="es">Español</option></select></label>
+      <p class="small" data-copy="preserve">Your existing workbench and its drafts stay where they are. This page creates a separate original episode.</p>
+    </section>
+    <form id="create-episode-form" class="creator-grid" novalidate>
+      <section class="panel creator-scene" aria-labelledby="creator-scene-heading">
+        <p class="eyebrow" data-copy="sceneEyebrow">01 · SET THE SCENE</p>
+        <h2 id="creator-scene-heading" data-copy="sceneHeading">A reason to arrange the cards.</h2>
+        <label for="new-episode-title" data-copy="titleLabel">Episode title</label>
+        <textarea id="new-episode-title" rows="2" required autocomplete="off"></textarea>
+        <label for="new-episode-story" data-copy="storyLabel">Story for the player</label>
+        <textarea id="new-episode-story" rows="5" required></textarea>
+        <label for="new-episode-locale" data-copy="puzzleLanguage">Language of the puzzle</label>
+        <select id="new-episode-locale"><option value="en" lang="en">English</option><option value="es" lang="es">Español</option></select>
+        <p class="small" data-copy="languageHelp">This controls the generated clue wording. Changing the interface does not translate your writing.</p>
+      </section>
+      <section class="panel creator-cards" aria-labelledby="creator-cards-heading">
+        <p class="eyebrow" data-copy="cardsEyebrow">02 · CHOOSE THE WORDS</p>
+        <h2 id="creator-cards-heading" data-copy="cardsHeading">Names that carry an action.</h2>
+        <label for="new-episode-labels" data-copy="labelsLabel">Card names · one per line</label>
+        <textarea id="new-episode-labels" rows="8" required aria-describedby="new-labels-help" spellcheck="false"></textarea>
+        <p id="new-labels-help" class="small" data-copy="labelsHelp">Use two to eight names, each starting with a letter. Keep every card on its own line, without empty lines. This list does not declare a solution order.</p>
+        <label for="new-episode-action" data-copy="actionLabel">Required action</label>
+        <input id="new-episode-action" type="text" required autocomplete="off" spellcheck="false" aria-describedby="new-action-help">
+        <p id="new-action-help" class="small" data-copy="actionHelp">Choose what the ordered initials should spell. The workbench will check your clues and action together.</p>
+      </section>
+      <section class="panel creator-submit">
+        <div><h2 data-copy="buildHeading">Make room for the reasoning.</h2><p data-copy="buildHelp">The starting episode has no clues or hints. It is intentionally unfinished: add clues and check the discovery in the workbench.</p></div>
+        <button id="create-starting-episode" class="primary" type="submit" data-copy="createButton">Create starting episode</button>
+      </section>
+    </form>
+    <p id="creator-status" class="notice" role="status" aria-live="polite" tabindex="-1"></p>
+    <section id="created-episode" class="panel creator-ready" hidden aria-labelledby="created-title">
+      <div><p class="eyebrow" data-copy="readyEyebrow">A STARTING POINT, NOT A SOLVED PUZZLE</p><h2 id="created-title"></h2><p id="created-summary"></p><p id="created-reasoning" class="small"></p><ol id="created-cards"></ol><p id="created-digest" class="digest"></p></div>
+      <div class="creator-next"><button id="open-created-workbench" class="primary" type="button" data-copy="openButton">Open in a new workbench</button><button id="download-starting-episode" class="secondary" type="button" data-copy="downloadButton">Download starting episode</button><p class="small" data-copy="nextHelp">Add clues, check the revision, then export your work. The new workbench keeps this episode in its tab; it does not save a fixture draft.</p><p class="small" data-copy="fallbackHelp">If a new window cannot open, download this episode. In a workbench, choose Reopen an export and select the downloaded file.</p><a href="./index.html" target="_blank" rel="noopener" class="text-button" data-copy="workbenchLink">Open a workbench for file import ↗</a></div>
+    </section>
+  </main>
+  <footer><span>LUDOLINGUA <span class="footer-dot">●</span> <span data-copy="footer">AN ORIGINAL BEGINNING</span></span><span data-copy="limits">Mechanical checks leave room for human judgment.</span></footer>
+</body>
+</html>
