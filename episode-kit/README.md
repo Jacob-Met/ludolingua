@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.1
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.2-compat.5b858b51
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -201,7 +201,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.1.
+the enclosing kit version is 0.3.2-compat.5b858b51.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -315,3 +315,23 @@ PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
 LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/clue-evidence \
 node tests/clue-conflict-receiver.mjs
 ```
+
+### Reopening records from the first playtest draft
+
+The receiver also accepts the original 0.1.0 playtest records whose saved final
+attempt predates the `tokenMatches` field. It replays the complete captured episode
+and journal, verifies every historical validation and evidence field against the
+original representation and binding, then returns current derived validation.
+The episode, session identity, event order, answers, hints, reveals and resets
+remain unchanged. An earlier failed attempt remains a failed attempt.
+
+This is a narrow compatibility rule. An explicitly supplied incorrect or null
+`tokenMatches`, an altered result or evidence claim, a mismatched digest, or an
+unsupported version is still rejected. Returning current validation does not
+modify the original downloaded file. The record viewer remains a review of the
+saved journey; it does not resume that journal as a new live player session.
+
+Hashes establish consistency with the supplied episode and events, not who
+authored them. A fully consistent replacement history can still be authored by
+a caller. The native fixtures record the exact historical engine/writer blobs
+and immutable old-record hashes in `tests/fixtures/playtest-v0.1-provenance.json`.
