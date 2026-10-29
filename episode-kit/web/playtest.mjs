@@ -1,12 +1,12 @@
 import { analyzeEpisode, clueText } from '../lib/engine.mjs';
 import { readExport } from '../lib/export.mjs';
 import { replayPlaytest, MAX_PLAYTEST_EVENTS } from '../lib/playtest.mjs';
-import { createPlaytestRecord } from '../lib/playtest-export.mjs';
+import { createPlaytestRecord, readPlaytestRecord } from '../lib/playtest-export.mjs';
 import { supportedLocale } from './i18n.mjs';
 
 const $ = id => document.getElementById(id);
 const MAX_BYTES = 20_000_000;
-let episode = null, events = [], replay = null, sessionId = '', startedAt = 0, loading = false, exporting = false;
+let episode = null, events = [], replay = null, sessionId = '', startedAt = 0, elapsedOffset = 0, loading = false, exporting = false;
 let uiLocale = supportedLocale((navigator.language ?? 'en').split('-')[0].toLowerCase()), lastDownloadedCount = null;
 const token = new URL(location.href).searchParams.get('handoff');
 const es = () => uiLocale === 'es';
@@ -22,6 +22,8 @@ function localizedCopy() {
     'playtest-edition-detail': ['YOUR DISCOVERY', 'TU DESCUBRIMIENTO'],
     'playtest-footer-edition': ['A CHOSEN REVISION', 'UNA REVISIÓN ELEGIDA'],
     'playtest-file-label': ['Open an episode export', 'Abrir una exportación del episodio'],
+    'playtest-resume-label': ['Continue a saved play record', 'Continuar un registro de juego guardado'],
+    'playtest-resume-note': ['Continue your newest record in one window. Recorded actions return; unsubmitted answers do not. Timing continues from the last recorded action; unrecorded time is not recovered. Multiple continuations can create conflicting records.', 'Continúa tu registro más reciente en una sola ventana. Se recuperan las acciones registradas, no las respuestas sin enviar. El tiempo continúa desde la última acción registrada; no se recupera el tiempo sin registrar. Varias continuaciones pueden crear registros incompatibles.'],
     'playtest-eyebrow': ['A PUZZLE TO DISCOVER', 'UN ENIGMA POR DESCUBRIR'],
     'playtest-arrange-heading': ['Arrange the keepers', 'Ordena a los guardianes'],
     'playtest-instructions': ['Use the clues to find an order. Read the first letter of each label, then enter the action.', 'Usa las pistas para ordenar las tarjetas. Lee la primera letra de cada nombre y escribe la acción.'],
@@ -33,7 +35,7 @@ function localizedCopy() {
     'playtest-reveal': ['Reveal the solution', 'Revelar la solución'],
     'playtest-record-heading': ['Keep a record of the journey.', 'Conserva el recorrido.'],
     'playtest-download': ['Download play record', 'Descargar registro de juego'],
-    'playtest-record-note': ['Resetting keeps the earlier attempts, hints and reveals in the record. Download before closing this window; the session is not saved after you leave.', 'Restablecer conserva los intentos, las pistas y las soluciones reveladas en el registro. Descárgalo antes de cerrar esta ventana; la sesión no se guarda al salir.'],
+    'playtest-record-note': ['Resetting keeps earlier attempts, hints and reveals. Download before closing; there is no automatic save. Continue your newest record in one window. Timing resumes from the last recorded action; unrecorded time and unsubmitted answers are not restored.', 'Restablecer conserva los intentos, las pistas y las soluciones reveladas. Descárgalo antes de cerrar; no se guarda automáticamente. Continúa tu registro más reciente en una sola ventana. El tiempo continúa desde la última acción registrada; no se recuperan el tiempo sin registrar ni las respuestas sin enviar.'],
     'playtest-evidence-note': ['This records actions and elapsed times reported by this browser. It does not verify who played, unaided solving, native-language fluency or puzzle quality.', 'El registro contiene las acciones y los tiempos que comunica este navegador. No verifica quién jugó, si resolvió sin ayuda, su dominio nativo del idioma ni la calidad del enigma.'],
     'playtest-footer': ['Follow the clues. Keep your own pace.', 'Sigue las pistas. A tu ritmo.']
   };
@@ -42,8 +44,8 @@ function localizedCopy() {
     $('playtest-revision').textContent = words(`Revision ${episode.revision} · ${episode.locale.toUpperCase()} · fixed for this session`, `Revisión ${episode.revision} · ${episode.locale.toUpperCase()} · fija para esta sesión`);
   } else {
     $('playtest-title').textContent = words('Meet the keepers.', 'Conoce a los guardianes.');
-    $('playtest-story').textContent = words('Open an episode export to begin. This window keeps one revision and records your attempts, hints and reveals.', 'Abre una exportación para empezar. Esta ventana conserva una revisión y registra tus intentos, ayudas y soluciones reveladas.');
-    if ($('playtest-status').dataset.state !== 'error') $('playtest-import-status').textContent = words('Choose a checked episode JSON exported from the workbench.', 'Elige un archivo JSON de episodio comprobado y exportado desde el taller.');
+    $('playtest-story').textContent = words('Open an episode export to begin, or continue your newest saved play record. This window keeps one revision and records your attempts, hints and reveals.', 'Abre una exportación para empezar o continúa tu registro de juego guardado más reciente. Esta ventana conserva una revisión y registra tus intentos, ayudas y soluciones reveladas.');
+    if ($('playtest-status').dataset.state !== 'error') $('playtest-import-status').textContent = words('Choose an episode export to start, or a saved play record to continue.', 'Elige una exportación de episodio para empezar o un registro de juego guardado para continuar.');
   }
   if ($('playtest-status').dataset.state === 'ready') status(words('Ready. This window keeps the revision you opened.', 'Listo. Esta ventana conserva la revisión que abriste.'));
   if ($('playtest-status').dataset.state === 'waiting') status(words('Waiting for an episode.', 'Esperando un episodio.'), 'waiting');
@@ -54,7 +56,11 @@ function renderDownloadStatus() {
 }
 function record(event) {
   if (!episode || events.length >= MAX_PLAYTEST_EVENTS) return false;
-  const elapsedMs = Math.max(replay.summary.elapsedMs, Math.floor(performance.now() - startedAt));
+  const elapsedMs = elapsedOffset + Math.floor(performance.now() - startedAt);
+  if (!Number.isSafeInteger(elapsedMs) || elapsedMs < replay.summary.elapsedMs) {
+    status(words('This action could not be recorded because the elapsed time is invalid. Your existing record is unchanged; download it to keep it.', 'No se pudo registrar esta acción porque el tiempo transcurrido no es válido. El registro existente no cambió; descárgalo para conservarlo.'), 'error');
+    return false;
+  }
   const candidate = [...events, { ...event, elapsedMs }], checked = replayPlaytest(episode, candidate);
   if (!checked.valid) { status(checked.errors.join('; '), 'error'); return false; }
   events = candidate; replay = checked; render(); return true;
@@ -101,32 +107,47 @@ function render() {
   $('playtest-journal-summary').textContent = words(`${summary.attempts} ${summary.attempts === 1 ? 'attempt' : 'attempts'} · ${summary.hintsShown} ${summary.hintsShown === 1 ? 'hint' : 'hints'} shown · ${summary.resets} ${summary.resets === 1 ? 'reset' : 'resets'} · solution ${summary.revealUsed ? 'revealed' : 'not revealed'} in this record`, `${summary.attempts} ${summary.attempts === 1 ? 'intento' : 'intentos'} · ${summary.hintsShown} ${summary.hintsShown === 1 ? 'pista mostrada' : 'pistas mostradas'} · ${summary.resets} ${summary.resets === 1 ? 'restablecimiento' : 'restablecimientos'} · solución ${summary.revealUsed ? 'revelada' : 'no revelada'} en este registro`);
   if (full) status(words('The 10,000-event record is full. Download it before starting another window.', 'El registro de 10.000 eventos está lleno. Descárgalo antes de empezar en otra ventana.'), 'full');
 }
-async function receive(source, incomingLocale) {
+async function receive(source, incomingLocale, continuing = false) {
   if (episode || loading) return;
-  if (incomingLocale !== undefined) { uiLocale = supportedLocale(incomingLocale); localizedCopy(); }
-  loading = true; $('playtest-file').disabled = true;
+  loading = true; $('playtest-file').disabled = true; $('playtest-resume-file').disabled = true;
   try {
     const value = typeof source === 'function' ? await source() : source;
-    if (new Blob([typeof value === 'string' ? value : JSON.stringify(value)]).size > MAX_BYTES) throw new Error('The episode export exceeds the 20 MB receiver limit.');
-    const received = await readExport(value);
-    const checked = replayPlaytest(received.episode, []);
+    if (new Blob([typeof value === 'string' ? value : JSON.stringify(value)]).size > MAX_BYTES) throw new Error('The file exceeds the 20 MB receiver limit.');
+    const received = continuing ? await readPlaytestRecord(value) : await readExport(value);
+    const adoptedEpisode = structuredClone(received.episode);
+    const adoptedEvents = continuing ? structuredClone(received.events) : [];
+    const checked = replayPlaytest(adoptedEpisode, adoptedEvents);
     if (!checked.valid) throw new Error(checked.errors.join('; '));
-    episode = structuredClone(received.episode); events = []; replay = checked; sessionId = crypto.randomUUID(); startedAt = performance.now();
+    const adoptedSessionId = continuing ? received.sessionId : crypto.randomUUID();
+    const adoptedStart = performance.now();
+    if (incomingLocale !== undefined) uiLocale = supportedLocale(incomingLocale);
+    episode = adoptedEpisode; events = adoptedEvents; replay = checked; sessionId = adoptedSessionId;
+    elapsedOffset = checked.summary.elapsedMs; startedAt = adoptedStart;
+    $('playtest-answer').value = '';
     localizedCopy(); document.title = `LUDOLINGUA · ${episode.title}`;
     $('playtest-title').textContent = episode.title; $('playtest-story').textContent = episode.story;
     for (const id of ['playtest-title', 'playtest-story', 'playtest-cards', 'playtest-clues', 'playtest-hints']) $(id).lang = episode.locale;
     $('playtest-clues').replaceChildren(...episode.clues.map(clue => node('li', clueText(episode, clue))));
     $('playtest-import').hidden = true; $('playtest-session').hidden = false;
-    render(); status(words('Ready. This window keeps the revision you opened.', 'Listo. Esta ventana conserva la revisión que abriste.'));
+    status(words('Ready. This window keeps the revision you opened.', 'Listo. Esta ventana conserva la revisión que abriste.')); render();
+    $('playtest-arrange-heading').focus();
   } catch (error) {
-    $('playtest-import-status').textContent = words(`Cannot open: ${error.message}`, `No se puede abrir: ${error.message}`); status(words('Choose a valid episode export to begin.', 'Elige una exportación válida para empezar.'), 'error');
-  } finally { loading = false; $('playtest-file').disabled = Boolean(episode); $('playtest-file').value = ''; }
+    $('playtest-import-status').textContent = words(`Cannot open: ${error.message}`, `No se puede abrir: ${error.message}`); status(words('Choose a valid episode export or saved play record.', 'Elige una exportación de episodio o un registro de juego válido.'), 'error');
+  } finally {
+    loading = false;
+    for (const id of ['playtest-file', 'playtest-resume-file']) { $(id).disabled = Boolean(episode); $(id).value = ''; }
+  }
 }
-$('playtest-file').addEventListener('change', async () => {
-  const file = $('playtest-file').files[0]; if (!file || episode || loading) return;
-  if (file.size > MAX_BYTES) { $('playtest-import-status').textContent = 'Cannot open: the episode export exceeds the 20 MB receiver limit.'; $('playtest-file').value = ''; return; }
-  await receive(() => file.text());
-});
+for (const [id, continuing] of [['playtest-file', false], ['playtest-resume-file', true]]) {
+  $(id).addEventListener('change', async () => {
+    const file = $(id).files[0]; if (!file || episode || loading) return;
+    if (file.size > MAX_BYTES) {
+      $('playtest-import-status').textContent = words('Cannot open: the file exceeds the 20 MB receiver limit.', 'No se puede abrir: el archivo supera el límite de 20 MB.');
+      status(words('Choose a smaller valid file.', 'Elige un archivo válido más pequeño.'), 'error'); $(id).value = ''; return;
+    }
+    await receive(() => file.text(), undefined, continuing);
+  });
+}
 $('playtest-answer-form').addEventListener('submit', event => { event.preventDefault(); record({ type: 'attempt', answer: $('playtest-answer').value }); });
 $('playtest-hint').addEventListener('click', () => record({ type: 'hint' }));
 $('playtest-reveal').addEventListener('click', () => record({ type: 'reveal' }));
