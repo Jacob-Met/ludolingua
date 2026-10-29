@@ -1,0 +1,300 @@
+{
+  "schema": "ludolingua.comparison-export.v1",
+  "source": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "NORTH"
+    },
+    "cards": [
+      {
+        "id": "nest",
+        "label": "Nest"
+      },
+      {
+        "id": "sea",
+        "label": "Ocean"
+      },
+      {
+        "id": "river",
+        "label": "River"
+      },
+      {
+        "id": "tower",
+        "label": "Tower"
+      },
+      {
+        "id": "landing",
+        "label": "Harbor"
+      }
+    ],
+    "clues": [
+      {
+        "id": "landing-after-tower",
+        "kind": "after",
+        "left": "landing",
+        "right": "tower"
+      },
+      {
+        "id": "sea-river-pair",
+        "kind": "immediately_before",
+        "left": "sea",
+        "right": "river"
+      },
+      {
+        "id": "nest-before-sea",
+        "kind": "before",
+        "left": "nest",
+        "right": "sea"
+      },
+      {
+        "id": "river-tower-pair",
+        "kind": "immediately_before",
+        "left": "river",
+        "right": "tower"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "“Immediately before” means the two plates must touch.",
+      "Join the two immediate links into one block of three plates. Keep their internal order.",
+      "Use the clue that says “before”, without “immediately”, to place one plate ahead of the block. Put the remaining plate after it, then read the five initials."
+    ],
+    "id": "coastal-bearing-en",
+    "locale": "en",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [],
+      "source": "Original Coastal Bearing case authored with ChatGPT by estate-a10203ad-3c50-4b64-aae6-2b9d1b0c60cf for the existing LUDOLINGUA project; product custody remains with hamon-a19-20261027. No external puzzle assets or NVIDIA/Nebius inference run."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "The chart room has gone dark. One lamp still glows beside the compass. Beneath it lie five wooden plates, each naming a feature from the navigator’s coastal notes. Arrange them in the only order the clues allow. Then read the first letters from left to right: together they recover the bearing missing from the chart.",
+    "title": "The Last Bearing"
+  },
+  "target": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "NORTE"
+    },
+    "cards": [
+      {
+        "id": "nest",
+        "label": "Nido"
+      },
+      {
+        "id": "sea",
+        "label": "Océano"
+      },
+      {
+        "id": "river",
+        "label": "Río"
+      },
+      {
+        "id": "tower",
+        "label": "Torre"
+      },
+      {
+        "id": "landing",
+        "label": "Puerto"
+      }
+    ],
+    "clues": [
+      {
+        "id": "landing-after-tower",
+        "kind": "after",
+        "left": "landing",
+        "right": "tower"
+      },
+      {
+        "id": "sea-river-pair",
+        "kind": "immediately_before",
+        "left": "sea",
+        "right": "river"
+      },
+      {
+        "id": "nest-before-sea",
+        "kind": "before",
+        "left": "nest",
+        "right": "sea"
+      },
+      {
+        "id": "river-tower-pair",
+        "kind": "immediately_before",
+        "left": "river",
+        "right": "tower"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "«Inmediatamente antes» significa que las dos tablillas deben quedar juntas.",
+      "Une los dos enlaces inmediatos en un bloque de tres tablillas. Conserva su orden interno.",
+      "Usa la pista que dice «antes», sin «inmediatamente», para colocar una tablilla delante del bloque. Pon la restante detrás y lee las cinco iniciales."
+    ],
+    "id": "coastal-bearing-es-literal",
+    "locale": "es",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [
+        "Authored Spanish literal-label contrast: Nest→Nido, Ocean→Océano, River→Río, Tower→Torre, Harbor→Puerto. Harbor is rendered as Puerto in this coastal context, not asserted as a universal exact equivalence.",
+        "The same unique role order extracts NORTP, not the localized bearing NORTE. This is an intentional mechanically unsuccessful contrast. Accents and all ordering constraints are retained."
+      ],
+      "source": "Original Coastal Bearing case authored with ChatGPT by estate-a10203ad-3c50-4b64-aae6-2b9d1b0c60cf for the existing LUDOLINGUA project; product custody remains with hamon-a19-20261027. No external puzzle assets or NVIDIA/Nebius inference run."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "La sala de mapas está a oscuras. Solo una lámpara sigue encendida junto a la brújula. Debajo hay cinco tablillas de madera con nombres tomados de unas notas sobre la costa. Ordénalas según las pistas y lee sus iniciales de izquierda a derecha. Juntas revelan el rumbo que falta en el mapa.",
+    "title": "El último rumbo"
+  },
+  "mapping": [
+    {
+      "sourceId": "nest",
+      "targetId": "nest"
+    },
+    {
+      "sourceId": "sea",
+      "targetId": "sea"
+    },
+    {
+      "sourceId": "river",
+      "targetId": "river"
+    },
+    {
+      "sourceId": "tower",
+      "targetId": "tower"
+    },
+    {
+      "sourceId": "landing",
+      "targetId": "landing"
+    }
+  ],
+  "validation": {
+    "comparisonEngineVersion": "0.1.0",
+    "sourceSha256": "649aa4716efedefde55af8ce5ba9f7481e5471648598567b7a453e264e626524",
+    "targetSha256": "b754c0a2a444471dc1261c6548f9c6ce34770fe4a17450e6a2b64b36e95508ef",
+    "bindingSha256": "2374f24812f5c3179a344f076f31d6df0b726eefbeb4d658e0af194b9ba202c1",
+    "result": {
+      "schema": "ludolingua.comparison.v1",
+      "comparisonEngineVersion": "0.1.0",
+      "valid": true,
+      "errors": [],
+      "mapping": [
+        {
+          "sourceId": "landing",
+          "targetId": "landing"
+        },
+        {
+          "sourceId": "nest",
+          "targetId": "nest"
+        },
+        {
+          "sourceId": "river",
+          "targetId": "river"
+        },
+        {
+          "sourceId": "sea",
+          "targetId": "sea"
+        },
+        {
+          "sourceId": "tower",
+          "targetId": "tower"
+        }
+      ],
+      "sameOrderSet": true,
+      "mechanicalPreserved": false,
+      "source": {
+        "valid": true,
+        "outcome": "verified",
+        "permutationCount": 120,
+        "clueOrderCount": 1,
+        "actionMatchCount": 1,
+        "uniqueReasoning": true,
+        "mechanicalSuccess": true
+      },
+      "target": {
+        "valid": true,
+        "outcome": "action-mismatch",
+        "permutationCount": 120,
+        "clueOrderCount": 1,
+        "actionMatchCount": 0,
+        "uniqueReasoning": true,
+        "mechanicalSuccess": false
+      },
+      "sourceOnlyCount": 0,
+      "targetOnlyCount": 0,
+      "sourceOnlyWitness": null,
+      "targetOnlyWitness": null,
+      "roleChanges": [
+        {
+          "sourceId": "landing",
+          "targetId": "landing",
+          "sourceLabel": "Harbor",
+          "targetLabel": "Puerto",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "nest",
+          "targetId": "nest",
+          "sourceLabel": "Nest",
+          "targetLabel": "Nido",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "river",
+          "targetId": "river",
+          "sourceLabel": "River",
+          "targetLabel": "Río",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "sea",
+          "targetId": "sea",
+          "sourceLabel": "Ocean",
+          "targetLabel": "Océano",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "tower",
+          "targetId": "tower",
+          "sourceLabel": "Tower",
+          "targetLabel": "Torre",
+          "labelChanged": true
+        }
+      ],
+      "clueChanges": {
+        "sourceOnly": [],
+        "targetOnly": []
+      },
+      "limitations": [
+        "Comparison covers encoded clue-consistent order sets under the declared role bijection and each episode’s extraction/action check.",
+        "Equal order sets do not establish equal discovery process, difficulty, linguistic meaning or cultural suitability. Human review remains unresolved.",
+        "No model inference or human playtest is evidenced by this comparison."
+      ]
+    }
+  },
+  "evidence": {
+    "modelContributionVerified": false,
+    "nativeHumanPlaytestVerified": false,
+    "limitations": [
+      "Encoded order-set and action checks only; no equivalence of meaning, difficulty or cultural suitability is established.",
+      "Hashes bind caller-provided content, not author identity or independent provenance attestation."
+    ]
+  }
+}

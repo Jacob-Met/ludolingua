@@ -1,0 +1,133 @@
+{
+  "schema": "ludolingua.episode-export.v1",
+  "episode": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "NORTE"
+    },
+    "cards": [
+      {
+        "id": "nest",
+        "label": "Nido"
+      },
+      {
+        "id": "sea",
+        "label": "Océano"
+      },
+      {
+        "id": "river",
+        "label": "Río"
+      },
+      {
+        "id": "tower",
+        "label": "Torre"
+      },
+      {
+        "id": "landing",
+        "label": "Embarcadero"
+      }
+    ],
+    "clues": [
+      {
+        "id": "landing-after-tower",
+        "kind": "after",
+        "left": "landing",
+        "right": "tower"
+      },
+      {
+        "id": "sea-river-pair",
+        "kind": "immediately_before",
+        "left": "sea",
+        "right": "river"
+      },
+      {
+        "id": "nest-before-sea",
+        "kind": "before",
+        "left": "nest",
+        "right": "sea"
+      },
+      {
+        "id": "river-tower-pair",
+        "kind": "immediately_before",
+        "left": "river",
+        "right": "tower"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "«Inmediatamente antes» significa que las dos tablillas deben quedar juntas.",
+      "Une los dos enlaces inmediatos en un bloque de tres tablillas. Conserva su orden interno.",
+      "Usa la pista que dice «antes», sin «inmediatamente», para colocar una tablilla delante del bloque. Pon la restante detrás y lee las cinco iniciales."
+    ],
+    "id": "coastal-bearing-es-adapted",
+    "locale": "es",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [
+        "Relative to the Spanish literal-label contrast, only the landing card label changes: Puerto→Embarcadero. The first four labels, card IDs, clues, story, hints, extraction and required bearing NORTE are preserved; episode identity and provenance identify this variant.",
+        "The referent narrows from a port or harbor to a place for boarding or landing. An embarcadero need not be a constructed pier. This is an authored semantic change, not a literal synonym substitution.",
+        "The same unique role order now extracts NORTE. Language clarity, comparable difficulty, cultural suitability and native-human playtesting remain unverified."
+      ],
+      "source": "Original Coastal Bearing case authored with ChatGPT by estate-a10203ad-3c50-4b64-aae6-2b9d1b0c60cf for the existing LUDOLINGUA project; product custody remains with hamon-a19-20261027. No external puzzle assets or NVIDIA/Nebius inference run."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "La sala de mapas está a oscuras. Solo una lámpara sigue encendida junto a la brújula. Debajo hay cinco tablillas de madera con nombres tomados de unas notas sobre la costa. Ordénalas según las pistas y lee sus iniciales de izquierda a derecha. Juntas revelan el rumbo que falta en el mapa.",
+    "title": "El último rumbo"
+  },
+  "validation": {
+    "engineVersion": "0.1.0",
+    "episodeSha256": "8d95e573ba653689aaf90b53c0e84b3bf1c678f573c5dfa24f6530ff1bbd2b61",
+    "result": {
+      "schema": "ludolingua.analysis.v1",
+      "engineVersion": "0.1.0",
+      "valid": true,
+      "errors": [],
+      "permutationCount": 120,
+      "clueOrderCount": 1,
+      "actionMatchCount": 1,
+      "uniqueReasoning": true,
+      "mechanicalSuccess": true,
+      "outcome": "verified",
+      "solutions": [
+        {
+          "order": [
+            "nest",
+            "sea",
+            "river",
+            "tower",
+            "landing"
+          ],
+          "token": "NORTE",
+          "actionMatches": true
+        }
+      ],
+      "frozenWitness": null,
+      "limitations": [
+        "Checks cover encoded ordering and extraction only; native-language clarity, cultural suitability and comparable discovery require human playtests.",
+        "No model inference is evidenced.",
+        "Extraction uses the first Unicode code point after trim and NFC, then locale-independent uppercase; uppercase may expand to multiple code points."
+      ]
+    }
+  },
+  "evidence": {
+    "kind": "authored-fixture",
+    "modelContributionVerified": false,
+    "nativeHumanPlaytestVerified": false,
+    "limitations": [
+      "Mechanical checks certify only the encoded properties.",
+      "No NVIDIA/Nebius model integration or native-language human playtest is established.",
+      "Equivalent difficulty, cultural suitability and linguistic quality remain unverified.",
+      "SHA256 binds content; it does not authenticate an author or attest provenance claims."
+    ]
+  }
+}
