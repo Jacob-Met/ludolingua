@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.7-authoring.1b623a99
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.8-card-identities.54627f35
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -264,7 +264,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.7-authoring.1b623a99.
+the enclosing kit version is 0.3.8-card-identities.54627f35.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -520,3 +520,40 @@ Hashes establish consistency with the supplied episode and events, not who
 authored them. A fully consistent replacement history can still be authored by
 a caller. The native fixtures record the exact historical engine/writer blobs
 and immutable old-record hashes in `tests/fixtures/playtest-v0.1-provenance.json`.
+
+## Distinguishing repeated card names
+
+Clues, authoring choices, player controls, solution paths and recorded moves
+keep repeated card names distinct using their existing role IDs. If those names
+still repeat, a stable card number appears in brackets. These display cues
+follow the card when you move it. The authored label and its extracted initial
+stay unchanged.
+
+The card-identity browser receiver covers generated-name collisions, Unicode
+choices, keyboard movement, exported labels and recorded moves. Use the same
+existing Playwright/Chrome setup as the other browser receivers:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/card-identity-evidence \
+node tests/duplicate-label-receiver.mjs
+```
+
+## Current-main card-identity receiving
+
+The additional `tests/duplicate-name-receiver.mjs` course checks actual successful
+play, byte-identical episode exports after display operations, historical record
+review after current author edits, both directions of comparison witnesses, and
+saved-session continuation. It uses the same `PLAYWRIGHT_PACKAGE` and
+`LUDO_EVIDENCE_DIR` settings shown above.
+
+`tests/fixtures/duplicate-name-before-display-repair.json` is a synthetic saved
+record generated with unmodified main
+`a6589f2c997e14e1a62f26077be8470d93c41185`. The continuation course verifies that
+the repaired display keeps its captured labels, IDs, session and event prefix.
+This fixture is not evidence of a human playtest.
+
+The current composition also receives original episodes through the separate
+authoring form, including colliding names, typed clues, locale changes, successful
+play and exact download/reopen. It retains main authoring and saved-session
+continuation, alongside the earlier attributed card-name collision repair.

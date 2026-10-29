@@ -54,12 +54,42 @@ export function extractToken(e, order) {
   if (!validateEpisode(e).valid || !fullOrder(e,order)) throw new Error('Expected a valid episode and full card permutation.');
   return token(e,order);
 }
+export function displayCardLabel(e, card) {
+  if (!obj(e) || !Array.isArray(e.cards) || !obj(card) || typeof card.label !== 'string') return '';
+  const visible = value => value.trim().normalize('NFC').replace(/\s+/gu, ' ');
+  if (!visible(card.label) || typeof card.id !== 'string') return card.label;
+  const preferred = value => {
+    if (!obj(value) || typeof value.label !== 'string') return '';
+    const matches = e.cards.filter(other => obj(other) && typeof other.label === 'string' && visible(other.label) === visible(value.label));
+    return matches.length > 1 ? `${value.label.trim()} (${value.id})` : value.label;
+  };
+  const index = e.cards.findIndex(other => obj(other) && other.id === card.id);
+  if (index < 0) return preferred(card);
+  const labels = e.cards.map(preferred);
+  const normalized = labels.map(visible);
+  const reserved = new Set(normalized);
+  const assigned = new Set();
+  // Reserve every authored/preferred name before adding display-only identities.
+  // Stable array positions keep these identities unchanged as players move cards.
+  // A suffix retains the authored first letter used by the puzzle's extraction.
+  const displayed = labels.map((label, i) => {
+    let result = label;
+    if (normalized.some((value, j) => j !== i && value === normalized[i])) {
+      const suffix = ` [${i + 1}]`;
+      result += suffix;
+      while (reserved.has(visible(result)) || assigned.has(visible(result))) result += suffix;
+    }
+    assigned.add(visible(result));
+    return result;
+  });
+  return displayed[index];
+}
 export function clueText(e,c) {
   if (!validateEpisode(e).valid || !obj(c) || !['before','after','immediately_before'].includes(c.kind) || c.left === c.right) throw new Error('Invalid clue.');
   const left = e.cards.find(x => x.id === c.left), right = e.cards.find(x => x.id === c.right);
   if (!left || !right) throw new Error('Unknown clue card.');
   const relations = e.locale === 'es' ? {before:'va antes de',after:'va después de',immediately_before:'va inmediatamente antes de'} : {before:'comes before',after:'comes after',immediately_before:'comes immediately before'};
-  return `${left.label} ${relations[c.kind]} ${right.label}.`;
+  return `${displayCardLabel(e,left)} ${relations[c.kind]} ${displayCardLabel(e,right)}.`;
 }
 export function checkAttempt(e,order,answer) {
   const fail = {orderValid:false,cluesSatisfied:false,token:'',tokenMatches:false,answerMatches:false,success:false};

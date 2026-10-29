@@ -1,4 +1,4 @@
-import { validateEpisode } from '../lib/engine.mjs';
+import { displayCardLabel, validateEpisode } from '../lib/engine.mjs';
 import { createExport } from '../lib/export.mjs';
 import { readPlaytestRecord } from '../lib/playtest-export.mjs';
 
@@ -46,7 +46,7 @@ export function setupPlaytest({ getEpisode, notice, maxBytes, t, diagnostic, get
       const end = Math.min(visible + count, record.events.length);
       for (; visible < end; visible++) {
         const event = record.events[visible];
-        const action = event.type === 'move' ? t(event.direction === 'up' ? 'Move {label} up' : 'Move {label} down', {label:record.episode.cards.find(card => card.id === event.cardId).label}) : event.type === 'attempt' ? t('Try action: {answer}', {answer:event.answer || t('(empty answer)')}) : event.type === 'hint' ? t('Show a hint') : event.type === 'reveal' ? t('Reveal the solution') : t('Reset the order');
+        const action = event.type === 'move' ? t(event.direction === 'up' ? 'Move {label} up' : 'Move {label} down', {label:displayCardLabel(record.episode, record.episode.cards.find(card => card.id === event.cardId))}) : event.type === 'attempt' ? t('Try action: {answer}', {answer:event.answer || t('(empty answer)')}) : event.type === 'hint' ? t('Show a hint') : event.type === 'reveal' ? t('Reveal the solution') : t('Reset the order');
         list.append(node('li', t('{seconds} s · {action}', {seconds:(event.elapsedMs / 1000).toFixed(1),action})));
       }
       visibleEvents = visible; more.hidden = visible >= record.events.length;
