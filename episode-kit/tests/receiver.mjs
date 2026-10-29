@@ -14,7 +14,7 @@ let browser, page;
 const receipt = { schema: 'ludolingua.browser-receiving.v1', startedAt: new Date().toISOString(), url, checks: [], errors: [], failedRequests: [], sandbox: null, passed: false };
 const check = name => receipt.checks.push(name);
 try {
-  browser = await chromium.launch({ headless: true, executablePath: '/usr/bin/google-chrome-stable', chromiumSandbox: true, args: ['--disable-dev-shm-usage'] });
+  browser = await chromium.launch({ headless: true, executablePath: '/usr/bin/google-chrome-stable', chromiumSandbox: true, args: ['--disable-dev-shm-usage', '--enable-automation'] });
   const session = await browser.newBrowserCDPSession();
   const command = await session.send('Browser.getBrowserCommandLine');
   assert.equal(command.arguments.some(a => a === '--no-sandbox' || a === '--disable-setuid-sandbox'), false, 'Sandbox-disabling launch flag');

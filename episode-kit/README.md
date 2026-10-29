@@ -54,6 +54,34 @@ evidence limits. The reader never inherits a supplied pass claim. This is conten
 integrity, not a cryptographic signature or independent provenance attestation.
 Edit the episode and export again to create a current result.
 
+## Recoverable author drafts
+
+Bundled episodes save label edits, ordering clues, the required action, exact hint text, author-declared hint review,
+the frozen-label flag, and the revision in this
+browser. Wait for **Draft saved in this browser** before closing or reloading.
+Returning to an episode restores its own unfinished draft, including empty labels.
+Every restored revision needs a fresh check; drafts never store verification results.
+**Discard draft** resets only the selected episode to its bundled original.
+
+Drafts belong to the same browser profile and exact origin (scheme, host and port).
+Use the same `http://127.0.0.1:4173` address when returning. They are local convenience,
+not a backup or server sync; clearing browser data removes them. With blocked storage,
+quota errors, or no Web Locks support, edits remain in the current tab only and the
+workbench says so. Browser tab memory survives episode switches but not closing.
+
+If another tab saves the same episode, automatic saving pauses. **Load saved draft**
+replaces this tab's content with the saved version and clears its old check.
+**Keep these edits** explicitly replaces the saved version with this tab's content.
+Malformed or source-incompatible saved data is preserved until you choose to keep
+the current edits or discard that draft. Loading such data never grants approval.
+
+Reopened exports retain full digest and mechanical verification. They are separate
+from bundled drafts even when episode IDs match; edits to reopened content remain
+in this tab when switching episodes. Export the checked revision to keep those
+changes after closing. Comparison sources and role maps still require a checked comparison export to
+keep them after closing. Draft restoration clears both episode and comparison
+checks. Drafts do not change the CLI or exported episode format.
+
 Maintainer verification and deterministic packaging:
 
 ```sh
@@ -140,3 +168,11 @@ Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
 Hints, story, provenance, and authored review flags remain bound as episode
 content; an authored review flag is not evidence of a native human playtest.
+
+Draft browser regression course (same runtime requirements as the locale receiver):
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \\
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/draft-evidence \\
+node tests/receiver-drafts.mjs
+```
