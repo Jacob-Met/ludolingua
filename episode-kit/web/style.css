@@ -12,3 +12,13 @@ textarea{font:inherit;resize:vertical;width:100%;min-height:110px;border:1px sol
 
 /* Explicit action authoring uses the same revision checks as labels and clues. */
 .action-editor{margin-top:21px;padding-top:21px;border-top:1px solid var(--line)}.action-editor label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}.action-editor input{width:100%;min-width:0;font-size:20px}
+
+/* Keep complete imported text readable inside constrained author/player layouts. */
+.episode-heading > div { min-width: 0; }
+.episode-heading h2,
+.episode-heading p,
+.comparison-pair h4,
+.comparison-pair p,
+.clues,
+.hints p,
+#semantic-changes { overflow-wrap: anywhere; }
