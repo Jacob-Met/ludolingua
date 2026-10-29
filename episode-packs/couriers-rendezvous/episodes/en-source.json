@@ -1,0 +1,95 @@
+{
+  "schema": "ludolingua.episode.v1",
+  "id": "courier-en-source",
+  "revision": 1,
+  "locale": "en",
+  "title": "The Courier’s Rendezvous",
+  "story": "The courier has left six cards and a note: “I cannot name our meeting place openly. Put the cards in the order described by the clues, then read the first letter of each card’s label from left to right. Enter the place you discover.” The cards have been shuffled.",
+  "cards": [
+    {
+      "id": "emerald",
+      "label": "Emerald"
+    },
+    {
+      "id": "ivy",
+      "label": "Ivy"
+    },
+    {
+      "id": "bread",
+      "label": "Bread"
+    },
+    {
+      "id": "topaz",
+      "label": "Golden topaz"
+    },
+    {
+      "id": "raisin",
+      "label": "Raisin"
+    },
+    {
+      "id": "daffodil",
+      "label": "Daffodil"
+    }
+  ],
+  "clues": [
+    {
+      "id": "bread_next_raisin",
+      "kind": "immediately_before",
+      "left": "bread",
+      "right": "raisin"
+    },
+    {
+      "id": "ivy_next_daffodil",
+      "kind": "immediately_before",
+      "left": "ivy",
+      "right": "daffodil"
+    },
+    {
+      "id": "topaz_next_emerald",
+      "kind": "immediately_before",
+      "left": "topaz",
+      "right": "emerald"
+    },
+    {
+      "id": "raisin_before_ivy",
+      "kind": "before",
+      "left": "raisin",
+      "right": "ivy"
+    },
+    {
+      "id": "daffodil_before_topaz",
+      "kind": "before",
+      "left": "daffodil",
+      "right": "topaz"
+    }
+  ],
+  "extraction": {
+    "kind": "first_letter",
+    "normalization": "NFC-uppercase"
+  },
+  "action": {
+    "expected": "BRIDGE",
+    "answerNormalization": "NFC-trim-uppercase"
+  },
+  "constraints": {
+    "labelsFrozen": false,
+    "requireUnique": true
+  },
+  "hints": [
+    "Three clues join cards into pairs. Keep each pair together and preserve its internal order.",
+    "The two remaining clues tell you how to order the three pairs.",
+    "Once every clue fits, read only the first letter of each label, from left to right. A label with several words still contributes just one letter."
+  ],
+  "provenance": {
+    "kind": "authored",
+    "source": "Original Courier’s Rendezvous content by estate-d0f95ce3-8a9f-464c-aa68-8376632345ae with retained ChatGPT reviewers, for LUDOLINGUA; original product custody hamon-a19-20261027. No external puzzle assets. Runtime authorship remains with its existing contributors.",
+    "modelRun": null,
+    "humanPlaytest": null,
+    "semanticChanges": [
+      "Original English source. Each of the six complete labels contributes one initial; multiword Golden topaz contributes G.",
+      "The six stable role IDs describe the authored object mapping; a stable ID is not evidence that a changed label preserves meaning.",
+      "Daffodil/Narciso is the shared author-chosen baseline for the intended daffodil flower. Its lexical and botanical precision is not independently qualified.",
+      "Authored with ChatGPT; internal model review does not establish native-human playtesting, comparable difficulty, language fluency or NVIDIA/Nebius inference benefit."
+    ]
+  }
+}

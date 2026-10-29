@@ -1,0 +1,97 @@
+{
+  "schema": "ludolingua.episode.v1",
+  "id": "courier-es-repaired",
+  "revision": 1,
+  "locale": "es",
+  "title": "La cita del mensajero",
+  "story": "El mensajero ha dejado seis tarjetas y una nota: «No puedo decir abiertamente dónde nos encontraremos. Ordena las tarjetas según las pistas y lee, de izquierda a derecha, la primera letra del nombre de cada tarjeta. Escribe el lugar que descubras». Las tarjetas están mezcladas.",
+  "cards": [
+    {
+      "id": "emerald",
+      "label": "Esmeralda"
+    },
+    {
+      "id": "ivy",
+      "label": "Enredadera de hiedra"
+    },
+    {
+      "id": "bread",
+      "label": "Pan"
+    },
+    {
+      "id": "topaz",
+      "label": "Topacio dorado"
+    },
+    {
+      "id": "raisin",
+      "label": "Uva pasa"
+    },
+    {
+      "id": "daffodil",
+      "label": "Narciso"
+    }
+  ],
+  "clues": [
+    {
+      "id": "bread_next_raisin",
+      "kind": "immediately_before",
+      "left": "bread",
+      "right": "raisin"
+    },
+    {
+      "id": "ivy_next_daffodil",
+      "kind": "immediately_before",
+      "left": "ivy",
+      "right": "daffodil"
+    },
+    {
+      "id": "topaz_next_emerald",
+      "kind": "immediately_before",
+      "left": "topaz",
+      "right": "emerald"
+    },
+    {
+      "id": "raisin_before_ivy",
+      "kind": "before",
+      "left": "raisin",
+      "right": "ivy"
+    },
+    {
+      "id": "daffodil_before_topaz",
+      "kind": "before",
+      "left": "daffodil",
+      "right": "topaz"
+    }
+  ],
+  "extraction": {
+    "kind": "first_letter",
+    "normalization": "NFC-uppercase"
+  },
+  "action": {
+    "expected": "PUENTE",
+    "answerNormalization": "NFC-trim-uppercase"
+  },
+  "constraints": {
+    "labelsFrozen": false,
+    "requireUnique": true
+  },
+  "hints": [
+    "Tres pistas unen las tarjetas por parejas. Mantén cada pareja junta y respeta su orden interno.",
+    "Las otras dos pistas indican cómo ordenar las tres parejas.",
+    "Cuando se cumplan todas las pistas, lee solo la primera letra de cada nombre, de izquierda a derecha. Un nombre de varias palabras aporta una sola letra."
+  ],
+  "provenance": {
+    "kind": "authored",
+    "source": "Original Courier’s Rendezvous content by estate-d0f95ce3-8a9f-464c-aa68-8376632345ae with retained ChatGPT reviewers, for LUDOLINGUA; original product custody hamon-a19-20261027. No external puzzle assets. Runtime authorship remains with its existing contributors.",
+    "modelRun": null,
+    "humanPlaytest": null,
+    "semanticChanges": [
+      "Relative to the literal Spanish baseline, Pasa becomes Uva pasa and Hiedra becomes Enredadera de hiedra. Authors intend the same dried grape and ivy; the latter adds descriptive framing and length.",
+      "Card roles, all five typed clues, the unique role order and first-letter extraction are unchanged. Initials now encode the localized destination PUENTE.",
+      "Referent preservation is an editorial assessment, not a certificate from the mechanical comparison.",
+      "The six stable role IDs describe the authored object mapping; a stable ID is not evidence that a changed label preserves meaning.",
+      "Daffodil/Narciso is the shared author-chosen baseline for the intended daffodil flower. Its lexical and botanical precision is not independently qualified.",
+      "Authored with ChatGPT; internal model review does not establish native-human playtesting, comparable difficulty, language fluency or NVIDIA/Nebius inference benefit."
+    ]
+  }
+}

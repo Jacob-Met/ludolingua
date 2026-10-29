@@ -1,0 +1,342 @@
+{
+  "schema": "ludolingua.comparison-export.v1",
+  "source": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "BRIDGE"
+    },
+    "cards": [
+      {
+        "id": "emerald",
+        "label": "Emerald"
+      },
+      {
+        "id": "ivy",
+        "label": "Ivy"
+      },
+      {
+        "id": "bread",
+        "label": "Bread"
+      },
+      {
+        "id": "topaz",
+        "label": "Golden topaz"
+      },
+      {
+        "id": "raisin",
+        "label": "Raisin"
+      },
+      {
+        "id": "daffodil",
+        "label": "Daffodil"
+      }
+    ],
+    "clues": [
+      {
+        "id": "bread_next_raisin",
+        "kind": "immediately_before",
+        "left": "bread",
+        "right": "raisin"
+      },
+      {
+        "id": "ivy_next_daffodil",
+        "kind": "immediately_before",
+        "left": "ivy",
+        "right": "daffodil"
+      },
+      {
+        "id": "topaz_next_emerald",
+        "kind": "immediately_before",
+        "left": "topaz",
+        "right": "emerald"
+      },
+      {
+        "id": "raisin_before_ivy",
+        "kind": "before",
+        "left": "raisin",
+        "right": "ivy"
+      },
+      {
+        "id": "daffodil_before_topaz",
+        "kind": "before",
+        "left": "daffodil",
+        "right": "topaz"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "Three clues join cards into pairs. Keep each pair together and preserve its internal order.",
+      "The two remaining clues tell you how to order the three pairs.",
+      "Once every clue fits, read only the first letter of each label, from left to right. A label with several words still contributes just one letter."
+    ],
+    "id": "courier-en-source",
+    "locale": "en",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [
+        "Original English source. Each of the six complete labels contributes one initial; multiword Golden topaz contributes G.",
+        "The six stable role IDs describe the authored object mapping; a stable ID is not evidence that a changed label preserves meaning.",
+        "Daffodil/Narciso is the shared author-chosen baseline for the intended daffodil flower. Its lexical and botanical precision is not independently qualified.",
+        "Authored with ChatGPT; internal model review does not establish native-human playtesting, comparable difficulty, language fluency or NVIDIA/Nebius inference benefit."
+      ],
+      "source": "Original Courier’s Rendezvous content by estate-d0f95ce3-8a9f-464c-aa68-8376632345ae with retained ChatGPT reviewers, for LUDOLINGUA; original product custody hamon-a19-20261027. No external puzzle assets. Runtime authorship remains with its existing contributors."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "The courier has left six cards and a note: “I cannot name our meeting place openly. Put the cards in the order described by the clues, then read the first letter of each card’s label from left to right. Enter the place you discover.” The cards have been shuffled.",
+    "title": "The Courier’s Rendezvous"
+  },
+  "target": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "PUENTE"
+    },
+    "cards": [
+      {
+        "id": "emerald",
+        "label": "Esmeralda"
+      },
+      {
+        "id": "ivy",
+        "label": "Hiedra"
+      },
+      {
+        "id": "bread",
+        "label": "Pan"
+      },
+      {
+        "id": "topaz",
+        "label": "Topacio dorado"
+      },
+      {
+        "id": "raisin",
+        "label": "Pasa"
+      },
+      {
+        "id": "daffodil",
+        "label": "Narciso"
+      }
+    ],
+    "clues": [
+      {
+        "id": "bread_next_raisin",
+        "kind": "immediately_before",
+        "left": "bread",
+        "right": "raisin"
+      },
+      {
+        "id": "ivy_next_daffodil",
+        "kind": "immediately_before",
+        "left": "ivy",
+        "right": "daffodil"
+      },
+      {
+        "id": "topaz_next_emerald",
+        "kind": "immediately_before",
+        "left": "topaz",
+        "right": "emerald"
+      },
+      {
+        "id": "raisin_before_ivy",
+        "kind": "before",
+        "left": "raisin",
+        "right": "ivy"
+      },
+      {
+        "id": "daffodil_before_topaz",
+        "kind": "before",
+        "left": "daffodil",
+        "right": "topaz"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "Tres pistas unen las tarjetas por parejas. Mantén cada pareja junta y respeta su orden interno.",
+      "Las otras dos pistas indican cómo ordenar las tres parejas.",
+      "Cuando se cumplan todas las pistas, lee solo la primera letra de cada nombre, de izquierda a derecha. Un nombre de varias palabras aporta una sola letra."
+    ],
+    "id": "courier-es-literal",
+    "locale": "es",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [
+        "Intended object mapping is retained by the authors' assessment. Literal Spanish initials PPHNTE fail the declared destination PUENTE; this is an intentional negative author exercise.",
+        "The six stable role IDs describe the authored object mapping; a stable ID is not evidence that a changed label preserves meaning.",
+        "Daffodil/Narciso is the shared author-chosen baseline for the intended daffodil flower. Its lexical and botanical precision is not independently qualified.",
+        "Authored with ChatGPT; internal model review does not establish native-human playtesting, comparable difficulty, language fluency or NVIDIA/Nebius inference benefit."
+      ],
+      "source": "Original Courier’s Rendezvous content by estate-d0f95ce3-8a9f-464c-aa68-8376632345ae with retained ChatGPT reviewers, for LUDOLINGUA; original product custody hamon-a19-20261027. No external puzzle assets. Runtime authorship remains with its existing contributors."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "El mensajero ha dejado seis tarjetas y una nota: «No puedo decir abiertamente dónde nos encontraremos. Ordena las tarjetas según las pistas y lee, de izquierda a derecha, la primera letra del nombre de cada tarjeta. Escribe el lugar que descubras». Las tarjetas están mezcladas. Este contraste de autoría conserva una traducción que no produce la respuesta requerida.",
+    "title": "La cita del mensajero — traducción literal (contraste)"
+  },
+  "mapping": [
+    {
+      "sourceId": "bread",
+      "targetId": "bread"
+    },
+    {
+      "sourceId": "raisin",
+      "targetId": "raisin"
+    },
+    {
+      "sourceId": "ivy",
+      "targetId": "ivy"
+    },
+    {
+      "sourceId": "daffodil",
+      "targetId": "daffodil"
+    },
+    {
+      "sourceId": "topaz",
+      "targetId": "topaz"
+    },
+    {
+      "sourceId": "emerald",
+      "targetId": "emerald"
+    }
+  ],
+  "validation": {
+    "comparisonEngineVersion": "0.1.0",
+    "sourceSha256": "8db23a0e503ccee72116010b5fb6d20d47b576e1474f842d5af0c74547df0cda",
+    "targetSha256": "cbd30f8a6daddb4f7b463599160deee782ebcd46cddeb2df3bf4eb0a8496b079",
+    "bindingSha256": "2856e490a0e53769ff90db4dccae386bd3045e3433acde342bc8ed4242621c61",
+    "result": {
+      "schema": "ludolingua.comparison.v1",
+      "comparisonEngineVersion": "0.1.0",
+      "valid": true,
+      "errors": [],
+      "mapping": [
+        {
+          "sourceId": "bread",
+          "targetId": "bread"
+        },
+        {
+          "sourceId": "daffodil",
+          "targetId": "daffodil"
+        },
+        {
+          "sourceId": "emerald",
+          "targetId": "emerald"
+        },
+        {
+          "sourceId": "ivy",
+          "targetId": "ivy"
+        },
+        {
+          "sourceId": "raisin",
+          "targetId": "raisin"
+        },
+        {
+          "sourceId": "topaz",
+          "targetId": "topaz"
+        }
+      ],
+      "sameOrderSet": true,
+      "mechanicalPreserved": false,
+      "source": {
+        "valid": true,
+        "outcome": "verified",
+        "permutationCount": 720,
+        "clueOrderCount": 1,
+        "actionMatchCount": 1,
+        "uniqueReasoning": true,
+        "mechanicalSuccess": true
+      },
+      "target": {
+        "valid": true,
+        "outcome": "action-mismatch",
+        "permutationCount": 720,
+        "clueOrderCount": 1,
+        "actionMatchCount": 0,
+        "uniqueReasoning": true,
+        "mechanicalSuccess": false
+      },
+      "sourceOnlyCount": 0,
+      "targetOnlyCount": 0,
+      "sourceOnlyWitness": null,
+      "targetOnlyWitness": null,
+      "roleChanges": [
+        {
+          "sourceId": "bread",
+          "targetId": "bread",
+          "sourceLabel": "Bread",
+          "targetLabel": "Pan",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "daffodil",
+          "targetId": "daffodil",
+          "sourceLabel": "Daffodil",
+          "targetLabel": "Narciso",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "emerald",
+          "targetId": "emerald",
+          "sourceLabel": "Emerald",
+          "targetLabel": "Esmeralda",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "ivy",
+          "targetId": "ivy",
+          "sourceLabel": "Ivy",
+          "targetLabel": "Hiedra",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "raisin",
+          "targetId": "raisin",
+          "sourceLabel": "Raisin",
+          "targetLabel": "Pasa",
+          "labelChanged": true
+        },
+        {
+          "sourceId": "topaz",
+          "targetId": "topaz",
+          "sourceLabel": "Golden topaz",
+          "targetLabel": "Topacio dorado",
+          "labelChanged": true
+        }
+      ],
+      "clueChanges": {
+        "sourceOnly": [],
+        "targetOnly": []
+      },
+      "limitations": [
+        "Comparison covers encoded clue-consistent order sets under the declared role bijection and each episode’s extraction/action check.",
+        "Equal order sets do not establish equal discovery process, difficulty, linguistic meaning or cultural suitability. Human review remains unresolved.",
+        "No model inference or human playtest is evidenced by this comparison."
+      ]
+    }
+  },
+  "evidence": {
+    "modelContributionVerified": false,
+    "nativeHumanPlaytestVerified": false,
+    "limitations": [
+      "Encoded order-set and action checks only; no equivalence of meaning, difficulty or cultural suitability is established.",
+      "Hashes bind caller-provided content, not author identity or independent provenance attestation."
+    ]
+  }
+}
