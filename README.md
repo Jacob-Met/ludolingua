@@ -20,6 +20,12 @@ episodes, their mapping and the comparison engine version, then recompute on
 receive. This supports inspecting encoded preservation and failures; it does
 not turn mechanical agreement into a claim of human or model validation.
 
+Version 0.3.0 adds a dedicated player session record and replay-based receiving.
+The exported journal binds the exact episode, session label and recorded actions;
+the author receiver and CLI recompute its summary. It can retain failed attempts,
+hints and reveals. These client records and self-reported timings do not attest
+human identity, native-language proficiency, unaided solving or model use.
+
 ## What is established
 
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.

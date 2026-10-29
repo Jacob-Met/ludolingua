@@ -2,6 +2,7 @@ import { EPISODES } from '../fixtures/episodes.mjs';
 import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
+import { setupPlaytest } from './playtest-author.mjs';
 
 const $ = id => document.getElementById(id);
 const clone = value => structuredClone(value);
@@ -174,4 +175,5 @@ $('import-file').addEventListener('change', async () => {
   finally { if (sequence === importSequence) $('import-file').value = ''; }
 });
 comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode, rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES });
+setupPlaytest({ getEpisode: () => episode, notice, maxBytes: MAX_EXPORT_BYTES });
 selectEpisode(EPISODES[0]);

@@ -1,4 +1,4 @@
-# LUDOLINGUA episode and comparison kit — 0.2.0
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.0
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -109,9 +109,60 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.2.0.
+the enclosing kit version is 0.3.0.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
 Hints, story, provenance, and authored review flags remain bound as episode
 content; an authored review flag is not evidence of a native human playtest.
+
+## Keep and receive a player session record
+
+Start the local server with `node serve.mjs`, then open the author workbench at
+`http://127.0.0.1:4173/` (use the printed port if different). Select an episode,
+make the desired edits, and choose **Open a separate playtest**. This captures
+the current valid episode revision at the moment you click. Later author edits
+do not change the already-open session. Each player window accepts one episode
+and creates its own session identifier.
+
+If the browser blocks the popup, export the checked episode from the workbench,
+open `http://127.0.0.1:4173/web/playtest.html`, and choose that episode export file.
+The standalone page verifies the exported episode before starting. Keep using
+the server URL rather than opening the HTML as a local file.
+
+In the player window, try an order and answer, optionally use hints or reveal,
+then choose **Download play record** (Spanish: **Descargar registro de juego**).
+Download before closing or reloading: sessions have no persistent browser
+storage. Resetting keeps earlier attempts, hints and reveals in the journal;
+it does not erase their history. Open a new player window for a fresh session.
+
+Back in the author workbench, choose **Reopen a play record** and select the
+downloaded record JSON. Its replayed summary and journey refer to the recorded
+revision and do not replace your current authored episode. You can also inspect
+the record with the CLI:
+
+```sh
+node cli.mjs playtest-receive playtest-record.json
+```
+
+Receiving snapshots the full episode, session identifier and event journal,
+replays the journal, and checks the recomputed result and version-bound hashes.
+Exit 0 means the record passes integrity and replay checks; exit 1 means malformed,
+stale or forged data was rejected. A valid record may show failures, hints or a
+solution reveal. Successful receiving does not mean successful solving.
+
+Keep the downloaded JSON file itself, then reopen that file in the author
+receiver or pass its path to `playtest-receive`; a screenshot of the summary is
+not a replayable record. The record refers to its captured episode revision,
+not any later author edits. Records are bounded to 10,000 events and the episode
+engine's two-to-eight-card limit. `successfulAttempts` counts individual attempts
+that satisfy the encoded clues and answer, not certification that the entire
+episode has unique reasoning or that a person solved it unaided.
+
+These are client-recorded events with self-reported timing. They do not attest
+human identity, native-language status, independent participation, linguistic
+quality or model contribution. A session identifier is a label, not an identity
+credential. Even a journal without a recorded reveal does not establish an
+unaided attempt or rule out assistance outside the player window. Hashes make
+content changes detectable against their retained binding; they are not signatures
+and cannot authenticate the client that authored a consistent record.
