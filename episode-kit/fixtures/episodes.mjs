@@ -1,3 +1,5 @@
+import { SIGNAL_PANEL_EPISODES } from './signal-panel.mjs';
+
 const clues = [
   {id:'pair',kind:'immediately_before',left:'bell',right:'moon'},
   {id:'lead',kind:'before',left:'key',right:'bell'},
@@ -23,5 +25,6 @@ export const EPISODES = [
   episode('es-adapted','es',['Agua','Barco','Roca','Estrella'],'ABRE',{changes:['All four card referents change: Otter→Agua, Pine→Barco, Eagle→Roca, Nest→Estrella. This is a coordinated adaptation, not a literal translation.','Stable card roles and ordering relations are preserved; extraction produces the localized action ABRE. Clarity and comparable difficulty remain untested.']}),
   episode('es-frozen','es',['Nutria','Pino','Águila','Nido'],'ABRE',{frozen:true,changes:['Literal labels are frozen. Their initial-letter multiset cannot produce ABRE under any permutation.']}),
   episode('en-ambiguous','en',['Otter','Pine','Eagle','Nest'],'OPEN',{relations:[clues[1]],changes:['Two ordering clues removed to expose ambiguity; the expected action must not select the reasoning order.']}),
-  episode('en-contradictory','en',['Otter','Pine','Eagle','Nest'],'OPEN',{relations:[...clues,{id:'cycle',kind:'before',left:'star',right:'key'}],changes:['Added a contradictory ordering relation as a negative control.']})
+  episode('en-contradictory','en',['Otter','Pine','Eagle','Nest'],'OPEN',{relations:[...clues,{id:'cycle',kind:'before',left:'star',right:'key'}],changes:['Added a contradictory ordering relation as a negative control.']}),
+  ...SIGNAL_PANEL_EPISODES
 ];

@@ -181,6 +181,23 @@ try {
     assert.ok(widths.scroll<=widths.viewport+1);
     await page.locator('.scene-editor').screenshot({path:resolve(evidenceDir,'wording-narrow-panel.png')});
   });
+
+  await check('Spanish five-card scene edits survive draft recovery and export',async()=>{
+    const signal=EPISODES.find(episode=>episode.id==='es-signal-adapted');
+    assert.ok(signal);assert.equal(signal.cards.length,5);assert.equal(signal.clues.length,5);assert.equal(signal.action.expected,'PULSA');
+    const key=draftKey(signal.id),title='  Una nueva señal — jardín 🌱  ',story='Cinco señales esperan junto a la puerta.\nSigue las pistas y descubre la acción indicada.  ';
+    await page.setViewportSize({width:1280,height:1000});await page.locator('#case-select').selectOption(signal.id);await editWording(title,story);
+    await page.waitForFunction(({key,title,story})=>{try{const r=JSON.parse(localStorage.getItem(key));return r?.title===title&&r?.story===story;}catch{return false;}},{key,title,story});
+    await page.locator('#draft-status[data-state="saved"]').waitFor();await page.reload();await page.locator('#draft-status[data-state="restored"]').waitFor();
+    assert.equal(await page.locator('#case-select').inputValue(),signal.id);await assertWording(title,story);
+    assert.ok(await page.evaluate(()=>document.documentElement.lang.startsWith('en')));
+    for(const selector of ['#episode-title-input','#episode-story-input'])assert.equal(await page.locator(selector).getAttribute('lang'),'es');
+    await freshCheck(true);
+    const path=await download(page,'#export-button','wording-spanish-five-card.episode.json'),verified=await readArtifact(path,readExport),restored=verified.episode;
+    assertEpisodeWording(restored,title,story);assert.equal(restored.id,signal.id);assert.equal(restored.locale,'es');assert.equal(restored.cards.length,5);assert.equal(restored.clues.length,5);assert.ok(restored.revision>signal.revision);
+    for(const field of ['constraints','extraction','cards','clues','action','hints','provenance'])assert.deepEqual(restored[field],signal[field],'Scene edits must preserve '+field);
+    assert.deepEqual(restored.hintReview,{status:'needs-author-review',kind:'author-self-declaration',reason:'Episode title or story changed.'});
+  });
   assert.deepEqual(receipt.errors,[]);assert.deepEqual(receipt.consoleErrors,[]);assert.deepEqual(receipt.failedRequests,[]);receipt.passed=true;
 } catch(error) {
   receipt.failure=error?.stack??String(error);process.exitCode=1;

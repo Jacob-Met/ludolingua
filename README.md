@@ -56,6 +56,11 @@ Author draft recovery does not save separate player journals: download the play
 record before closing its window. See the kit README for storage limits, conflict
 controls and draft receiving instructions.
 
+Version 0.3.1 adds bounded author guidance for inconsistent clues: one proven
+conflicting set, current labels and direct links to the relevant editor controls.
+It clears on edits and leaves analysis, checked exports and captured play sessions
+unchanged. Other conflicts can remain; this does not identify the author's intent.
+
 ## What is established
 
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.
@@ -67,3 +72,9 @@ This is a first-episode contribution, not the full LUDOLINGUA product. The examp
 The selected LUDOLINGUA direction and original product ownership of `hamon-a19-20261027` are preserved. This isolated `episode-kit/` contribution does not modify the original prepared source tree or adopt the retired OFFCUT experiment. Its task is `ludolingua-first-episode-receiver-bd63af23`; the source-recovery checkpoint remains recorded separately.
 
 No public release or competition submission is implied by this private contribution.
+
+## The Signal Panel
+
+A second authored English/Spanish episode uses five cards, including two English cards with the same initial. Play its complete source and coordinated adaptation, then inspect the missing-clue version: two different layouts can spell the same word while the author check correctly reports ambiguous reasoning. The literal Spanish version is an intentional negative example.
+
+Choose a Signal Panel entry in the episode selector. [The episode guide](episode-kit/SIGNAL-PANEL.md) explains the four versions, player-versus-author distinction, CLI course and evidence limits. The existing six episodes and engine remain unchanged.
