@@ -243,12 +243,16 @@ try {
     assert.equal(record.evidence.modelContributionVerified, false);
     await page.selectOption('#ui-language', 'en');
     await page.setInputFiles('#playtest-record-file', destination);
-    await page.waitForFunction(({ title, attempts, successes }) => {
-      const values = [...document.querySelectorAll('#playtest-review .metric strong')].map(node => node.textContent);
-      return document.getElementById('playtest-review-status').textContent.startsWith('Record verified.')
-        && document.querySelector('#playtest-review h4')?.textContent.startsWith(title)
-        && values[0] === String(attempts) && values[1] === String(successes);
-    }, { title: record.episode.title, attempts: id === 'en-signal-ambiguous' ? 2 : 1, successes: successCount });
+    await page.locator('#playtest-review').filter({ hasText: record.sessionId }).waitFor();
+    const reviewStatus = page.locator('#playtest-review-status');
+    await reviewStatus.filter({ hasText: 'Record verified.' }).waitFor();
+    assert.equal((await reviewStatus.textContent()).startsWith('Record verified.'), true);
+    const reviewTitle = page.locator('#playtest-review h4');
+    await reviewTitle.filter({ hasText: record.episode.title }).waitFor();
+    assert.equal((await reviewTitle.textContent()).startsWith(record.episode.title), true);
+    const reviewMetrics = page.locator('#playtest-review .metric strong');
+    await reviewMetrics.nth(0).filter({ hasText: new RegExp('^' + String(id === 'en-signal-ambiguous' ? 2 : 1) + '$') }).waitFor();
+    await reviewMetrics.nth(1).filter({ hasText: new RegExp('^' + String(successCount) + '$') }).waitFor();
     assert.equal(await page.locator('#case-select').inputValue(), id);
     assert.deepEqual((await page.locator('#playtest-review .metric strong').allTextContents()).slice(0, 2), [String(id === 'en-signal-ambiguous' ? 2 : 1), String(successCount)]);
     await player.close();
