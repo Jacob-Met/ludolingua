@@ -1,6 +1,7 @@
 import { EPISODES } from '../fixtures/episodes.mjs';
 import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
+import { createWorkspaceSnapshot, readWorkspaceSnapshot } from '../lib/workspace.mjs';
 import { setupComparison } from './comparison.mjs';
 import { translate, translateDiagnostic, supportedLocale } from './i18n.mjs';
 
@@ -8,6 +9,7 @@ const $ = id => document.getElementById(id);
 const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
+const WORKSPACE_KEY = 'ludolingua.workbench.v1';
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
 let comparisonController;
 let importedEpisode = null;
@@ -163,11 +165,12 @@ function renderReveal() {
   for (const solution of r.solutions.slice(0, 4)) $('reveal').append(Object.assign(node('p', `${labels(solution.order)} → ${solution.token}`, 'path'), { lang: episode.locale }));
   if (!r.mechanicalSuccess) $('reveal').append(node('p', t('This episode does not pass its encoded requirements. Solving attempts do not repair its authoring constraints.'), 'reveal-note'));
 }
-$('answer-form').addEventListener('submit', event => {
-  event.preventDefault(); const attempt = checkAttempt(episode, order, $('answer').value);
+function evaluatePlayerAttempt() {
+  const attempt = checkAttempt(episode, order, $('answer').value);
   playerFeedbackKey = attempt.success ? 'The action works. Your order fits the clues and its initials match.' : !attempt.cluesSatisfied ? 'This order does not yet satisfy all the clues.' : 'The order fits the clues, but the action does not match. This adaptation may need changes.';
   renderPlayerFeedback();
-});
+}
+$('answer-form').addEventListener('submit', event => { event.preventDefault(); evaluatePlayerAttempt(); });
 $('reveal-button').addEventListener('click', () => { revealedResult = analyzeEpisode(episode); $('reveal').hidden = false; renderReveal(); });
 $('export-button').addEventListener('click', async () => {
   const checkpoint = version, current = clone(episode);
@@ -188,6 +191,45 @@ $('import-file').addEventListener('change', async () => {
     digestKey = 'Reopened source · SHA-256 {hash}'; renderDigest(); tab('author'); notice('Reopened revision {revision}. Source digest and mechanical result verified.', false, { revision: episode.revision });
   } catch (error) { if (sequence === importSequence) notice('Cannot reopen: {message}', true, { message: error.message }); }
   finally { if (sequence === importSequence) $('import-file').value = ''; }
+});
+$('save-workspace').addEventListener('click', () => {
+  let saved;
+  try {
+    saved = createWorkspaceSnapshot({
+      episode, comparison: comparisonController.captureWorkspace(), uiLocale,
+      mode: $('player').hidden ? 'author' : 'player', hintDraft: $('hint-editor').value,
+      player: { order, answer: $('answer').value, hintCount, revealed: !$('reveal').hidden, attempted: Boolean(playerFeedbackKey) }
+    });
+  } catch { notice('This working copy cannot be saved in the supported format. Keep it open and export a checked episode when possible.', true); return; }
+  try { localStorage.setItem(WORKSPACE_KEY, JSON.stringify(saved)); }
+  catch { notice('Browser storage is full or unavailable. Keep this draft open, or export a checked episode.', true); return; }
+  notice('Saved this working copy in this browser. Restore it here after reloading.');
+});
+$('restore-workspace').addEventListener('click', () => {
+  let serialized, saved;
+  try { serialized = localStorage.getItem(WORKSPACE_KEY); }
+  catch { notice('Browser storage is unavailable at this address.', true); return; }
+  if (serialized === null) { notice('No working copy is saved in this browser at this address.', true); return; }
+  // Validate the entire record before replacing any current work.
+  try { saved = readWorkspaceSnapshot(serialized); }
+  catch { notice('The saved working copy is not compatible or is damaged. Your current work was kept.', true); return; }
+  uiLocale = saved.uiLocale;
+  selectEpisode(saved.episode); rememberImportedEpisode(saved.episode, 'Restored working episode');
+  comparisonController.restoreWorkspace(saved.comparison);
+  $('hint-editor').value = saved.hintDraft;
+  order = clone(saved.player.order); hintCount = saved.player.hintCount; $('answer').value = saved.player.answer;
+  $('hints').replaceChildren(...episode.hints.slice(0, hintCount).map(text => node('p', text)));
+  $('hint-button').disabled = hintCount >= episode.hints.length;
+  drawPlayer();
+  if (saved.player.attempted) evaluatePlayerAttempt();
+  if (saved.player.revealed) { revealedResult = analyzeEpisode(episode); $('reveal').hidden = false; renderReveal(); }
+  tab(saved.mode); relocalize();
+  notice('Restored the working copy. Run fresh episode and comparison checks before exporting.');
+});
+$('delete-workspace').addEventListener('click', () => {
+  try { localStorage.removeItem(WORKSPACE_KEY); }
+  catch { notice('Browser storage is unavailable at this address.', true); return; }
+  notice('Deleted the saved working copy. Your current work is still open.');
 });
 comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode, rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
 function renderDigest() { $('digest').textContent = digest ? t(digestKey, { hash: digest }) : ''; }

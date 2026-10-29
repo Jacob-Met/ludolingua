@@ -146,5 +146,10 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
     const option = $('source-select').querySelector('option[value="custom-source"]');
     if (option && customSourceKey) option.textContent = t(customSourceKey);
   }
-  return { refreshTarget, invalidate, relocalize };
+  function captureWorkspace() { return { source: clone(source), mapping: clone(mapping) }; }
+  function restoreWorkspace(state) {
+    source = clone(state.source); mapping = clone(state.mapping);
+    sourceOption('Restored working source'); invalidate(); renderPair();
+  }
+  return { refreshTarget, invalidate, relocalize, captureWorkspace, restoreWorkspace };
 }

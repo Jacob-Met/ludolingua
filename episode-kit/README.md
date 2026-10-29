@@ -40,6 +40,27 @@ including a faithfully exported negative case. Inspect `mechanicalSuccess` and
 `outcome`; integrity success alone is not puzzle success. Export refuses to
 overwrite an existing output file.
 
+## Keep a local working copy
+
+Use **Save working copy** to save the current draft, comparison source and role
+mapping, player progress and interface language in this browser. After reloading,
+use **Restore working copy** to reopen that saved state. Saving is explicit: edits
+after the last save are not automatically retained. A draft may still need repairs.
+Restoring a working copy does not restore checked results or permission to export;
+check the episode and compare the current pair again before exporting evidence.
+
+Local storage belongs to the same browser profile and exact address, including
+hostname and port. The maintained `node serve.mjs` command defaults to
+`http://127.0.0.1:4173`. Changing `PORT`, switching between `localhost` and
+`127.0.0.1`, or using another browser will not find that address's saved copy.
+Browser data clearing or private-browsing limits can remove it. If saving fails,
+keep the page open and resolve the displayed error; do not assume a copy exists.
+
+**Delete saved copy** removes the browser's saved copy without discarding the
+current open draft. Checked episode and comparison exports remain the portable
+way to carry verified work to another browser or computer; local working copies
+are not integrity attestations, backups or native-language review evidence.
+
 Extraction takes the first Unicode code point of each trimmed NFC label and
 uppercases it without locale-specific conversion. Accents remain significant.
 Uppercase expansion can produce multiple code points (for example ß becomes SS).
