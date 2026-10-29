@@ -19,7 +19,7 @@ test('source and coordinated Spanish adaptation retain exact progression and fin
   assert.deepEqual(r.sourcePath.steps.map(s => s.afterCount), r.targetPath.steps.map(s => s.afterCount));
 });
 
-test('mechanical endpoint equality hides changed order of clue revelation', () => {
+test('mechanical endpoint equality hides changed listed-clue prefix order', () => {
   const s = get('en-original'), t = get('es-adapted');
   t.clues.reverse();
   const r = compareClueProgression(s, t);

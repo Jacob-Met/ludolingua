@@ -62,8 +62,10 @@ function defaultReturn() {
     sameClueProgression: null, firstDifference: null,
     sourcePath: null, targetPath: null,
     limitations: [
-      'Clue progression measures exact survivor sets after authored clue prefixes, not comprehension, subjective difficulty, cultural equivalence or learning.',
-      'Changing the order in which hints are shown can change the learner experience even if every encoded order remains unchanged.',
+      'Clue progression measures exact survivor sets after hypothetical prefixes of the listed encoded clues, not comprehension, subjective difficulty, cultural equivalence or learning.',
+      'The current player displays all encoded clues at once and reveals separate hints. This audit does not inspect hint wording or reveal order, or establish the learner journey.',
+      'informationBits is log2(beforeCount/afterCount), rounded to six decimal places for positive counts; otherwise null. It describes count reduction under a uniform-candidate interpretation, not learner information acquisition.',
+      'Different listed-clue prefix sets can reflect a deliberate author choice and do not by themselves establish a failed localization.',
       'No NVIDIA/Nebius model run or native-language human playtest is established by this audit.'
     ]
   };
@@ -145,6 +147,6 @@ export function inspectClueProgression(episode) {
   return {
     schema: 'ludolingua.clue-path.v1', version: CLUE_PATH_VERSION,
     valid: true, available: true, errors: [], ...publicResult(episode, orders, examined),
-    limitations: ['Exact ordering-space narrowing is not proof of perceived difficulty, linguistic meaning or language quality.']
+    limitations: ['These are hypothetical prefixes of the listed encoded clues; the current player displays all clues at once and reveals separate hints that this audit does not inspect.', 'informationBits is log2(beforeCount/afterCount), rounded to six decimal places for positive counts; otherwise null. Uniform-candidate count reduction does not establish learner information acquisition, perceived difficulty, linguistic meaning or language quality.']
   };
 }
