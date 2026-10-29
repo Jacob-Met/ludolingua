@@ -41,6 +41,15 @@ play journal unchanged. It does not translate authored content or establish
 native-language review. See the kit README for the complete launch, download,
 reopen and locale verification instructions.
 
+Bundled author episodes can recover unfinished drafts in the same browser profile
+and exact server origin. Wait for the saved status before leaving; restored drafts
+need fresh checks and are not verified exports. Cross-tab conflicts require an
+explicit choice to load the saved draft or keep the current edits. Reopened exports
+and comparison mappings still need their own exports for durable retention.
+Author draft recovery does not save separate player journals: download the play
+record before closing its window. See the kit README for storage limits, conflict
+controls and draft receiving instructions.
+
 ## What is established
 
 The verifier exhaustively checks every order for two to eight cards. It counts clue-consistent orders independently of the target answer, then checks the extracted action. It distinguishes ambiguous clues, contradictory clues, action mismatches and a bounded impossibility witness for frozen labels.

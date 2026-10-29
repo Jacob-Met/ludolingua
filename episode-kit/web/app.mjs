@@ -3,6 +3,7 @@ import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
 import { setupPlaytest } from './playtest-author.mjs';
+import { createFixtureDrafts } from './draft-controller.mjs';
 import { translate, translateDiagnostic, supportedLocale } from './i18n.mjs';
 
 const $ = id => document.getElementById(id);
@@ -11,7 +12,7 @@ const names = { 'en-original': 'English · original episode', 'es-literal': 'Spa
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
 let comparisonController, playtestController;
-let importedEpisode = null;
+let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
 let uiLocale = supportedLocale((navigator.language ?? 'en').split('-')[0].toLowerCase());
 let noticeState = { key: '', error: false, values: {} }, digestKey = 'Checked source · SHA-256 {hash}';
 let playerFeedbackKey = '', revealedResult = null;
@@ -35,10 +36,13 @@ function clues(target) {
   catch { const fallback = node('li', t('Complete valid card labels before reading the generated clues.')); fallback.lang = uiLocale; target.replaceChildren(fallback); }
 }
 function changed({ reviewHints = false } = {}) {
+  editorHintText = $('hint-editor').value;
   if (reviewHints) episode.hintReview = { status: 'needs-author-review', kind: 'author-self-declaration', reason: 'Labels, required action, ordering clues or hints changed.' };
   episode.revision += 1; version += 1; result = null; digest = ''; revision(); renderResult();
   $('digest').textContent = ''; $('export-button').disabled = true;
   clues($('author-clues')); refreshClueLabels(); renderHintReview(); comparisonController?.refreshTarget(); resetPlayer(); notice('This revision needs a new check. Previous results do not approve these edits.');
+  if (editingImport) { importedEpisode = clone(episode); importedHintText = editorHintText; }
+  else drafts.changed(episode, editorHintText);
 }
 function renderHintReview() {
   const review = episode.hintReview;
@@ -80,7 +84,7 @@ function renderEditor() {
   $('freeze-labels').checked = episode.constraints.labelsFrozen;
   $('required-action').value = episode.action.expected; $('required-action').lang = episode.locale;
   clues($('author-clues'));
-  renderClueEditor(); $('hint-editor').value = episode.hints.join('\n'); $('hint-editor').lang = episode.locale; renderHintReview();
+  renderClueEditor(); $('hint-editor').value = editorHintText; $('hint-editor').lang = episode.locale; renderHintReview();
   const changes = episode.provenance.semanticChanges;
   $('semantic-changes').replaceChildren(changes.length ? Object.assign(node('ul'), { }) : node('p', t('This authored source episode has no recorded adaptation changes.')));
   if (changes.length) $('semantic-changes').firstChild.append(...changes.map(text => node('li', text)));
@@ -128,23 +132,41 @@ function drawPlayer() {
     } return li;
   }));
 }
-function selectEpisode(ep) {
+function installEpisode(ep, hintText = ep.hints.join('\n')) {
+  editorHintText = hintText;
   episode = clone(ep); version += 1; result = null; digest = ''; revision();
   $('episode-locale').textContent = t(episode.locale === 'es' ? 'SPANISH / ORIGINAL PUZZLE MATERIAL' : 'ENGLISH / ORIGINAL PUZZLE MATERIAL');
   $('episode-title').textContent = episode.title; $('episode-title').lang = episode.locale; $('episode-story').textContent = episode.story;
   $('episode-story').lang = episode.locale; $('answer').lang = episode.locale; $('digest').textContent = ''; $('export-button').disabled = true;
   renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); notice('');
 }
+function selectEpisode(ep, detached = false, hintText = ep.hints.join('\n')) {
+  editingImport = detached;
+  if (detached) {
+    importedEpisode = clone(ep); importedHintText = hintText;
+    drafts.detach(); installEpisode(ep, hintText);
+  } else {
+    const restored = drafts.open(ep);
+    installEpisode(restored, drafts.hintText());
+  }
+}
 function rememberImportedEpisode(ep, label = 'Reopened · verified export') {
-  importedEpisode = clone(ep);
+  importedEpisode = clone(ep); importedHintText = editorHintText;
   $('case-select').querySelector('option[value="imported"]')?.remove();
   const option = node('option', t(label)); option.dataset.labelKey = label; option.value = 'imported'; $('case-select').append(option); $('case-select').value = 'imported';
 }
 function tab(mode) {
   for (const name of ['author', 'player']) { const active = mode === name; $(name).hidden = !active; $(`${name}-tab`).setAttribute('aria-selected', String(active)); $(`${name}-tab`).tabIndex = active ? 0 : -1; }
 }
+const drafts = await createFixtureDrafts(EPISODES, (ep, hintText) => {
+  installEpisode(ep, hintText); $('editor-heading').focus();
+}, t);
 for (const ep of EPISODES) { const option = node('option', t(names[ep.id] ?? ep.title)); option.dataset.labelKey = names[ep.id] ?? ep.title; option.value = ep.id; $('case-select').append(option); }
-$('case-select').addEventListener('change', () => { const ep = $('case-select').value === 'imported' ? importedEpisode : EPISODES.find(value => value.id === $('case-select').value); if (ep) selectEpisode(ep); });
+$('case-select').addEventListener('change', () => {
+  const detached = $('case-select').value === 'imported';
+  const ep = detached ? importedEpisode : EPISODES.find(value => value.id === $('case-select').value);
+  if (ep) selectEpisode(ep, detached, detached ? importedHintText : undefined);
+});
 $('freeze-labels').addEventListener('change', () => { episode.constraints.labelsFrozen = $('freeze-labels').checked; changed(); renderEditor(); });
 $('required-action').addEventListener('input', () => { episode.action.expected = $('required-action').value; changed({ reviewHints: true }); });
 $('add-clue').addEventListener('click', () => {
@@ -191,14 +213,14 @@ $('import-file').addEventListener('change', async () => {
     const received = await readExport(await file.text());
     if (sequence !== importSequence) return;
     if (checkpoint !== version) throw new Error('The episode changed while this file was being verified. Reopen it again to replace the current revision.');
-    selectEpisode(received.episode);
+    selectEpisode(received.episode, true);
     rememberImportedEpisode(received.episode);
     result = received.validation.result; digest = received.integrity.episodeSha256; renderResult(); $('export-button').disabled = false;
     digestKey = 'Reopened source · SHA-256 {hash}'; renderDigest(); tab('author'); notice('Reopened revision {revision}. Source digest and mechanical result verified.', false, { revision: episode.revision });
   } catch (error) { if (sequence === importSequence) notice('Cannot reopen: {message}', true, { message: error.message }); }
   finally { if (sequence === importSequence) $('import-file').value = ''; }
 });
-comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode, rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
+comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode: ep => selectEpisode(ep, true), rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
 playtestController = setupPlaytest({ getEpisode: () => episode, notice, maxBytes: MAX_EXPORT_BYTES, t, diagnostic, getUILocale: () => uiLocale });
 function renderDigest() { $('digest').textContent = digest ? t(digestKey, { hash: digest }) : ''; }
 function relocalize() {
@@ -224,12 +246,14 @@ function relocalize() {
     renderResult(); renderDigest(); drawPlayer(); renderPlayerFeedback(); renderReveal(); comparisonController?.relocalize();
   }
   playtestController?.relocalize();
-  renderNotice();
+  renderNotice(); drafts.relocalize();
   let focus = active?.isConnected ? active : focusId ? $(focusId) : null;
   if (!focus && move) focus = [...$('player-order').children].find(row => row.dataset.cardId === move.card)?.querySelector(`[data-direction="${move.direction}"]`);
   if (!focus && clue) { const row = [...$('clue-editor').children].find(row => row.dataset.clueId === clue.id); focus = clue.remove ? row?.querySelector('[data-action="remove-clue"]') : [...(row?.querySelectorAll('select') ?? [])].find(select => select.dataset.field === clue.field); }
   if (focus && focus !== document.body) { focus.focus({ preventScroll: true }); if (selection?.start !== null && selection?.start !== undefined) focus.setSelectionRange?.(selection.start, selection.end, selection.direction); }
 }
 $('ui-language').addEventListener('change', () => { uiLocale = supportedLocale($('ui-language').value); relocalize(); });
-selectEpisode(EPISODES[0]);
+const initialEpisode = EPISODES.find(ep => ep.id === drafts.selectedId) ?? EPISODES[0];
+$('case-select').value = initialEpisode.id;
+selectEpisode(initialEpisode);
 relocalize();

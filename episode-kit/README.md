@@ -69,6 +69,38 @@ evidence limits. The reader never inherits a supplied pass claim. This is conten
 integrity, not a cryptographic signature or independent provenance attestation.
 Edit the episode and export again to create a current result.
 
+## Recoverable author drafts
+
+Bundled episodes save label edits, ordering clues, the required action, exact hint
+text, author-declared hint review, the frozen-label flag, and the revision in this
+browser. Wait for **Draft saved in this browser** before closing or reloading.
+Returning to an episode restores its own unfinished draft, including empty labels.
+Every restored revision needs a fresh check; drafts never store verification results.
+**Discard draft** resets only the selected episode to its bundled original.
+
+Drafts belong to the same browser profile and exact origin (scheme, host and port).
+Use the same `http://127.0.0.1:4173` address when returning. They are local convenience,
+not a backup or server sync; clearing browser data removes them. With blocked storage,
+quota errors, or no Web Locks support, edits remain in the current tab only and the
+workbench says so. Browser tab memory survives episode switches but not closing.
+
+If another tab saves the same episode, automatic saving pauses. **Load saved draft**
+replaces this tab's content with the saved version and clears its old check.
+**Keep these edits** explicitly replaces the saved version with this tab's content.
+Malformed or source-incompatible saved data is preserved until you choose to keep
+the current edits or discard that draft. Loading such data never grants approval.
+
+Reopened exports retain full digest and mechanical verification. They are separate
+from bundled drafts even when episode IDs match; edits to reopened content remain
+in this tab when switching episodes. Export the checked revision to keep those
+changes after closing. Comparison sources and role maps still require a checked
+comparison export to keep them after closing. Draft restoration clears both episode
+and comparison checks. Drafts do not change the CLI or exported episode format.
+
+Author draft recovery does not persist a separate player session or its journal.
+Download the play record before closing that window; restoring an author draft
+does not update an already-open player's captured episode.
+
 Maintainer verification and deterministic packaging:
 
 ```sh
@@ -103,6 +135,14 @@ node tests/action-receiver.mjs
 It exercises explicit action edits, player success and failure gates, actual
 export/reopen flows, interface-language preservation, and delayed completions.
 Its receipt and screenshots are evidence only after an actual successful run.
+
+The draft browser regression course uses the same runtime requirements:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/draft-evidence \
+node tests/receiver-drafts.mjs
+```
 
 The archive contains source, fixtures, tests, startup instructions and a generated
 `MANIFEST.json` with every included source file's byte length and SHA256. Archive
@@ -226,3 +266,21 @@ credential. Even a journal without a recorded reveal does not establish an
 unaided attempt or rule out assistance outside the player window. Hashes make
 content changes detectable against their retained binding; they are not signatures
 and cannot authenticate the client that authored a consistent record.
+
+## Long imported content
+
+Long titles, reference URLs, card labels and authored notes wrap within the
+author, comparison and player views. The display keeps the complete content;
+exports retain the original strings and evidence. This display improvement
+does not change schema limits or puzzle mechanics.
+
+The content receiver exercises valid long imported content at 390px and 1280px,
+including captured-source previews, English/Spanish controls, player hints and
+actual export/reopen integrity. Use the same existing Playwright/Chrome setup
+as the other browser receivers and keep its evidence outside the source tree:
+
+```sh
+PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/content-evidence \
+node tests/content-receiver.mjs
+```

@@ -7,10 +7,23 @@ textarea{font:inherit;resize:vertical;width:100%;min-height:110px;border:1px sol
 .toolbar{flex-wrap:wrap}.toolbar>.case-picker{min-width:0;flex:1 1 260px}.toolbar>.language-picker{flex:0 1 170px}.language-picker select{min-width:0;width:100%}.toolbar>.case-picker:not(.language-picker) select{width:100%}.tabs{flex-shrink:0}
 @media(max-width:800px){.toolbar>.case-picker,.toolbar>.language-picker{flex:0 1 auto;width:100%}.tabs{width:100%}.tabs button{flex:1;min-width:0}.intro h1{overflow-wrap:anywhere}}
 
+/* Draft feedback stays in the author view and leaves editor focus untouched. */
+.draft-strip{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:0 0 18px;padding:12px 17px;border:1px solid var(--line);border-radius:12px;background:#eeefe5}.draft-strip p{font-size:12px;line-height:1.6;color:var(--muted);margin:0}.draft-strip p[data-state=conflict],.draft-strip p[data-state=invalid],.draft-strip p[data-state=incompatible],.draft-strip p[data-state=unavailable],.draft-strip p[data-state=loadFailed]{color:#8d3528}.draft-actions{display:flex;gap:16px;flex-shrink:0;flex-wrap:wrap}.draft-actions button{white-space:nowrap}.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:800px){.draft-strip{align-items:flex-start;flex-direction:column;gap:3px}.draft-actions{gap:20px}}
+
 /* Explicit action authoring uses the same revision checks as labels and clues. */
 .action-editor{margin-top:21px;padding-top:21px;border-top:1px solid var(--line)}.action-editor label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}.action-editor input{width:100%;min-width:0;font-size:20px}
+
+/* Keep complete imported text readable inside constrained author/player layouts. */
+.episode-heading > div { min-width: 0; }
+.episode-heading h2,
+.episode-heading p,
+.comparison-pair h4,
+.comparison-pair p,
+.clues,
+.hints p,
+#semantic-changes { overflow-wrap: anywhere; }
 
 /* Focused player sessions and author review. */
 .playtest-toolbar{display:flex;justify-content:flex-end;padding-top:24px}.playtest-toolbar .language-picker{width:170px}.playtest-toolbar+.playtest-intro{padding-top:22px}
 .playtest-author{margin-top:22px}.playtest-author-actions{display:flex;align-items:center;gap:22px;margin-bottom:15px}.playtest-review-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;padding:23px 0;margin:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}#playtest-review h4{font-size:19px;text-transform:none;letter-spacing:-.3px;margin-top:25px;line-height:1.4}#playtest-review{overflow-wrap:anywhere}.playtest-events{font-size:13px;line-height:1.7;margin-top:20px}.playtest-events summary{font-weight:600;cursor:pointer}.playtest-events ol{padding-left:24px}.playtest-events li{margin:8px 0}.playtest-page main{max-width:1140px}.playtest-intro{max-width:900px;padding-bottom:24px}.playtest-intro h1{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(38px,4.8vw,58px);letter-spacing:-1.5px;line-height:1.12}.playtest-intro .lede{max-width:800px}.playtest-import{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:15px 0 24px}.playtest-import label{font-size:14px;font-weight:600}.playtest-import input{max-width:100%;font-size:12px}.playtest-import p{flex-basis:100%}.playtest-page .panel h2,.playtest-record-strip h2{font-size:19px;font-weight:600;margin:0 0 9px;letter-spacing:-.4px}.playtest-page .section-title{margin-bottom:23px}.playtest-page .play-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#playtest-answer-form{margin-top:30px}#playtest-answer-label{font-size:13px;font-weight:600}#playtest-solution{border-top:1px solid var(--line);padding-top:20px;margin-top:15px}#playtest-solution h3{font-size:15px}.playtest-record-strip{display:flex;align-items:center;justify-content:space-between;gap:30px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:27px 0;margin-top:24px}.playtest-record-strip>div{max-width:670px}.playtest-record-strip button{flex-shrink:0}#playtest-record-note{max-width:600px}#playtest-journal-summary{font-size:13px;color:var(--green)}#playtest-evidence-note{max-width:850px;margin-bottom:27px}@media(max-width:800px){.playtest-author-actions{flex-direction:column;align-items:stretch;gap:8px}.playtest-review-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.playtest-page .play-grid{grid-template-columns:1fr}.playtest-record-strip{flex-direction:column;align-items:stretch;gap:20px}.playtest-page .intro{padding-top:32px}.playtest-page .lede{font-size:14px}.playtest-page .panel{padding:22px}.playtest-page .answer-row{flex-direction:column}.playtest-intro h1{font-size:42px}.playtest-import{padding:20px}}
-
+#playtest-title, #playtest-story, #playtest-solution { overflow-wrap: anywhere; }
