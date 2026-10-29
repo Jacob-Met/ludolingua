@@ -1,9 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, writeFile, open, rm } from 'node:fs/promises';
+import { mkdtemp, readFile, writeFile, open, rm, symlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { createPlaytestRecord } from '../lib/playtest-export.mjs';
 
@@ -96,4 +96,46 @@ test('individually permitted sparse files exceeding aggregate size fail before J
   const directory=await temporary(t),paths=[];
   for(let index=0;index<3;index++) paths.push(await sparse(directory,'part-'+index+'.json',14_000_000));
   rejected(paths,/40 MB|combined input/i);
+});
+
+test('symlinked standalone entrypoints produce the same single JSON result and exit status as direct and maintained CLI routes',async t=>{
+  const directory=await temporary(t);
+  const good=await save(directory,'valid record.json',await fixture('empty'));
+  const invalid=await save(directory,'invalid record.json','{');
+  const linkedFile=join(directory,'linked cohort.mjs');
+  const linkedDirectory=join(directory,'linked kit');
+  await symlink(join(root,'playtest-cohort.mjs'),linkedFile,'file');
+  await symlink(root,linkedDirectory,'dir');
+  // A linked directory keeps relative imports available even when Node retains
+  // the lexical main-module URL. A lone file link cannot provide that layout.
+  const entries=[...entrypoints,[linkedFile],
+    [join(linkedDirectory,'playtest-cohort.mjs')],
+    ['--preserve-symlinks-main',join(linkedDirectory,'playtest-cohort.mjs')],
+    ['--preserve-symlinks-main',join(linkedDirectory,'cli.mjs'),'playtest-cohort']];
+  for(const [args,status] of [[[good],0],[[good,invalid],1],[[],1]]) {
+    const baseline=invoke(entrypoints[0],args);
+    assert.equal(baseline.status,status);
+    for(const entry of entries) {
+      // invoke parses the whole stdout: empty output or two JSON reports fails.
+      const actual=invoke(entry,args);
+      assert.equal(actual.status,status,JSON.stringify(entry));
+      assert.deepEqual(actual.value,baseline.value,JSON.stringify(entry));
+      if(status===1) {
+        assert.equal(actual.value.ok,false);
+        assert.equal(Object.hasOwn(actual.value,'episodes'),false);
+      }
+    }
+  }
+});
+
+test('import-only evaluation stays quiet with absent or unrelated unresolved entrypoint arguments',async t=>{
+  const directory=await temporary(t);
+  const expression='await import('+JSON.stringify(pathToFileURL(join(root,'playtest-cohort.mjs')).href)+');';
+  for(const args of [[],[join(directory,'missing-entrypoint.mjs')],[directory]]) {
+    const child=spawnSync(process.execPath,['--input-type=module','--eval',expression,...args],{
+      cwd:root,encoding:'utf8',timeout:30000,maxBuffer:2_000_000
+    });
+    assert.equal(child.error,undefined);assert.equal(child.signal,null);
+    assert.equal(child.status,0);assert.equal(child.stdout,'');assert.equal(child.stderr,'');
+  }
 });

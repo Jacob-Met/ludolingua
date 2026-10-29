@@ -1,6 +1,5 @@
 #!/usr/bin/env node
-import { readFile, stat } from 'node:fs/promises';
-import { resolve } from 'node:path';
+import { readFile, realpath, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { readPlaytestRecord } from './lib/playtest-export.mjs';
 
@@ -116,6 +115,13 @@ export async function runCli(paths = process.argv.slice(2)) {
   }
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+// Node resolves the module URL through symlinks unless instructed otherwise.
+// Normalize both paths so linked entrypoints run, while ordinary imports stay quiet.
+const invokedAsMain = process.argv[1] && await Promise.all([
+  realpath(process.argv[1]),
+  realpath(fileURLToPath(import.meta.url))
+]).then(([entry, source]) => entry === source, () => false);
+
+if (invokedAsMain) {
   await runCli();
 }
