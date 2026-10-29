@@ -1,5 +1,6 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+'The order fits the clues. Try the action again using its initials.':'El orden cumple las pistas. Intenta de nuevo la acción usando sus iniciales.',
 "Local author draft":"Borrador local del autor",
 "Load saved draft":"Cargar borrador guardado",
 "Keep these edits":"Conservar estos cambios",
