@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.8-portable.1b623a99
+# LUDOLINGUA episode, comparison and playtest kit — 0.3.9-portable-guard.1b623a99
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -335,7 +335,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.8-portable.1b623a99.
+the enclosing kit version is 0.3.9-portable-guard.1b623a99.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -591,3 +591,27 @@ Hashes establish consistency with the supplied episode and events, not who
 authored them. A fully consistent replacement history can still be authored by
 a caller. The native fixtures record the exact historical engine/writer blobs
 and immutable old-record hashes in `tests/fixtures/playtest-v0.1-provenance.json`.
+
+
+### Runtime freshness of playable downloads
+
+The local receiver checks the recorded portable-player sources each time it
+serves the bundled runtime, including HEAD requests. If the bundle is stale,
+missing, corrupt, or replaced during the check, the receiver refuses that
+download with HTTP 503 and does not cache the refusal. The workbench, JSON
+episode export and ordinary player remain available.
+
+Each author download requests the runtime again, including after an earlier
+successful export. A source edit made while the receiver is running is checked
+on that next bundle request. Restore the exact recorded source bytes or rebuild the portable bundle
+with the pinned development toolchain described above, then retry the download.
+The receiver prints the check diagnostic and never installs tools or rebuilds
+source automatically. Previously downloaded HTML remains a captured copy.
+
+The focused server tests use disposable copies, including a controlled verifier
+fault to exercise a bundle replacement during checking. The real author refusal,
+same-page recovery and resulting offline record are covered by:
+
+    PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+    LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/serving-evidence \
+    node tests/portable-serving-receiver.mjs

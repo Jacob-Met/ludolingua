@@ -29,6 +29,9 @@ export function setupPortableAuthor({ getEpisode, getUILocale, notice, maxBytes 
       document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000);
       notice('Downloaded revision {revision} as a playable HTML file. Open it directly in a browser.', false, { revision: page.episode.revision });
     } catch (error) { notice('Cannot download playable file: {message}', true, { message: error.message }); }
-    finally { pending = false; button.disabled = false; }
+    finally {
+      // Every later export must revalidate the served runtime, including after success.
+      bundlePromise = null; pending = false; button.disabled = false;
+    }
   });
 }
