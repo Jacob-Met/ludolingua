@@ -1,6 +1,7 @@
 import { validateEpisode } from '../lib/engine.mjs';
 import { createExport } from '../lib/export.mjs';
 import { readPlaytestRecord } from '../lib/playtest-export.mjs';
+import { describePlaytestJourney } from '../lib/playtest-journey.mjs';
 
 export function setupPlaytest({ getEpisode, notice, maxBytes, t, diagnostic, getUILocale }) {
   const $ = id => document.getElementById(id);
@@ -33,6 +34,7 @@ export function setupPlaytest({ getEpisode, notice, maxBytes, t, diagnostic, get
   });
   function renderReview(record) {
     const root = $('playtest-review'), summary = record.validation.result.summary;
+    const journey = describePlaytestJourney(record.episode, record.events);
     root.replaceChildren(node('h4', t('{title} · revision {revision}', {title:record.episode.title,revision:record.episode.revision})), node('p', t('Session {session} · {locale}', {session:record.sessionId,locale:record.episode.locale.toUpperCase()}), 'small'));
     const metrics = node('div', undefined, 'playtest-review-metrics');
     for (const [value, label] of [[summary.attempts, 'Recorded attempts'], [summary.successfulAttempts, 'Attempts matching clues and action'], [summary.hintsShown, 'Hints shown, including repeats'], [summary.resets, 'Resets'], [t(summary.revealUsed ? 'Yes' : 'No'), 'Solution revealed in this record'], [summary.firstSuccessMs === null ? '—' : `${(summary.firstSuccessMs / 1000).toFixed(1)} s`, 'First matching attempt · client timing']]) {
@@ -47,7 +49,19 @@ export function setupPlaytest({ getEpisode, notice, maxBytes, t, diagnostic, get
       for (; visible < end; visible++) {
         const event = record.events[visible];
         const action = event.type === 'move' ? t(event.direction === 'up' ? 'Move {label} up' : 'Move {label} down', {label:record.episode.cards.find(card => card.id === event.cardId).label}) : event.type === 'attempt' ? t('Try action: {answer}', {answer:event.answer || t('(empty answer)')}) : event.type === 'hint' ? t('Show a hint') : event.type === 'reveal' ? t('Reveal the solution') : t('Reset the order');
-        list.append(node('li', t('{seconds} s · {action}', {seconds:(event.elapsedMs / 1000).toFixed(1),action})));
+        const step = journey[visible];
+        const entry = node('li',t('{seconds} s · {action}', {seconds:(event.elapsedMs / 1000).toFixed(1),action}));
+        const order = step.order.map(id => record.episode.cards.find(card => card.id === id).label).join(' → ');
+        entry.append(node('p',t('Order after this step: {order}',{order}),'playtest-order'));
+        if (step.attempt) {
+          const feedback = step.attempt.success
+            ? 'The recorded order and action satisfied the encoded checks.'
+            : !step.attempt.cluesSatisfied
+              ? 'The recorded order did not satisfy every clue.'
+              : 'The clues matched, but the entered action did not.';
+          entry.append(node('p',t(feedback),'playtest-attempt-result'));
+        }
+        list.append(entry);
       }
       visibleEvents = visible; more.hidden = visible >= record.events.length;
     }
