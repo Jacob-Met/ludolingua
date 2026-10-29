@@ -1,0 +1,40 @@
+{
+  "schema": "ludolingua.couriers-rendezvous-provenance.v1",
+  "author": "estate-d0f95ce3-8a9f-464c-aa68-8376632345ae",
+  "promptVersion": "2026-10-29.32",
+  "originalProductOwner": "hamon-a19-20261027",
+  "runtimeCommit": "18fdb3eb5fc5c1d8d24efb698eff72bc127f72a4",
+  "runtimeTree": "827e4ceb4d959347daab857bb38eab73715c65c9",
+  "task": "ludolingua-couriers-rendezvous-d0f95ce3",
+  "caseVersion": "0.1.0",
+  "evidenceLimits": [
+    "Authored content and retained internal model review; no native-human or provider-model study.",
+    "Order and extraction are mechanically checkable; meaning, fluency and difficulty are separate judgments."
+  ],
+  "roles": [
+    {
+      "id": "bread",
+      "intendedObject": "bread"
+    },
+    {
+      "id": "raisin",
+      "intendedObject": "a dried grape (raisin)"
+    },
+    {
+      "id": "ivy",
+      "intendedObject": "ivy"
+    },
+    {
+      "id": "daffodil",
+      "intendedObject": "a daffodil flower"
+    },
+    {
+      "id": "topaz",
+      "intendedObject": "golden topaz"
+    },
+    {
+      "id": "emerald",
+      "intendedObject": "emerald"
+    }
+  ]
+}

@@ -1,0 +1,396 @@
+{
+  "commit": "18fdb3eb5fc5c1d8d24efb698eff72bc127f72a4",
+  "tree": "827e4ceb4d959347daab857bb38eab73715c65c9",
+  "files": [
+    {
+      "path": "episode-kit/README.md",
+      "blob": "1747cfd7ea95fa4e35ebaa14ffc3fcf6f194502c",
+      "sha256": "22e6c2101adb65d70e12b0d64c23ddbcb079592d975e3f00a78e4dde115b579d",
+      "bytes": 29536
+    },
+    {
+      "path": "episode-kit/SIGNAL-PANEL.md",
+      "blob": "e21d7a9e8ebfdcd969fdcc70586ce34cc06a2e66",
+      "sha256": "f96c46cffc3a6aecdd6d5994823d85a63b305605bd11683fd36603974e1bdc0f",
+      "bytes": 3777
+    },
+    {
+      "path": "episode-kit/cli.mjs",
+      "blob": "257d69ed8b4211cd80141f999563cbe17180f725",
+      "sha256": "00a92c3cb3fda490426e780b96c878e982a8df3820aeb74e2e602df7e3b8bbac",
+      "bytes": 3833
+    },
+    {
+      "path": "episode-kit/fixtures/episodes.mjs",
+      "blob": "ad68fe5e39ebe4657c330259b3ad932ad5004a21",
+      "sha256": "9d628115c5615222ff10c17a4035fe1c9e076facabd5f39fabb90194f16df04d",
+      "bytes": 3104
+    },
+    {
+      "path": "episode-kit/fixtures/signal-panel.mjs",
+      "blob": "97c860736a162e51d7347feb673879b285be55bd",
+      "sha256": "86367a2b081528072df873c6b9e53b21e4f9c9297f968e94c26b2cb2c404acad",
+      "bytes": 5696
+    },
+    {
+      "path": "episode-kit/lib/authoring.mjs",
+      "blob": "0a5a980a86881b25051d35224cb7b250c0ed458d",
+      "sha256": "05a6d14a009270a6ddf5e6911503e8c682b7520e877e3a98018c1d1ef8d79c38",
+      "bytes": 1415
+    },
+    {
+      "path": "episode-kit/lib/clue-conflict.mjs",
+      "blob": "ac4162dd19d5744d1b44518b2efe1950e69ac762",
+      "sha256": "470c15d91fe166f8bc19648b97338287a6abffe8af634c95aea7f303e538377e",
+      "bytes": 3415
+    },
+    {
+      "path": "episode-kit/lib/compare.mjs",
+      "blob": "fce142650e2a3c2fe2257f0bb5ad5ac9930432d0",
+      "sha256": "bf5ff89397626a96cd0a8456a1ae294d7171d637b45aa2c2a8a107194ef34528",
+      "bytes": 4686
+    },
+    {
+      "path": "episode-kit/lib/comparison-export.mjs",
+      "blob": "1fd67796f365eaaf1e0f844788656bb190ff84f5",
+      "sha256": "dc8ce53d88b833ea36e393f90898ed429e0c84b31a1bd2bbc7e8393a74a42f59",
+      "bytes": 2429
+    },
+    {
+      "path": "episode-kit/lib/drafts.mjs",
+      "blob": "4d622cb792a9ae6b2fcccf5aa8390bf88af4c196",
+      "sha256": "a6d12e069ebb05a7a0f82539ac0350ad8367256f3e7ee98e64bbac508d8405a6",
+      "bytes": 10446
+    },
+    {
+      "path": "episode-kit/lib/engine.mjs",
+      "blob": "54edc0e687f734add986c1ab9506c33f1610ae88",
+      "sha256": "58a37cad55c5a665a2eb9d61d4ff328fab7bd86b826197aacf42667dbd911f96",
+      "bytes": 7210
+    },
+    {
+      "path": "episode-kit/lib/export.mjs",
+      "blob": "d808b96f59a0f95f2e074631f4b56b3d41abacf3",
+      "sha256": "9182f63ca5908fe491671ce75a3b3208bc879c30b8f43a4cba4a7ed00e73bf53",
+      "bytes": 3305
+    },
+    {
+      "path": "episode-kit/lib/playtest-cohort.mjs",
+      "blob": "49cb7150e539a9091848e39cd0b30272724194b6",
+      "sha256": "17d38175c89a5e4bc958b8cb3b2225ee0ce81788c260e1947540068c28d580fe",
+      "bytes": 4418
+    },
+    {
+      "path": "episode-kit/lib/playtest-export.mjs",
+      "blob": "5683ba3b2ab3d5ca66a9404a19d0f59ca5957614",
+      "sha256": "8451a9848f10aa8f96ad47b34192e7e2cf2bb2d50d27ef82618c52be3b4d52f9",
+      "bytes": 4552
+    },
+    {
+      "path": "episode-kit/lib/playtest.mjs",
+      "blob": "821d1bb65ce74b5eff6c28214d28df0458d900c3",
+      "sha256": "b6d48925239fb393ff795a532b3b777fb714fcc6eb707d7d652f024968405a00",
+      "bytes": 3901
+    },
+    {
+      "path": "episode-kit/package.json",
+      "blob": "f1bf25bb38cf79a44adb1e1036865f7c4767e10c",
+      "sha256": "e7d9bbdf1c8877d0cb0b77537574d6b89e11efe4e2b5cdd62989edd137a4d5a0",
+      "bytes": 312
+    },
+    {
+      "path": "episode-kit/playtest-cohort.mjs",
+      "blob": "e8fb5d5d90685d4b77ff8a909922e476683bd75d",
+      "sha256": "3c6827e1512f3fc577f3d2053830a4c7af9b4a234a7f3c620dfd408682ee7c8b",
+      "bytes": 1734
+    },
+    {
+      "path": "episode-kit/scripts/package.py",
+      "blob": "180d73718de89ef16b3e31154c2034066ee561c8",
+      "sha256": "14b849aded591eae4a4445fb4e4c20ecde5aaee3ff237735b19d80abce49d000",
+      "bytes": 2461
+    },
+    {
+      "path": "episode-kit/serve.mjs",
+      "blob": "dce35c3f3c05a22efb1be4769425ffa10bdb2c7e",
+      "sha256": "ac18f05ceff0f73d91c15e85b0b1ee72f86fcfae04423a3957aaa374509340f0",
+      "bytes": 2498
+    },
+    {
+      "path": "episode-kit/tests/action-receiver.mjs",
+      "blob": "f4e8ef8f6a14478962519471f7f40d41cb0c3bac",
+      "sha256": "1e4c467857088ff997320664c4320ff044d1e20e91dbfa068c7809d1f8d243e8",
+      "bytes": 14837
+    },
+    {
+      "path": "episode-kit/tests/attempt-feedback.test.mjs",
+      "blob": "cc116926f1f43e6a0b1fcbbee4844acfe3e10417",
+      "sha256": "10c933dd2bc4b9814fc4abb750ef248f6c2fd887240dc6ea48573c8b265b1a85",
+      "bytes": 4929
+    },
+    {
+      "path": "episode-kit/tests/authoring-receiver.mjs",
+      "blob": "6ff03c90305fb1899acc3aa66441c1abb81d15ca",
+      "sha256": "304c28319bd1a4aee22f2e6232997c64b0951c41355097115a67b1a327139245",
+      "bytes": 20090
+    },
+    {
+      "path": "episode-kit/tests/authoring.test.mjs",
+      "blob": "41f883ac45826d056039af8b06c8d6f2a7d00d96",
+      "sha256": "b8b2e14508624654ed771392d97aeefa0f686e5ced45d69f4f0bf776bf8bf88f",
+      "bytes": 5793
+    },
+    {
+      "path": "episode-kit/tests/browser-cohort-receiver.mjs",
+      "blob": "e429de5968c352c88def64e3e4e81edb335e2325",
+      "sha256": "7963dfb181271f26749b7a72167b260b3562974da42cda93cbb7ed5e2d57b5e8",
+      "bytes": 26859
+    },
+    {
+      "path": "episode-kit/tests/clue-conflict-receiver.mjs",
+      "blob": "5525f8911409d9bf67d810e3a7871458a9a4a9ac",
+      "sha256": "443bc776955450782d52040b1890136e1fb2b46f52ad187546468ef36fe5782d",
+      "bytes": 14240
+    },
+    {
+      "path": "episode-kit/tests/clue-conflict.test.mjs",
+      "blob": "c54f8dd351e889b391fd5ea3e23632de22eff193",
+      "sha256": "9516daf6bbcd46771834febe76bacd73d9f1e9e2bba7ea982113683306d57ac5",
+      "bytes": 7450
+    },
+    {
+      "path": "episode-kit/tests/comparison-receiver.mjs",
+      "blob": "f486f01e9345fbdf137abd150f5d9df479263fb8",
+      "sha256": "bcdd0e9f0c2b0e2771b82ce042f5b967f35ea78d833b507acf535c650aee4f37",
+      "bytes": 12603
+    },
+    {
+      "path": "episode-kit/tests/comparison.test.mjs",
+      "blob": "b8e24695f374f3b0500dd64f277915473d6a243c",
+      "sha256": "109888562afd11e25a20a9c20e403b5eda98d1df5a675868519a1df0eb01850c",
+      "bytes": 7611
+    },
+    {
+      "path": "episode-kit/tests/content-receiver.mjs",
+      "blob": "91c341dde0ecabf17b7321ead22383bb10f642b1",
+      "sha256": "78207edfe7c17f7f904842a899336f7792b9cf74ad25dfa44b17af38fd7c049d",
+      "bytes": 9934
+    },
+    {
+      "path": "episode-kit/tests/drafts.test.mjs",
+      "blob": "dade52f7a0c798959a4aec72ae753a3f63a01971",
+      "sha256": "9aaba3486686839a0fc620f88607bff8d9231bc7000ec1f76a97e2bd563977b8",
+      "bytes": 16264
+    },
+    {
+      "path": "episode-kit/tests/engine.test.mjs",
+      "blob": "5af921b33bc47fead3355384f4dd764c864e0673",
+      "sha256": "539b8978c4e2d518ac53667cfd73b095bafc6f8091b51569006118ee374af8b4",
+      "bytes": 6358
+    },
+    {
+      "path": "episode-kit/tests/export.test.mjs",
+      "blob": "876ca9ac0d73873e5593999962637fd223d447cf",
+      "sha256": "029b9c02083e366df2386b8fb463afbed27a5d2670ec0340da4f80b249262535",
+      "bytes": 5360
+    },
+    {
+      "path": "episode-kit/tests/fixtures/playtest-v0.1-attempt.json",
+      "blob": "38926db72cba98dcd12a84000968ddd51092eb42",
+      "sha256": "76392d45a1ece09e18e435d64ef6d74835b5b4de4ff634568b5b489c30c1c78e",
+      "bytes": 4467
+    },
+    {
+      "path": "episode-kit/tests/fixtures/playtest-v0.1-empty.json",
+      "blob": "a561d1631e2ed85325ded37a52aaa1e6a3c7adf4",
+      "sha256": "506ba68a63508ddffbd09c2f297b7ced8b427a3f3dd878c7e449c04a6d75daeb",
+      "bytes": 3899
+    },
+    {
+      "path": "episode-kit/tests/fixtures/playtest-v0.1-history.json",
+      "blob": "1438a638abb286333c13e476c9c8219fc7c66999",
+      "sha256": "28bda2af8f33dd31f35f2bbbaf6693aaeb4b6ac514000caf138c31c463a34b6b",
+      "bytes": 4942
+    },
+    {
+      "path": "episode-kit/tests/fixtures/playtest-v0.1-provenance.json",
+      "blob": "9b0d0d7580cacd6d9affcfd942be5e08a6dee665",
+      "sha256": "28002d74aae1e31523a54a92378986326531aa64da3382ba0ad8ca6d38d52706",
+      "bytes": 2676
+    },
+    {
+      "path": "episode-kit/tests/locale-receiver.mjs",
+      "blob": "c77ca18e4b8ffe0f6f1b5f47e83f7473090ca60b",
+      "sha256": "7b0f73534b1558a5e365792dc1f3e0381897086abef9c87a2ec68fa6592aeb73",
+      "bytes": 16111
+    },
+    {
+      "path": "episode-kit/tests/playtest-cohort-cli.test.mjs",
+      "blob": "113890288b6f24471b59fc53231b8b9c45dd3d5d",
+      "sha256": "e644659b77ee33796b8a4c6e613843f258537772c26e2d4cb0cb5256da634766",
+      "bytes": 7156
+    },
+    {
+      "path": "episode-kit/tests/playtest-cohort-receiver.mjs",
+      "blob": "a5484933371aed41530a43ba9e3ca8cd4ed316d4",
+      "sha256": "fe5b71ec9cced6171ce5bdf1fafa738f0d6ad0fccb061e43ee6244d8a9624cee",
+      "bytes": 8429
+    },
+    {
+      "path": "episode-kit/tests/playtest-cohort.test.mjs",
+      "blob": "341788f7fcd3b213f19e917f0306e02b5141eb40",
+      "sha256": "9646f2a835f30504ac48606a307bb449e975ced2b006240a0c63b211f3ab1774",
+      "bytes": 8417
+    },
+    {
+      "path": "episode-kit/tests/playtest-compatibility-receiver.mjs",
+      "blob": "10ec807bf7373b00f1621e75800d6cb0021becab",
+      "sha256": "200e24cbdea39a6f146329ca869fba61d6beceff3b15f8e8539b8f2b52d6e163",
+      "bytes": 6797
+    },
+    {
+      "path": "episode-kit/tests/playtest-compatibility.test.mjs",
+      "blob": "abb693e2821268fbdb9d321e225538d4ebfe07c9",
+      "sha256": "b8b4f91ccdefc2fd185e7f7b0a0027f1fe3fb2665505c75356057125090a897f",
+      "bytes": 7248
+    },
+    {
+      "path": "episode-kit/tests/playtest-continuation-receiver.mjs",
+      "blob": "c82fda710fe442a578b5d2a30cf0f24db3ba1f42",
+      "sha256": "93cec281222d6e8f94d084a41b78bda5fb0c2c15febfdfe00423bfe49ec9d152",
+      "bytes": 24451
+    },
+    {
+      "path": "episode-kit/tests/playtest-receiver.mjs",
+      "blob": "ed4a538abd35ed476a174291852b87096ef41cc2",
+      "sha256": "122f7dba8ae48a90b667ad31d22af14f87bad123f855e2b124a3aa6b12e4a842",
+      "bytes": 18834
+    },
+    {
+      "path": "episode-kit/tests/playtest.test.mjs",
+      "blob": "8b83247c337b259f691e58a6624925eff2b6fac0",
+      "sha256": "74c0079b947f1ea6a192b984b35fb1acddb04aa68e2fa3f90e089123773655c4",
+      "bytes": 7485
+    },
+    {
+      "path": "episode-kit/tests/receiver-drafts.mjs",
+      "blob": "d4dd21dfed857cf640c451ed67ac080aee836014",
+      "sha256": "2798504ba4992c4c47c7e7c4d6a60ae03ce964fff7fe5a36934a9d365985320c",
+      "bytes": 16952
+    },
+    {
+      "path": "episode-kit/tests/receiver.mjs",
+      "blob": "fe6542f1f51c6f1c91d460caa9f61ed4546d1df6",
+      "sha256": "d5c09b3b816f2314ff6c61996af8165a7de623fb4370fd38c06658b00e882d08",
+      "bytes": 17666
+    },
+    {
+      "path": "episode-kit/tests/signal-panel-receiver.mjs",
+      "blob": "d2b768c5a562b88137db98c9be5b03c010ed55c0",
+      "sha256": "54ed1f2992ef3a7d7cc6b2f925f8153338da90135391057b346a041b476aa530",
+      "bytes": 18180
+    },
+    {
+      "path": "episode-kit/tests/signal-panel.test.mjs",
+      "blob": "8e344ee9206fde0f269502e8bad457ef0107e6d9",
+      "sha256": "41ee62e5aafac30c0fbf01b5611a6a12f90235f87d070915b2857bf3dbd3dc97",
+      "bytes": 7031
+    },
+    {
+      "path": "episode-kit/tests/wording-receiver.mjs",
+      "blob": "c3e15f28cfa7161717e2b201f17d36cb35276433",
+      "sha256": "677a20c9f1ae2f649fafdb223c7df2057c3170ff0b6e02cb6dd16c5273515da6",
+      "bytes": 18811
+    },
+    {
+      "path": "episode-kit/tests/wording.test.mjs",
+      "blob": "6faa932726698668a03506384163b4deaa98156e",
+      "sha256": "6ff9779661410fb4ef160f6f799a2b56ab08369ff7c0c736b044d340c4936168",
+      "bytes": 6053
+    },
+    {
+      "path": "episode-kit/web/app.mjs",
+      "blob": "441dbd3a08b1445ebf555f8d4e6046fb02f1f215",
+      "sha256": "608f57be9d27dbdac8433450cf19b2dac174a9e1ccacf67807b07c7262da0ada",
+      "bytes": 29148
+    },
+    {
+      "path": "episode-kit/web/author-handoff.mjs",
+      "blob": "9a2209c593398b4a11aa34f8d40e6290fd97288a",
+      "sha256": "9050555f9b022298b01c4a3391b0d9d33812ee03c2a6f2e74f27ef9cba8b7b7c",
+      "bytes": 7913
+    },
+    {
+      "path": "episode-kit/web/comparison.mjs",
+      "blob": "5f09eff5259e4d8f2bc0309648794c82a6c6ffbf",
+      "sha256": "de22dab33ab6db564b717e54d3f0aef24dcdcc77b2f68aa9161cd689f1c156d5",
+      "bytes": 13170
+    },
+    {
+      "path": "episode-kit/web/create.css",
+      "blob": "69b39da804fe42ec0e0a07f134d3d19b2b49be12",
+      "sha256": "7fa7bf6e4c3eb3eb01376cae64ccc37b241a2cf109a022d7b44ecd420c464ef9",
+      "bytes": 1722
+    },
+    {
+      "path": "episode-kit/web/create.html",
+      "blob": "3a023c3ac99809dcfa48b764bf40d2831bb0cf37",
+      "sha256": "17c9848eae3147b651551243711afa49b83010cbc3d09eeccca8b98e7e5a5405",
+      "bytes": 5541
+    },
+    {
+      "path": "episode-kit/web/create.mjs",
+      "blob": "ac420d3f3528d3815c627666430745f016547ba7",
+      "sha256": "312c0b99ab03265abef5420496afef5e1186ffc94253b2d1ec27fa8073f529f4",
+      "bytes": 11142
+    },
+    {
+      "path": "episode-kit/web/draft-controller.mjs",
+      "blob": "d3464514202fcf9e42e1a3741bf51756863da263",
+      "sha256": "9c2be8bb00de89e23f35192f0db08b820b6c0bf996c3c6fd0ca117594c51c9d9",
+      "bytes": 8514
+    },
+    {
+      "path": "episode-kit/web/i18n.mjs",
+      "blob": "51c9dcf4aeb18eaa453fb5070f24ec91c4fc01f1",
+      "sha256": "718cfba88171ec56a877ded6e9fa73f3e1a9b070a4fb35010946b7c9981a2f9a",
+      "bytes": 35305
+    },
+    {
+      "path": "episode-kit/web/index.html",
+      "blob": "5d5d1c27c5d411dd52b6c4d7dcdc8d8c7bd9fd7b",
+      "sha256": "d05bf104949852e3a45b96330c8b2baddaa5a8291c51620727499734eaece914",
+      "bytes": 17021
+    },
+    {
+      "path": "episode-kit/web/playtest-author.mjs",
+      "blob": "f71a293635de1326acfe69997462c5d7438d6f7b",
+      "sha256": "b056743ffa6dcaad563da1ba2e8f732368a5896b2162a7bf75d55f462efd0d64",
+      "bytes": 7331
+    },
+    {
+      "path": "episode-kit/web/playtest-cohort.mjs",
+      "blob": "b5ec52a865b720698553cb97a92178ee3039e336",
+      "sha256": "0fc6b850b8cdf06b6f4594b5397c0f845a15d97a89ea79b40d4c8a4e757dde3d",
+      "bytes": 5805
+    },
+    {
+      "path": "episode-kit/web/playtest.html",
+      "blob": "1f29dced2c706c8979d19f723ccc869e9f55a80a",
+      "sha256": "9312b01d5aef01259ed389d2e03e72397e9c88c1aa347f7e2c66fee866fda12e",
+      "bytes": 5192
+    },
+    {
+      "path": "episode-kit/web/playtest.mjs",
+      "blob": "1014bc00d2da57768631a8392e3909f323a29915",
+      "sha256": "b7be64d775535dc39591908901d42ff585c616f9c0dcaafcec00864460356f5e",
+      "bytes": 17711
+    },
+    {
+      "path": "episode-kit/web/style.css",
+      "blob": "39764bfb354b8e1663cbef872a90620823324569",
+      "sha256": "70d332bbe45f915c6dded0a6944993d1c6a6db633b80ab7641c8e3067465bcf4",
+      "bytes": 23951
+    }
+  ]
+}

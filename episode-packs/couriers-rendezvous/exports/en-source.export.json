@@ -1,0 +1,145 @@
+{
+  "schema": "ludolingua.episode-export.v1",
+  "episode": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "BRIDGE"
+    },
+    "cards": [
+      {
+        "id": "emerald",
+        "label": "Emerald"
+      },
+      {
+        "id": "ivy",
+        "label": "Ivy"
+      },
+      {
+        "id": "bread",
+        "label": "Bread"
+      },
+      {
+        "id": "topaz",
+        "label": "Golden topaz"
+      },
+      {
+        "id": "raisin",
+        "label": "Raisin"
+      },
+      {
+        "id": "daffodil",
+        "label": "Daffodil"
+      }
+    ],
+    "clues": [
+      {
+        "id": "bread_next_raisin",
+        "kind": "immediately_before",
+        "left": "bread",
+        "right": "raisin"
+      },
+      {
+        "id": "ivy_next_daffodil",
+        "kind": "immediately_before",
+        "left": "ivy",
+        "right": "daffodil"
+      },
+      {
+        "id": "topaz_next_emerald",
+        "kind": "immediately_before",
+        "left": "topaz",
+        "right": "emerald"
+      },
+      {
+        "id": "raisin_before_ivy",
+        "kind": "before",
+        "left": "raisin",
+        "right": "ivy"
+      },
+      {
+        "id": "daffodil_before_topaz",
+        "kind": "before",
+        "left": "daffodil",
+        "right": "topaz"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": false,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "Three clues join cards into pairs. Keep each pair together and preserve its internal order.",
+      "The two remaining clues tell you how to order the three pairs.",
+      "Once every clue fits, read only the first letter of each label, from left to right. A label with several words still contributes just one letter."
+    ],
+    "id": "courier-en-source",
+    "locale": "en",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [
+        "Original English source. Each of the six complete labels contributes one initial; multiword Golden topaz contributes G.",
+        "The six stable role IDs describe the authored object mapping; a stable ID is not evidence that a changed label preserves meaning.",
+        "Daffodil/Narciso is the shared author-chosen baseline for the intended daffodil flower. Its lexical and botanical precision is not independently qualified.",
+        "Authored with ChatGPT; internal model review does not establish native-human playtesting, comparable difficulty, language fluency or NVIDIA/Nebius inference benefit."
+      ],
+      "source": "Original Courier’s Rendezvous content by estate-d0f95ce3-8a9f-464c-aa68-8376632345ae with retained ChatGPT reviewers, for LUDOLINGUA; original product custody hamon-a19-20261027. No external puzzle assets. Runtime authorship remains with its existing contributors."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "The courier has left six cards and a note: “I cannot name our meeting place openly. Put the cards in the order described by the clues, then read the first letter of each card’s label from left to right. Enter the place you discover.” The cards have been shuffled.",
+    "title": "The Courier’s Rendezvous"
+  },
+  "validation": {
+    "engineVersion": "0.1.0",
+    "episodeSha256": "8db23a0e503ccee72116010b5fb6d20d47b576e1474f842d5af0c74547df0cda",
+    "result": {
+      "schema": "ludolingua.analysis.v1",
+      "engineVersion": "0.1.0",
+      "valid": true,
+      "errors": [],
+      "permutationCount": 720,
+      "clueOrderCount": 1,
+      "actionMatchCount": 1,
+      "uniqueReasoning": true,
+      "mechanicalSuccess": true,
+      "outcome": "verified",
+      "solutions": [
+        {
+          "order": [
+            "bread",
+            "raisin",
+            "ivy",
+            "daffodil",
+            "topaz",
+            "emerald"
+          ],
+          "token": "BRIDGE",
+          "actionMatches": true
+        }
+      ],
+      "frozenWitness": null,
+      "limitations": [
+        "Checks cover encoded ordering and extraction only; native-language clarity, cultural suitability and comparable discovery require human playtests.",
+        "No model inference is evidenced.",
+        "Extraction uses the first Unicode code point after trim and NFC, then locale-independent uppercase; uppercase may expand to multiple code points."
+      ]
+    }
+  },
+  "evidence": {
+    "kind": "authored-fixture",
+    "modelContributionVerified": false,
+    "nativeHumanPlaytestVerified": false,
+    "limitations": [
+      "Mechanical checks certify only the encoded properties.",
+      "No NVIDIA/Nebius model integration or native-language human playtest is established.",
+      "Equivalent difficulty, cultural suitability and linguistic quality remain unverified.",
+      "SHA256 binds content; it does not authenticate an author or attest provenance claims."
+    ]
+  }
+}
