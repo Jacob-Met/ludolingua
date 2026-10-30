@@ -56,8 +56,10 @@ reopen and locale verification instructions.
 Bundled author episodes can recover unfinished drafts in the same browser profile
 and exact server origin. Wait for the saved status before leaving; restored drafts
 need fresh checks and are not verified exports. Cross-tab conflicts require an
-explicit choice to load the saved draft or keep the current edits. Reopened exports
-and comparison mappings still need their own exports for durable retention.
+explicit choice to load the saved draft or keep the current edits. Original and
+reopened episodes can be kept with **Download unfinished draft**, including incomplete
+words, clues and hints; **Reopen a draft** restores those edits for a fresh check.
+Comparison mappings still need their own exports for durable retention.
 Author draft recovery does not save separate player journals: download the play
 record before closing its window. See the kit README for storage limits, conflict
 controls and draft receiving instructions.
@@ -99,7 +101,8 @@ workbench narrows six possible orders to three, then one. Try the resulting
 puzzle in the player and export the checked episode to keep the complete work.
 
 New originals stay in their tab rather than becoming bundled fixture drafts.
-Export before closing or reloading. If the new window cannot open, choose
+Download an unfinished draft before closing or reloading; use a checked episode
+export when you want to keep mechanical results. If the new window cannot open, choose
 **Download starting episode**, open a workbench and use **Reopen an export**.
 The downloaded file carries the same starting episode and recomputable result.
 

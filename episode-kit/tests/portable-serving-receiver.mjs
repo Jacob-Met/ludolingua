@@ -74,7 +74,65 @@ try {
   await author.screenshot({ path: resolve(out, 'portable-download-refused.png'), fullPage: true });
   const whileStale = await download(author, '#export-button', 'episode-while-stale.json'); assert.deepEqual(whileStale.bytes, before.bytes);
   receipt.checks.push('After a successful export, the same author page rechecks the runtime and refuses stale files with HTTP503; no stale HTML downloads and exact JSON/state remain available');
-  await writeFile(engine, engineBytes);
+
+  const draftBefore = await download(author, '#download-draft-button', 'draft-after-refusal.json');
+  const draftEnvelope = JSON.parse(draftBefore.bytes.toString());
+  assert.deepEqual(draftEnvelope.sourceEpisode, episodeExport.episode);
+  await author.waitForFunction(() => document.getElementById('notice').textContent.startsWith('Draft download prepared'));
+  const draftSnapshot = page => page.evaluate(() => Object.fromEntries(
+    ['episode-title-input', 'episode-story-input', 'required-action', 'hint-editor', 'label-0', 'label-1', 'label-2', 'label-3']
+      .map(id => [id, document.getElementById(id).value])));
+  const expectedDraftInputs = await draftSnapshot(author);
+  let invalidDraft, invalidInputs;
+  const draftContext = await browser.newContext({ acceptDownloads: true });
+  draftContext.setDefaultTimeout(10_000); draftContext.setDefaultNavigationTimeout(10_000);
+  try {
+    const draftPage = await draftContext.newPage(); observe(draftPage); await draftPage.goto(started.url);
+    await draftPage.locator('#draft-file').setInputFiles(draftBefore.path);
+    await draftPage.waitForFunction(() => document.getElementById('case-select').value === 'imported');
+    assert.deepEqual(await draftSnapshot(draftPage), expectedDraftInputs);
+    assert.equal(await draftPage.locator('#export-button').isDisabled(), true);
+    assert.equal(await draftPage.locator('#digest').textContent(), '');
+    await draftPage.selectOption('#ui-language', 'es');
+    await draftPage.waitForFunction(() => document.getElementById('notice').textContent.startsWith('Se ha reabierto la revisión'));
+    receipt.draftReopenSpanishNotice = await draftPage.locator('#notice').textContent();
+    assert.equal(receipt.draftReopenSpanishNotice.includes(recoveryGuidance.es), false);
+    assert.deepEqual(await draftSnapshot(draftPage), expectedDraftInputs);
+    await draftPage.fill('#episode-title-input', '');
+    await draftPage.fill('#label-0', '');
+    await draftPage.fill('#required-action', '');
+    await draftPage.locator('#check-button').click();
+    await draftPage.locator('#result .result-state.invalid').waitFor();
+    assert.equal(await draftPage.locator('#export-button').isDisabled(), true);
+    invalidInputs = await draftSnapshot(draftPage);
+    invalidDraft = await download(draftPage, '#download-draft-button', 'unfinished-after-refusal.json');
+    assert.deepEqual(JSON.parse(invalidDraft.bytes.toString()).sourceEpisode, draftEnvelope.sourceEpisode);
+  } finally { await draftContext.close(); }
+  const reopenedContext = await browser.newContext({ acceptDownloads: true });
+  reopenedContext.setDefaultTimeout(10_000); reopenedContext.setDefaultNavigationTimeout(10_000);
+  try {
+    const reopened = await reopenedContext.newPage(); observe(reopened); await reopened.goto(started.url);
+    await reopened.locator('#draft-file').setInputFiles(invalidDraft.path);
+    await reopened.waitForFunction(() => document.getElementById('case-select').value === 'imported');
+    assert.deepEqual(await draftSnapshot(reopened), invalidInputs);
+    assert.equal(await reopened.locator('#export-button').isDisabled(), true);
+    assert.equal(await reopened.locator('#digest').textContent(), '');
+    await writeFile(engine, engineBytes);
+    let invalidHtmlDownloads = 0; reopened.on('download', () => invalidHtmlDownloads++);
+    const [available] = await Promise.all([
+      reopened.waitForResponse(response => response.url().endsWith('/web/portable-player-bundle.json')),
+      reopened.locator('#download-portable-player').click()
+    ]);
+    assert.equal(available.status(), 200); receipt.unfinishedRuntimeStatus = available.status();
+    await reopened.waitForFunction(() => document.getElementById('notice').textContent.startsWith('Cannot download playable file: ') && !document.getElementById('download-portable-player').disabled);
+    receipt.unfinishedPortableNotice = await reopened.locator('#notice').textContent();
+    assert.equal(receipt.unfinishedPortableNotice.includes(recoveryGuidance.en), false);
+    assert.equal(invalidHtmlDownloads, 0);
+    assert.deepEqual(await draftSnapshot(reopened), invalidInputs);
+    assert.equal(await reopened.locator('#export-button').isDisabled(), true);
+    assert.equal(await reopened.locator('#digest').textContent(), '');
+  } finally { await reopenedContext.close(); lastPage = author; }
+  receipt.checks.push('After a playable refusal, actual unfinished-draft downloads reopen in fresh browser storage with original source and incomplete inputs preserved; locale changes retain draft notices and a restored runtime does not approve invalid work');
   const [goodResponse, html] = await Promise.all([author.waitForResponse(r => r.url().endsWith('/web/portable-player-bundle.json')), download(author, '#download-portable-player', 'recovered-player.html')]);
   assert.equal(goodResponse.status(), 200);
   assert.deepEqual(html.bytes, initial.bytes); assert.deepEqual(runtimeResponses, [200, 503, 503, 200]); receipt.runtimeResponses = [...runtimeResponses];
