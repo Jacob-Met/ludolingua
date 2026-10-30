@@ -2,6 +2,18 @@
 
 LUDOLINGUA explores puzzle localization that preserves encoded reasoning and discovery mechanics. This private repository contains an original English/Spanish first-episode contribution, with a local author/player receiver and a bounded mechanical verifier.
 
+## Play the offline example
+
+[Download the example player (HTML)](https://github.com/Jacob-Met/ludolingua/releases/download/episode-kit-v0.4.1-portable-guidance.1b623a99/original-episode-player.html) and open the downloaded file in your browser.
+This English episode-kit example works offline without Node.js or a server.
+You can switch its controls between English and Spanish independently of the puzzle.
+
+To author with the version used by this example, [download the 0.4.1 episode kit (ZIP)](https://github.com/Jacob-Met/ludolingua/releases/download/episode-kit-v0.4.1-portable-guidance.1b623a99/ludolingua-episode-kit-0.4.1-portable-guidance.1b623a99.zip),
+extract it, and follow its README. For a checkout of this repository, use
+[Run the episode kit](#run-the-episode-kit) below.
+These downloads come from the [0.4.1 private release](https://github.com/Jacob-Met/ludolingua/releases/tag/episode-kit-v0.4.1-portable-guidance.1b623a99)
+and require access to this private repository.
+
 ## Run the episode kit
 
 Requires Node.js 22 or newer. No dependency installation, credentials or inference service is needed.
