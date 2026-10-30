@@ -49,3 +49,7 @@ textarea{font:inherit;resize:vertical;width:100%;min-height:110px;border:1px sol
 
 /* Original episode entry and isolated handoff status. */
 .original-entry{margin:-1rem 0 2rem;font-size:1rem}.original-entry a{color:var(--ink);text-underline-offset:.3em;font-weight:650}.author-handoff-notice{padding:1rem 1.2rem;margin:0 0 1rem;border:1px solid currentColor;border-radius:.35rem}
+
+/* Begin a separate authored adaptation without hiding the copied-wording boundary. */
+.adaptation-start{margin:0 0 22px}.adaptation-start>summary{font-size:18px;font-weight:600;cursor:pointer;line-height:1.45}.adaptation-options{display:flex;gap:20px;align-items:end;flex-wrap:wrap}.adaptation-options>.case-picker{flex:1;min-width:160px}.adaptation-options button{white-space:normal;max-width:100%}.adaptation-start .notice:empty{display:none}
+@media(max-width:800px){.adaptation-options{flex-direction:column;align-items:stretch;gap:14px}.adaptation-options>.case-picker{min-width:0}.adaptation-options button{width:100%}}

@@ -4,6 +4,7 @@ import { analyzeEpisode, clueText, checkAttempt } from '../lib/engine.mjs';
 import { explainClueConflict } from '../lib/clue-conflict.mjs';
 import { createExport, readExport, sourceDigest } from '../lib/export.mjs';
 import { setupComparison } from './comparison.mjs';
+import { setupAdaptation } from './adaptation-start.mjs';
 import { setupPlaytest } from './playtest-author.mjs';
 import { setupPortableAuthor } from './portable-author.mjs';
 import { setupPlaytestCohort } from './playtest-cohort.mjs';
@@ -16,7 +17,7 @@ const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
 let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0, draftInputSequence = 0, checkedInputSequence = 0;
-let comparisonController, playtestController, playtestCohortController, authoringReceiver;
+let comparisonController, adaptationController, playtestController, playtestCohortController, authoringReceiver;
 let conflictFor = null, conflictExplanation = null;
 let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
 let draftSourceEpisode = null, importedDraftSource = null;
@@ -200,7 +201,7 @@ function installEpisode(ep, hintText = ep.hints.join('\n')) {
   episode = clone(ep); version += 1; result = null; digest = ''; revision();
   $('episode-locale').textContent = t(episode.locale === 'es' ? 'SPANISH / ORIGINAL PUZZLE MATERIAL' : 'ENGLISH / ORIGINAL PUZZLE MATERIAL');
   renderWording(); $('answer').lang = episode.locale; $('digest').textContent = ''; $('export-button').disabled = true;
-  renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); notice('');
+  renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); adaptationController?.refresh(); notice('');
 }
 function selectEpisode(ep, detached = false, hintText = ep.hints.join('\n'), sourceEpisode = ep) {
   editingImport = detached;
@@ -323,7 +324,8 @@ $('import-file').addEventListener('change', async () => {
   } catch (error) { if (sequence === importSequence) notice('Cannot reopen: {message}', true, { message: error.message }); }
   finally { if (inputSequence === checkedInputSequence) $('import-file').value = ''; }
 });
-comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode: ep => selectEpisode(ep, true), rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
+comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode: (ep, hintText) => selectEpisode(ep, true, hintText), rememberImportedEpisode, beginIntent: () => ++importSequence, getIntent: () => importSequence, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
+adaptationController = setupAdaptation({ getEpisode: () => episode, getHintText: () => editorHintText, getVersion: () => version, beginIntent: () => ++importSequence, getIntent: () => importSequence, comparison: comparisonController, notice, showAuthor: () => tab('author'), t, diagnostic });
 playtestController = setupPlaytest({ getEpisode: () => episode, notice, maxBytes: MAX_EXPORT_BYTES, t, diagnostic, getUILocale: () => uiLocale });
 playtestCohortController = setupPlaytestCohort({ t, diagnostic });
 setupPortableAuthor({ getEpisode: () => episode, getUILocale: () => uiLocale, notice, maxBytes: MAX_EXPORT_BYTES });
@@ -351,7 +353,7 @@ function relocalize() {
     renderResult(); renderDigest(); drawPlayer(); renderPlayerFeedback(); renderReveal(); comparisonController?.relocalize();
   }
   playtestController?.relocalize();
-  playtestCohortController?.relocalize();
+  playtestCohortController?.relocalize(); adaptationController?.relocalize();
   renderNotice(); drafts.relocalize(); authoringReceiver?.relocalize(uiLocale);
   $('create-episode-link').href = './create.html?ui=' + uiLocale;
   let focus = active?.isConnected ? active : focusId ? $(focusId) : null;

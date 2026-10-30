@@ -126,3 +126,10 @@ No public release or competition submission is implied by this private contribut
 A second authored English/Spanish episode uses five cards, including two English cards with the same initial. Play its complete source and coordinated adaptation, then inspect the missing-clue version: two different layouts can spell the same word while the author check correctly reports ambiguous reasoning. The literal Spanish version is an intentional negative example.
 
 Choose a Signal Panel entry in the episode selector. [The episode guide](episode-kit/SIGNAL-PANEL.md) explains the four versions, player-versus-author distinction, CLI course and evidence limits. The existing six episodes and engine remain unchanged.
+
+Use **Start an adaptation in another language** to make a separate target from the
+current original revision. The original is captured for comparison; stable card roles,
+clues and constraints carry over, while the target uses the chosen content language.
+All wording initially remains unchanged and requires the author's translation and
+review. Download unfinished target work as a draft; export a checked comparison to
+carry both full versions and their role mapping.

@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.4.1-portable-guidance.1b623a99
+# LUDOLINGUA episode, comparison and playtest kit — 0.5.0-adaptation.a424427c
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -345,7 +345,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.4.1-portable-guidance.1b623a99.
+the enclosing kit version is 0.5.0-adaptation.a424427c.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -650,3 +650,28 @@ same-page recovery and resulting offline record are covered by:
     PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
     LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/serving-evidence \
     node tests/portable-serving-receiver.mjs
+
+## Start an adaptation of your own episode
+
+Open **Start an adaptation in another language**, choose English or Spanish, and select **Start an adaptation of this revision**. The current episode must have valid episode data, but it need not already solve successfully. The workbench creates a new episode in the selected content language and keeps the exact original revision as the comparison source. Card roles, ordering relations and constraints are retained.
+
+All wording starts unchanged. Translate and review the title, story, labels, required action and hints yourself. Changing the content language does not translate the text or establish equivalent meaning, difficulty or language quality. Interface language remains a separate choice. Previously checked episode and comparison results do not approve the new adaptation; check and compare the new revision after editing.
+
+Use **Download unfinished draft** to keep the adaptation, including unfinished edits. The draft uses the new adaptation as its baseline and retains its content language. It does not include the separate original comparison source. To carry both versions and their role mapping, compare the revisions and use **Export checked comparison**. New adaptations stay in the current tab unless you download them; their original source's local draft is not replaced.
+
+
+### Adaptation receiving
+
+The source tests cover both content languages, exact copied content and source attribution,
+original-source isolation, frozen labels, invalid choices, mechanical negatives and an
+unfinished adaptation draft. The browser course creates an original, starts and edits a
+Spanish adaptation, downloads/reopens its comparison and plays the received target. It
+also exercises reverse adaptation, refused stale starts and the narrow Spanish interface.
+
+```sh
+node --test tests/adaptation-independent.test.mjs
+PLAYWRIGHT_PACKAGE=/absolute/path/to/node_modules/playwright \
+CHROME_PATH=/absolute/path/to/google-chrome-stable \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/adaptation-evidence \
+node tests/receiver-adaptation-independent.mjs
+```

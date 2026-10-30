@@ -12,7 +12,7 @@ function node(tag, text, cls) {
   return n;
 }
 
-export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpisode, notice, showAuthor, maxBytes, t, diagnostic }) {
+export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpisode, beginIntent, getIntent, notice, showAuthor, maxBytes, t, diagnostic }) {
   let source = clone(EPISODES[0]), customSource = null, mapping = [], epoch = 0, checked = null, comparison = null, importSequence = 0;
   let digestKey = '', customSourceKey = '';
   function renderDigest() { $('comparison-digest').textContent = checked && digestKey ? t(digestKey, { hash: checked.validation.bindingSha256 }) : ''; }
@@ -125,12 +125,12 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
   $('comparison-import-button').addEventListener('click', () => $('comparison-import-file').click());
   $('comparison-import-file').addEventListener('change', async () => {
     const file = $('comparison-import-file').files[0]; if (!file) return;
-    const token = epoch, sequence = ++importSequence;
+    const token = epoch, sequence = ++importSequence, intent = beginIntent();
     try {
       if (file.size > maxBytes) throw new Error('The comparison export exceeds the 20 MB receiver limit.');
       const received = await readComparisonExport(await file.text());
       const bundle = await createComparisonExport(received.source, received.target, received.mapping === null ? undefined : received.mapping);
-      if (sequence !== importSequence) return;
+      if (sequence !== importSequence || intent !== getIntent()) return;
       if (token !== epoch) throw new Error('The source, adaptation or role map changed while this file was being verified. Reopen it again to replace the pair.');
       source = clone(received.source); selectEpisode(received.target);
       rememberImportedEpisode(received.target, 'Reopened · comparison adaptation');
@@ -138,7 +138,7 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
       checked = bundle; comparison = bundle.validation.result; renderResult(); $('comparison-export-button').disabled = false;
       digestKey = 'Reopened pair · SHA-256 {hash}'; renderDigest();
       showAuthor(); notice('Reopened both revisions. Complete source, adaptation, role map and mechanical comparison verified.');
-    } catch (error) { if (sequence === importSequence) notice('Cannot reopen comparison: {message}', true, { message: error.message }); }
+    } catch (error) { if (sequence === importSequence && intent === getIntent()) notice('Cannot reopen comparison: {message}', true, { message: error.message }); }
     finally { if (sequence === importSequence) $('comparison-import-file').value = ''; }
   });
   function relocalize() {
@@ -146,5 +146,10 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
     const option = $('source-select').querySelector('option[value="custom-source"]');
     if (option && customSourceKey) option.textContent = t(customSourceKey);
   }
-  return { refreshTarget, invalidate, relocalize };
+  function adoptAdaptation(original, target, hintText) {
+    source = clone(original); sourceOption('Original · captured before adaptation');
+    selectEpisode(target, hintText); rememberImportedEpisode(target, 'New · authored adaptation');
+    mapping = defaultMapping(); invalidate(); renderPair();
+  }
+  return { refreshTarget, invalidate, relocalize, getEpoch: () => epoch, adoptAdaptation };
 }
