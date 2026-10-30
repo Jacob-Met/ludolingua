@@ -1,6 +1,19 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
 "The downloadable player is out of date or unavailable. You can keep editing, export checked JSON, or open a separate playtest. Ask the kit maintainer to refresh the player bundle, then try again.":"El reproductor descargable está desactualizado o no está disponible. Puedes seguir editando, exportar el JSON verificado o abrir una prueba independiente. Pide a la persona responsable del kit que actualice el paquete del reproductor y vuelve a intentarlo.",
+"Start an adaptation in another language":"Iniciar una adaptación en otro idioma",
+"Make a new copy of the current episode and keep this revision as its comparison source. All text starts unchanged; translate and review it yourself.":"Crea una copia del episodio actual y conserva esta revisión como origen de la comparación. Todo el texto se copia sin cambios; tradúcelo y revísalo tú.",
+"Adaptation language":"Idioma de la adaptación",
+"Start an adaptation of this revision":"Iniciar una adaptación de esta revisión",
+"A draft file keeps the adaptation. To carry both versions, check and export their comparison.":"El borrador conserva la adaptación. Para guardar ambas versiones, comprueba y exporta su comparación.",
+"The adaptation is ready to edit. Its text was copied unchanged; translate and review it. The original revision was captured as a comparison source.":"La adaptación está lista para editar. Su texto se copió sin cambios; tradúcelo y revísalo. La revisión original se capturó como origen de la comparación.",
+"Preparing an adaptation of this revision…":"Preparando una adaptación de esta revisión…",
+"The episode, comparison source or language choice changed. Start the adaptation again.":"El episodio, el origen de la comparación o el idioma elegido han cambiado. Vuelve a iniciar la adaptación.",
+"Cannot start adaptation: {message}":"No se puede iniciar la adaptación: {message}",
+"Choose a different supported content language for the adaptation.":"Elige otro idioma de contenido admitido para la adaptación.",
+"The adaptation requires a new nonempty episode ID.":"La adaptación necesita un identificador de episodio nuevo y no vacío.",
+"Original · captured before adaptation":"Original · capturado antes de adaptar",
+"New · authored adaptation":"Nueva · adaptación de autoría",
 "Download unfinished draft":"Descargar borrador sin terminar",
 "Reopen a draft":"Reabrir un borrador",
 "A draft file keeps unfinished words, clues and hints. Reopen it to continue; check the episode before sharing.":"Un archivo de borrador conserva las palabras, pistas y ayudas sin terminar. Ábrelo para continuar; comprueba el episodio antes de compartirlo.",
@@ -190,7 +203,7 @@ export function translateDiagnostic(locale, message) {
   if (supportedLocale(locale) === 'en') return text;
   if (Object.hasOwn(spanish, text)) return spanish[text];
   // Only parse explicitly emitted diagnostic prefixes; preserve unknown engine/browser text.
-  for (const [prefix, translated] of [['Invalid original episode: ', 'Episodio original no válido: '], ['Invalid episode: ', 'Episodio no válido: '], ['Invalid comparison: ', 'Comparación no válida: '], ['Source: ', 'Origen: '], ['Target: ', 'Destino: ']]) {
+  for (const [prefix, translated] of [['Invalid adaptation source: ', 'Origen de adaptación no válido: '], ['Invalid original episode: ', 'Episodio original no válido: '], ['Invalid episode: ', 'Episodio no válido: '], ['Invalid comparison: ', 'Comparación no válida: '], ['Source: ', 'Origen: '], ['Target: ', 'Destino: ']]) {
     if (text.startsWith(prefix)) return translated + text.slice(prefix.length).split('; ').map(part => translateDiagnostic(locale, part)).join('; ');
   }
   const field = /^(id|title|story) must be nonempty text\.$/.exec(text);
