@@ -1,0 +1,97 @@
+{
+  "schema": "ludolingua.mapmakers-workshop-rehearsal.v1",
+  "checks": [
+    {
+      "name": "Original English import becomes a distinct Spanish target with copied wording and explicit label lock"
+    },
+    {
+      "name": "All intended Spanish content authored through visible controls; labels refrozen, six clues and seven displayed role identities unchanged"
+    },
+    {
+      "name": "Checked comparison retains the exact original source and actual new target, with preserved clue-order set"
+    },
+    {
+      "name": "Authored rationale downloaded with its exact checked source/target pair through the maintained notes control"
+    },
+    {
+      "name": "Fresh contexts receive target, comparison and notes separately; each UI re-export retains exact content"
+    },
+    {
+      "name": "Actual downloaded HTML plays offline with the new target; accent-sensitive answer and ordered hints reach the player"
+    }
+  ],
+  "errors": [],
+  "downloads": [
+    {
+      "name": "target.es.json",
+      "bytes": 5420,
+      "sha256": "ba5133b193ab2c26be47270614bdff088460aa5b82cb018ddae0e1f7ac7a7918"
+    },
+    {
+      "name": "comparison.en-es.json",
+      "bytes": 11029,
+      "sha256": "b6edd052167f68a58dc53bf1dea4d5fa58d26068db12fac38ff88bf06b20b435"
+    },
+    {
+      "name": "localization-notes.json",
+      "bytes": 13341,
+      "sha256": "e927f40c6c9bbaa088a41ec5bc11a6b8580796bc4b260d2e2ca005f763621eba"
+    },
+    {
+      "name": "completed-player.es.html",
+      "bytes": 123322,
+      "sha256": "ec47eec2d4ea21ebc41feb82be7c6823479f94b9a15c75a34aaf956a0b7b1174"
+    },
+    {
+      "name": "received-target.es.json",
+      "bytes": 5420,
+      "sha256": "ba5133b193ab2c26be47270614bdff088460aa5b82cb018ddae0e1f7ac7a7918"
+    },
+    {
+      "name": "received-comparison.en-es.json",
+      "bytes": 11029,
+      "sha256": "b6edd052167f68a58dc53bf1dea4d5fa58d26068db12fac38ff88bf06b20b435"
+    },
+    {
+      "name": "received-localization-notes.json",
+      "bytes": 13341,
+      "sha256": "e927f40c6c9bbaa088a41ec5bc11a6b8580796bc4b260d2e2ca005f763621eba"
+    },
+    {
+      "name": "received-notes-comparison.json",
+      "bytes": 11029,
+      "sha256": "b6edd052167f68a58dc53bf1dea4d5fa58d26068db12fac38ff88bf06b20b435"
+    },
+    {
+      "name": "completed-play-record.json",
+      "bytes": 7676,
+      "sha256": "0d48edbe98962a9a5e1b384cc7c6f3e2313bb8170b153d3fad39b164021d5d96"
+    }
+  ],
+  "source": {
+    "id": "mapmakers-cabinet-en-source",
+    "revision": 1,
+    "episodeSha256": "2ad968c45527253e9db25a3ef1555bf0813e342f872356e03c1efe2cc103f407",
+    "inputFileSha256": "28eac25ccee4ec4d75930df921ef118ccb27c6371754307b981644d9db659d15"
+  },
+  "limitations": [
+    "Automated known-answer authoring rehearsal, not human or native-language playtesting.",
+    "Author hint review and localization notes are author self-declarations.",
+    "The new target identity and provenance are preserved; they are not normalized to the preauthored reference."
+  ],
+  "sandbox": "Sandbox Status\nLayer 1 Sandbox\tNamespace\nPID namespaces\tYes\nNetwork namespaces\tYes\nSeccomp-BPF sandbox\tYes\nSeccomp-BPF sandbox supports TSYNC\tYes\nPtrace Protection with Yama LSM (Broker)\tNo\nPtrace Protection with Yama LSM (Non-broker)\tNo\n\nYou are adequately sandboxed.",
+  "browserVersion": "156.0.8078.47",
+  "target": {
+    "id": "adapted-754ab419-7c07-4143-a917-ff3a7ebbb4a9",
+    "revision": 19,
+    "episodeSha256": "6a22fd42b2e484850c5f6440c7748d08a7a320abf801064144da799c57303d67",
+    "hintReview": {
+      "kind": "author-self-declaration",
+      "revision": 19,
+      "status": "author-reviewed"
+    }
+  },
+  "comparisonBinding": "0fd5fd05ab1c601579fce1c8ab17db3286ccf1bb119c65bd9d44d3006d7630d3",
+  "notesContentSha256": "c52fff69bc487c1604a75cf3fe494e2bbb5aad9c4dec24c3030384cbe90ec433",
+  "status": "passed"
+}

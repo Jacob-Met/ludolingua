@@ -1,0 +1,82 @@
+{
+  "schema": "ludolingua.mapmakers-workshop-files.v1",
+  "originalPackCommit": "baf1fac28a73d6955ba80356d8220b8d32590f50",
+  "authoringRuntimeCommit": "c3afac6e6be207a9dc6811e0fbfd9c81c4949ece",
+  "authoringRuntimeRelease": "https://github.com/Jacob-Met/ludolingua/releases/tag/episode-kit-v0.6.0-notes.a424427c",
+  "authoringRuntimeZipSha256": "6dd933f0bdd05ab98e39c19ed18042aee5aaaed92d72b98572441a181bff87dd",
+  "source": {
+    "id": "mapmakers-cabinet-en-source",
+    "revision": 1,
+    "episodeSha256": "2ad968c45527253e9db25a3ef1555bf0813e342f872356e03c1efe2cc103f407",
+    "inputFileSha256": "28eac25ccee4ec4d75930df921ef118ccb27c6371754307b981644d9db659d15"
+  },
+  "target": {
+    "id": "adapted-754ab419-7c07-4143-a917-ff3a7ebbb4a9",
+    "revision": 19,
+    "episodeSha256": "6a22fd42b2e484850c5f6440c7748d08a7a320abf801064144da799c57303d67",
+    "hintReview": {
+      "kind": "author-self-declaration",
+      "revision": 19,
+      "status": "author-reviewed"
+    }
+  },
+  "comparisonBinding": "0fd5fd05ab1c601579fce1c8ab17db3286ccf1bb119c65bd9d44d3006d7630d3",
+  "notesContentSha256": "c52fff69bc487c1604a75cf3fe494e2bbb5aad9c4dec24c3030384cbe90ec433",
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 10492,
+      "sha256": "1adf7863a94fbfe0f67782ee0cab3eca65973afdedb50691b8653517be3abbf8"
+    },
+    {
+      "path": "REHEARSAL.json",
+      "bytes": 3830,
+      "sha256": "992ec5b9640831e07674d7100d092e6e97f338456f0089b1dbb975286d618bca"
+    },
+    {
+      "path": "WORKSHOP.html",
+      "bytes": 14240,
+      "sha256": "9bb4a45ad57a2c09598399ec6a584819691010477cd6d277e3fa94c52abddb22"
+    },
+    {
+      "path": "author-notes.txt",
+      "bytes": 1022,
+      "sha256": "ec832bf7cf184bbe4b570a4bafacf682e1a279c4bce5cd9dac301e55892e4536"
+    },
+    {
+      "path": "comparison.en-es.json",
+      "bytes": 11029,
+      "sha256": "b6edd052167f68a58dc53bf1dea4d5fa58d26068db12fac38ff88bf06b20b435"
+    },
+    {
+      "path": "completed-player.es.html",
+      "bytes": 123322,
+      "sha256": "ec47eec2d4ea21ebc41feb82be7c6823479f94b9a15c75a34aaf956a0b7b1174"
+    },
+    {
+      "path": "localization-notes.json",
+      "bytes": 13341,
+      "sha256": "e927f40c6c9bbaa088a41ec5bc11a6b8580796bc4b260d2e2ca005f763621eba"
+    },
+    {
+      "path": "rehearse.mjs",
+      "bytes": 14515,
+      "sha256": "83962bafaee6bda87b70f6a1b8f113f987cf57ec95d23f17e5af3c6bb4f6b838"
+    },
+    {
+      "path": "source.en.json",
+      "bytes": 4586,
+      "sha256": "28eac25ccee4ec4d75930df921ef118ccb27c6371754307b981644d9db659d15"
+    },
+    {
+      "path": "target.es.json",
+      "bytes": 5420,
+      "sha256": "ba5133b193ab2c26be47270614bdff088460aa5b82cb018ddae0e1f7ac7a7918"
+    }
+  ],
+  "limitations": [
+    "Automated known-answer authoring rehearsal, not human or native-language playtesting.",
+    "Author hint review and localization notes are author self-declarations.",
+    "The new target identity and provenance are preserved; they are not normalized to the preauthored reference."
+  ]
+}

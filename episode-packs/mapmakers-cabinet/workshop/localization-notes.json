@@ -1,0 +1,386 @@
+{
+  "schema": "ludolingua.localization-notes.v1",
+  "comparison": {
+    "schema": "ludolingua.comparison-export.v1",
+    "source": {
+      "action": {
+        "answerNormalization": "NFC-trim-uppercase",
+        "expected": "COMPASS"
+      },
+      "cards": [
+        {
+          "id": "slot-d",
+          "label": "Pear"
+        },
+        {
+          "id": "slot-a",
+          "label": "Candle"
+        },
+        {
+          "id": "slot-f",
+          "label": "Star"
+        },
+        {
+          "id": "slot-c",
+          "label": "Mirror"
+        },
+        {
+          "id": "slot-g",
+          "label": "Shell"
+        },
+        {
+          "id": "slot-b",
+          "label": "Oak"
+        },
+        {
+          "id": "slot-e",
+          "label": "Apple"
+        }
+      ],
+      "clues": [
+        {
+          "id": "order-ab",
+          "kind": "before",
+          "left": "slot-a",
+          "right": "slot-b"
+        },
+        {
+          "id": "order-bc",
+          "kind": "after",
+          "left": "slot-c",
+          "right": "slot-b"
+        },
+        {
+          "id": "order-cd",
+          "kind": "immediately_before",
+          "left": "slot-c",
+          "right": "slot-d"
+        },
+        {
+          "id": "order-de",
+          "kind": "after",
+          "left": "slot-e",
+          "right": "slot-d"
+        },
+        {
+          "id": "order-ef",
+          "kind": "before",
+          "left": "slot-e",
+          "right": "slot-f"
+        },
+        {
+          "id": "order-fg",
+          "kind": "immediately_before",
+          "left": "slot-f",
+          "right": "slot-g"
+        }
+      ],
+      "constraints": {
+        "labelsFrozen": true,
+        "requireUnique": true
+      },
+      "extraction": {
+        "kind": "first_letter",
+        "normalization": "NFC-uppercase"
+      },
+      "hints": [
+        "Before and after describe numbered positions, not the order in which the cards are currently displayed.",
+        "Combine the notes into one sequence. The candle comes before the oak, and the mirror comes after the oak.",
+        "The complete order is Candle, Oak, Mirror, Pear, Apple, Star, Shell. Read their first letters."
+      ],
+      "id": "mapmakers-cabinet-en-source",
+      "locale": "en",
+      "provenance": {
+        "humanPlaytest": null,
+        "kind": "authored",
+        "modelRun": null,
+        "semanticChanges": [],
+        "source": "Original Mapmaker’s Cabinet seven-card episode authored for LUDOLINGUA."
+      },
+      "revision": 1,
+      "schema": "ludolingua.episode.v1",
+      "story": "The expedition leaves at dawn, but the mapmaker’s cabinet is locked. Its contents are needed to chart the next route. Across the desk lie seven labeled specimens and keepsakes, scattered during the packing. The oak label belongs to a small wood sample; the star label belongs to a brass token. Beside them is a note: “Restore my collection to its numbered places, first through seventh. Read the first letter of each label in that order, then enter the instrument’s English name.” Use the surviving arrangement notes to open the cabinet.",
+      "title": "The Mapmaker’s Cabinet"
+    },
+    "target": {
+      "action": {
+        "answerNormalization": "NFC-trim-uppercase",
+        "expected": "BRÚJULA"
+      },
+      "cards": [
+        {
+          "id": "slot-d",
+          "label": "Jarra"
+        },
+        {
+          "id": "slot-a",
+          "label": "Botella"
+        },
+        {
+          "id": "slot-f",
+          "label": "Libro"
+        },
+        {
+          "id": "slot-c",
+          "label": "Útil náutico"
+        },
+        {
+          "id": "slot-g",
+          "label": "Ancla"
+        },
+        {
+          "id": "slot-b",
+          "label": "Reloj"
+        },
+        {
+          "id": "slot-e",
+          "label": "Uva"
+        }
+      ],
+      "clues": [
+        {
+          "id": "order-ab",
+          "kind": "before",
+          "left": "slot-a",
+          "right": "slot-b"
+        },
+        {
+          "id": "order-bc",
+          "kind": "after",
+          "left": "slot-c",
+          "right": "slot-b"
+        },
+        {
+          "id": "order-cd",
+          "kind": "immediately_before",
+          "left": "slot-c",
+          "right": "slot-d"
+        },
+        {
+          "id": "order-de",
+          "kind": "after",
+          "left": "slot-e",
+          "right": "slot-d"
+        },
+        {
+          "id": "order-ef",
+          "kind": "before",
+          "left": "slot-e",
+          "right": "slot-f"
+        },
+        {
+          "id": "order-fg",
+          "kind": "immediately_before",
+          "left": "slot-f",
+          "right": "slot-g"
+        }
+      ],
+      "constraints": {
+        "labelsFrozen": true,
+        "requireUnique": true
+      },
+      "extraction": {
+        "kind": "first_letter",
+        "normalization": "NFC-uppercase"
+      },
+      "hintReview": {
+        "kind": "author-self-declaration",
+        "revision": 19,
+        "status": "author-reviewed"
+      },
+      "hints": [
+        "Antes y después se refieren a las posiciones numeradas, no al orden en que aparecen ahora las tarjetas.",
+        "Une las notas para formar una sola secuencia. La botella va antes que el reloj, y el útil náutico va después del reloj.",
+        "El orden completo es Botella, Reloj, Útil náutico, Jarra, Uva, Libro, Ancla. Conserva la tilde de Ú al leer las iniciales."
+      ],
+      "id": "adapted-754ab419-7c07-4143-a917-ff3a7ebbb4a9",
+      "locale": "es",
+      "provenance": {
+        "humanPlaytest": null,
+        "kind": "authored",
+        "modelRun": null,
+        "semanticChanges": [
+          "Target content language changed from en to es. Title, story, labels, required action and hints were initially copied unchanged, not translated. Stable card roles, typed ordering relations, extraction and constraints were retained. Review and translate the copied wording; equivalent meaning, difficulty and language quality have not been established."
+        ],
+        "source": "Authored adaptation starting point from episode \"mapmakers-cabinet-en-source\", revision 1, locale en, SHA-256 2ad968c45527253e9db25a3ef1555bf0813e342f872356e03c1efe2cc103f407. Source attribution: Original Mapmaker’s Cabinet seven-card episode authored for LUDOLINGUA."
+      },
+      "revision": 19,
+      "schema": "ludolingua.episode.v1",
+      "story": "La expedición parte al amanecer, pero el armario del cartógrafo está cerrado. Su contenido es necesario para trazar la próxima ruta. Sobre el escritorio hay siete muestras y recuerdos etiquetados que quedaron esparcidos durante los preparativos. Una de las etiquetas identifica un útil náutico; otra, un ancla en miniatura. Junto a ellos hay una nota: «Devuelve mi colección a sus lugares numerados, del primero al séptimo. Lee la primera letra de cada etiqueta en ese orden e introduce el nombre del instrumento en español». Usa las notas de colocación que se conservaron para abrir el armario.",
+      "title": "El armario del cartógrafo"
+    },
+    "mapping": [
+      {
+        "sourceId": "slot-d",
+        "targetId": "slot-d"
+      },
+      {
+        "sourceId": "slot-a",
+        "targetId": "slot-a"
+      },
+      {
+        "sourceId": "slot-f",
+        "targetId": "slot-f"
+      },
+      {
+        "sourceId": "slot-c",
+        "targetId": "slot-c"
+      },
+      {
+        "sourceId": "slot-g",
+        "targetId": "slot-g"
+      },
+      {
+        "sourceId": "slot-b",
+        "targetId": "slot-b"
+      },
+      {
+        "sourceId": "slot-e",
+        "targetId": "slot-e"
+      }
+    ],
+    "validation": {
+      "comparisonEngineVersion": "0.1.0",
+      "sourceSha256": "2ad968c45527253e9db25a3ef1555bf0813e342f872356e03c1efe2cc103f407",
+      "targetSha256": "6a22fd42b2e484850c5f6440c7748d08a7a320abf801064144da799c57303d67",
+      "bindingSha256": "0fd5fd05ab1c601579fce1c8ab17db3286ccf1bb119c65bd9d44d3006d7630d3",
+      "result": {
+        "schema": "ludolingua.comparison.v1",
+        "comparisonEngineVersion": "0.1.0",
+        "valid": true,
+        "errors": [],
+        "mapping": [
+          {
+            "sourceId": "slot-a",
+            "targetId": "slot-a"
+          },
+          {
+            "sourceId": "slot-b",
+            "targetId": "slot-b"
+          },
+          {
+            "sourceId": "slot-c",
+            "targetId": "slot-c"
+          },
+          {
+            "sourceId": "slot-d",
+            "targetId": "slot-d"
+          },
+          {
+            "sourceId": "slot-e",
+            "targetId": "slot-e"
+          },
+          {
+            "sourceId": "slot-f",
+            "targetId": "slot-f"
+          },
+          {
+            "sourceId": "slot-g",
+            "targetId": "slot-g"
+          }
+        ],
+        "sameOrderSet": true,
+        "mechanicalPreserved": true,
+        "source": {
+          "valid": true,
+          "outcome": "verified",
+          "permutationCount": 5040,
+          "clueOrderCount": 1,
+          "actionMatchCount": 1,
+          "uniqueReasoning": true,
+          "mechanicalSuccess": true
+        },
+        "target": {
+          "valid": true,
+          "outcome": "verified",
+          "permutationCount": 5040,
+          "clueOrderCount": 1,
+          "actionMatchCount": 1,
+          "uniqueReasoning": true,
+          "mechanicalSuccess": true
+        },
+        "sourceOnlyCount": 0,
+        "targetOnlyCount": 0,
+        "sourceOnlyWitness": null,
+        "targetOnlyWitness": null,
+        "roleChanges": [
+          {
+            "sourceId": "slot-a",
+            "targetId": "slot-a",
+            "sourceLabel": "Candle",
+            "targetLabel": "Botella",
+            "labelChanged": true
+          },
+          {
+            "sourceId": "slot-b",
+            "targetId": "slot-b",
+            "sourceLabel": "Oak",
+            "targetLabel": "Reloj",
+            "labelChanged": true
+          },
+          {
+            "sourceId": "slot-c",
+            "targetId": "slot-c",
+            "sourceLabel": "Mirror",
+            "targetLabel": "Útil náutico",
+            "labelChanged": true
+          },
+          {
+            "sourceId": "slot-d",
+            "targetId": "slot-d",
+            "sourceLabel": "Pear",
+            "targetLabel": "Jarra",
+            "labelChanged": true
+          },
+          {
+            "sourceId": "slot-e",
+            "targetId": "slot-e",
+            "sourceLabel": "Apple",
+            "targetLabel": "Uva",
+            "labelChanged": true
+          },
+          {
+            "sourceId": "slot-f",
+            "targetId": "slot-f",
+            "sourceLabel": "Star",
+            "targetLabel": "Libro",
+            "labelChanged": true
+          },
+          {
+            "sourceId": "slot-g",
+            "targetId": "slot-g",
+            "sourceLabel": "Shell",
+            "targetLabel": "Ancla",
+            "labelChanged": true
+          }
+        ],
+        "clueChanges": {
+          "sourceOnly": [],
+          "targetOnly": []
+        },
+        "limitations": [
+          "Comparison covers encoded clue-consistent order sets under the declared role bijection and each episode’s extraction/action check.",
+          "Equal order sets do not establish equal discovery process, difficulty, linguistic meaning or cultural suitability. Human review remains unresolved.",
+          "No model inference or human playtest is evidenced by this comparison."
+        ]
+      }
+    },
+    "evidence": {
+      "modelContributionVerified": false,
+      "nativeHumanPlaytestVerified": false,
+      "limitations": [
+        "Encoded order-set and action checks only; no equivalence of meaning, difficulty or cultural suitability is established.",
+        "Hashes bind caller-provided content, not author identity or independent provenance attestation."
+      ]
+    }
+  },
+  "notesText": "This Spanish adaptation replaces all seven source referents: Candle → Botella, Oak → Reloj, Mirror → Útil náutico, Pear → Jarra, Apple → Uva, Star → Libro, and Shell → Ancla. These are newly authored inventory choices, not literal translations. The seven stable card IDs, all six typed ordering clues, and first-letter extraction are preserved. In the solved order, the replacement labels spell BRÚJULA, matching the Spanish required action. The accented Ú is essential; normalization preserves accents. The target labels were unlocked using “Freeze these labels” for editing and frozen again afterward. The story now describes the replacement collection without revealing its order, and the hints use the new labels, including singular “Útil náutico” to agree with the clue wording. The English source remains unchanged. Author hint review records a check against the authored content; it does not establish human playtesting, native-language quality, equivalent meaning, or equal difficulty.\n",
+  "evidence": {
+    "kind": "author-notes",
+    "limitations": [
+      "These notes are authored statements, not independent verification of meaning, language quality, difficulty or cultural suitability.",
+      "Content hashes bind the supplied notes and comparison; they do not authenticate an author or establish human playtesting or model contribution."
+    ]
+  },
+  "contentSha256": "c52fff69bc487c1604a75cf3fe494e2bbb5aad9c4dec24c3030384cbe90ec433"
+}
