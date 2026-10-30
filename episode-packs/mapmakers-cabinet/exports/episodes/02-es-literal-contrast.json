@@ -1,0 +1,183 @@
+{
+  "schema": "ludolingua.episode-export.v1",
+  "episode": {
+    "action": {
+      "answerNormalization": "NFC-trim-uppercase",
+      "expected": "BRÚJULA"
+    },
+    "cards": [
+      {
+        "id": "slot-d",
+        "label": "Pera"
+      },
+      {
+        "id": "slot-a",
+        "label": "Vela"
+      },
+      {
+        "id": "slot-f",
+        "label": "Estrella"
+      },
+      {
+        "id": "slot-c",
+        "label": "Espejo"
+      },
+      {
+        "id": "slot-g",
+        "label": "Concha"
+      },
+      {
+        "id": "slot-b",
+        "label": "Roble"
+      },
+      {
+        "id": "slot-e",
+        "label": "Manzana"
+      }
+    ],
+    "clues": [
+      {
+        "id": "order-ab",
+        "kind": "before",
+        "left": "slot-a",
+        "right": "slot-b"
+      },
+      {
+        "id": "order-bc",
+        "kind": "after",
+        "left": "slot-c",
+        "right": "slot-b"
+      },
+      {
+        "id": "order-cd",
+        "kind": "immediately_before",
+        "left": "slot-c",
+        "right": "slot-d"
+      },
+      {
+        "id": "order-de",
+        "kind": "after",
+        "left": "slot-e",
+        "right": "slot-d"
+      },
+      {
+        "id": "order-ef",
+        "kind": "before",
+        "left": "slot-e",
+        "right": "slot-f"
+      },
+      {
+        "id": "order-fg",
+        "kind": "immediately_before",
+        "left": "slot-f",
+        "right": "slot-g"
+      }
+    ],
+    "constraints": {
+      "labelsFrozen": true,
+      "requireUnique": true
+    },
+    "extraction": {
+      "kind": "first_letter",
+      "normalization": "NFC-uppercase"
+    },
+    "hints": [
+      "Antes y después se refieren a las posiciones numeradas, no al orden en que aparecen ahora las tarjetas.",
+      "Une las notas para formar una sola secuencia. La vela va antes que el roble, y el espejo va después del roble.",
+      "El orden completo es Vela, Roble, Espejo, Pera, Manzana, Estrella, Concha. Sus iniciales forman VREPMEC: esta traducción literal no conserva la respuesta codificada."
+    ],
+    "id": "mapmakers-cabinet-es-literal",
+    "locale": "es",
+    "provenance": {
+      "humanPlaytest": null,
+      "kind": "authored",
+      "modelRun": null,
+      "semanticChanges": [
+        "The story and inventory labels are translated into Spanish; stable role IDs, displayed card order and ordering relations are retained.",
+        "The required instrument name changes from COMPASS to BRÚJULA.",
+        "The translated labels extract VREPMEC rather than BRÚJULA. This is an intentional negative control, not a successfully localized playable episode."
+      ],
+      "source": "Authored Spanish literal control derived from mapmakers-cabinet-en-source revision 1."
+    },
+    "revision": 1,
+    "schema": "ludolingua.episode.v1",
+    "story": "La expedición parte al amanecer, pero el armario del cartógrafo está cerrado. Su contenido es necesario para trazar la próxima ruta. Sobre el escritorio hay siete muestras y recuerdos etiquetados que quedaron esparcidos durante los preparativos. La etiqueta «Roble» corresponde a una pequeña muestra de madera; la etiqueta «Estrella», a una ficha de latón. Junto a ellos hay una nota: «Devuelve mi colección a sus lugares numerados, del primero al séptimo. Lee la primera letra de cada etiqueta en ese orden e introduce el nombre del instrumento en español». Usa las notas de colocación que se conservaron para abrir el armario.",
+    "title": "El armario del cartógrafo: traducción literal"
+  },
+  "validation": {
+    "engineVersion": "0.1.0",
+    "episodeSha256": "4eddfe3e9a225a4fe9ec661587431cbe56c8e2b6fd30d6ffb1b0587abd15d535",
+    "result": {
+      "schema": "ludolingua.analysis.v1",
+      "engineVersion": "0.1.0",
+      "valid": true,
+      "errors": [],
+      "permutationCount": 5040,
+      "clueOrderCount": 1,
+      "actionMatchCount": 0,
+      "uniqueReasoning": true,
+      "mechanicalSuccess": false,
+      "outcome": "action-mismatch",
+      "solutions": [
+        {
+          "order": [
+            "slot-a",
+            "slot-b",
+            "slot-c",
+            "slot-d",
+            "slot-e",
+            "slot-f",
+            "slot-g"
+          ],
+          "token": "VREPMEC",
+          "actionMatches": false
+        }
+      ],
+      "frozenWitness": {
+        "available": [
+          "P",
+          "V",
+          "E",
+          "E",
+          "C",
+          "R",
+          "M"
+        ],
+        "required": [
+          "B",
+          "R",
+          "Ú",
+          "J",
+          "U",
+          "L",
+          "A"
+        ],
+        "missing": [
+          "B",
+          "Ú",
+          "J",
+          "U",
+          "L",
+          "A"
+        ],
+        "scope": "All permutations of these frozen labels under first-code-point NFC-uppercase extraction; multiset mismatch proves the target impossible, independently of clues."
+      },
+      "limitations": [
+        "Checks cover encoded ordering and extraction only; native-language clarity, cultural suitability and comparable discovery require human playtests.",
+        "No model inference is evidenced.",
+        "Extraction uses the first Unicode code point after trim and NFC, then locale-independent uppercase; uppercase may expand to multiple code points."
+      ]
+    }
+  },
+  "evidence": {
+    "kind": "authored-fixture",
+    "modelContributionVerified": false,
+    "nativeHumanPlaytestVerified": false,
+    "limitations": [
+      "Mechanical checks certify only the encoded properties.",
+      "No NVIDIA/Nebius model integration or native-language human playtest is established.",
+      "Equivalent difficulty, cultural suitability and linguistic quality remain unverified.",
+      "SHA256 binds content; it does not authenticate an author or attest provenance claims."
+    ]
+  }
+}
