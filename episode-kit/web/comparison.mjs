@@ -15,6 +15,8 @@ function node(tag, text, cls) {
 export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpisode, beginIntent, getIntent, notice, showAuthor, maxBytes, t, diagnostic }) {
   let source = clone(EPISODES[0]), customSource = null, mapping = [], epoch = 0, checked = null, comparison = null, importSequence = 0;
   let digestKey = '', customSourceKey = '';
+  const listeners = new Set();
+  const notifyPair = () => { for (const listener of listeners) listener(); };
   function renderDigest() { $('comparison-digest').textContent = checked && digestKey ? t(digestKey, { hash: checked.validation.bindingSha256 }) : ''; }
   const defaultMapping = () => source.cards.map(card => ({ sourceId: card.id, targetId: getEpisode()?.cards.some(c => c.id === card.id) ? card.id : '' }));
   function invalidate() {
@@ -22,6 +24,7 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
     $('comparison-export-button').disabled = true;
     digestKey = ''; renderDigest();
     renderResult();
+    notifyPair();
   }
   function preview(root, episode, label) {
     root.replaceChildren(node('p', t(label), 'eyebrow'), Object.assign(node('h4', episode.title), { lang: episode.locale }), node('p', t('{locale} · revision {revision}', { locale: episode.locale.toUpperCase(), revision: episode.revision }), 'small'));
@@ -104,12 +107,14 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
     const token = epoch, currentSource = clone(source), currentTarget = clone(getEpisode()), currentMapping = clone(mapping);
     checked = null; $('comparison-export-button').disabled = true; digestKey = ''; renderDigest();
     comparison = compareEpisodes(currentSource, currentTarget, currentMapping); renderResult();
+    notifyPair();
     if (!comparison.valid) { notice('The comparison needs valid episodes and a complete one-to-one role map.', true); return; }
     try {
       const bundle = await createComparisonExport(currentSource, currentTarget, currentMapping);
       if (token !== epoch) return;
       checked = bundle; comparison = bundle.validation.result; renderResult(); $('comparison-export-button').disabled = false;
       digestKey = 'Checked pair · SHA-256 {hash}'; renderDigest();
+      notifyPair();
       notice('Both complete revisions and their role map are bound to this comparison. Human meaning and difficulty remain unverified.');
     } catch (error) { if (token === epoch) notice(error.message, true); }
   });
@@ -132,11 +137,7 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
       const bundle = await createComparisonExport(received.source, received.target, received.mapping === null ? undefined : received.mapping);
       if (sequence !== importSequence || intent !== getIntent()) return;
       if (token !== epoch) throw new Error('The source, adaptation or role map changed while this file was being verified. Reopen it again to replace the pair.');
-      source = clone(received.source); selectEpisode(received.target);
-      rememberImportedEpisode(received.target, 'Reopened · comparison adaptation');
-      mapping = clone(bundle.validation.result.mapping); sourceOption('Reopened · comparison source'); renderPair();
-      checked = bundle; comparison = bundle.validation.result; renderResult(); $('comparison-export-button').disabled = false;
-      digestKey = 'Reopened pair · SHA-256 {hash}'; renderDigest();
+      adoptCheckedPair(bundle);
       showAuthor(); notice('Reopened both revisions. Complete source, adaptation, role map and mechanical comparison verified.');
     } catch (error) { if (sequence === importSequence && intent === getIntent()) notice('Cannot reopen comparison: {message}', true, { message: error.message }); }
     finally { if (sequence === importSequence) $('comparison-import-file').value = ''; }
@@ -151,5 +152,16 @@ export function setupComparison({ getEpisode, selectEpisode, rememberImportedEpi
     selectEpisode(target, hintText); rememberImportedEpisode(target, 'New · authored adaptation');
     mapping = defaultMapping(); invalidate(); renderPair();
   }
-  return { refreshTarget, invalidate, relocalize, getEpoch: () => epoch, adoptAdaptation };
+  // Only callers that have verified a complete comparison may adopt it here.
+  function adoptCheckedPair(bundle) {
+    source = clone(bundle.source); selectEpisode(clone(bundle.target));
+    rememberImportedEpisode(bundle.target, 'Reopened · comparison adaptation');
+    mapping = clone(bundle.validation.result.mapping); sourceOption('Reopened · comparison source'); renderPair();
+    checked = clone(bundle); comparison = checked.validation.result; renderResult(); $('comparison-export-button').disabled = false;
+    digestKey = 'Reopened pair · SHA-256 {hash}'; renderDigest(); notifyPair();
+  }
+  return { refreshTarget, invalidate, relocalize, getEpoch: () => epoch, adoptAdaptation, adoptCheckedPair,
+    getChecked: () => checked ? clone(checked) : null,
+    subscribe: listener => { listeners.add(listener); return () => listeners.delete(listener); } };
 }
+

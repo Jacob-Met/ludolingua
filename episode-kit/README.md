@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.5.0-adaptation.a424427c
+# LUDOLINGUA episode, comparison and playtest kit — 0.6.0-notes.a424427c
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -345,7 +345,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.5.0-adaptation.a424427c.
+the enclosing kit version is 0.6.0-notes.a424427c.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -675,3 +675,22 @@ CHROME_PATH=/absolute/path/to/google-chrome-stable \
 LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/adaptation-evidence \
 node tests/receiver-adaptation-independent.mjs
 ```
+
+### Keep authored localization notes with a comparison
+
+Compare the source and adaptation, open **Explain your localization choices**, write your notes, and choose **Attach notes to checked pair**. This explicitly binds the notes to those two complete revisions and their role mapping. Download the notes file to keep both the captured comparison and your exact note text.
+
+Editing an episode or changing the pair does not silently move the notes to the new revisions. The notes remain attached to their earlier pair, which is identified below the editor, and you can still download that earlier pair with the notes. To move the notes, compare the new pair, explicitly attach them again, and review their wording before downloading.
+
+Reopening a notes file verifies its contents and restores its captured source, adaptation, mapping and note text together. Notes are kept in the current tab until downloaded; they are not automatically saved. Download a new file after further note edits or rebinding.
+
+The comparison checks encoded mechanics. Localization notes remain authored statements about meaning, wording or context; attaching them or verifying their file does not approve those statements, prove equivalent meaning, identify the author, or establish a human playtest.
+
+
+Focused notes receiving:
+
+    node --test tests/localization-notes-independent.test.mjs
+    PLAYWRIGHT_PACKAGE=/absolute/path/to/playwright \
+    LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/notes-evidence \
+    CHROME_PATH=/usr/bin/google-chrome-stable \
+    node tests/receiver-localization-notes-independent.mjs

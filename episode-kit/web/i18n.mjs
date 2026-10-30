@@ -1,5 +1,30 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"Explain your localization choices":"Explica tus decisiones de localización",
+"Record why you changed a referent, clue, action or wording. These are author statements, not independent semantic review.":"Anota por qué cambiaste un referente, una pista, una acción o el texto. Son declaraciones del autor, no una revisión semántica independiente.",
+"Localization notes":"Notas de localización",
+"Attach notes to checked pair":"Adjuntar notas al par verificado",
+"Download notes with captured pair":"Descargar notas con el par capturado",
+"Reopen notes and pair":"Reabrir notas y par",
+"Notes stay in this tab until downloaded. An unfinished episode draft does not save them. After changing the pair, compare again and explicitly attach the notes to the new revisions.":"Las notas permanecen en esta pestaña hasta que las descargues. Un borrador de episodio sin terminar no las guarda. Si cambias el par, vuelve a compararlo y adjunta explícitamente las notas a las nuevas revisiones.",
+"Compare a pair, then attach your notes to those checked revisions.":"Compara un par y adjunta tus notas a esas revisiones verificadas.",
+"These notes are attached to the current checked pair.":"Estas notas están adjuntas al par verificado actual.",
+"The current pair has changed or needs a fresh comparison. These notes still describe the captured pair below.":"El par actual ha cambiado o necesita una nueva comparación. Estas notas siguen describiendo el par capturado que aparece a continuación.",
+"Captured pair: {source} ({sourceLocale}, revision {sourceRevision}) → {target} ({targetLocale}, revision {targetRevision})":"Par capturado: {source} ({sourceLocale}, revisión {sourceRevision}) → {target} ({targetLocale}, revisión {targetRevision})",
+"Compare the current pair before attaching localization notes.":"Compara el par actual antes de adjuntar las notas de localización.",
+"Attached the current checked pair. Review your notes for these revisions before downloading.":"Se ha adjuntado el par verificado actual. Revisa tus notas sobre estas revisiones antes de descargarlas.",
+"Notes download prepared with the captured pair. Later notes or episode edits need a new file.":"Descarga de notas preparada con el par capturado. Los cambios posteriores en las notas o los episodios requieren un nuevo archivo.",
+"Cannot download localization notes: {message}":"No se pueden descargar las notas de localización: {message}",
+"The pair or notes changed while this file was being verified. Reopen it again to replace them.":"El par o las notas cambiaron mientras se verificaba este archivo. Vuelve a abrirlo para reemplazarlos.",
+"Reopened the captured pair and exact authored notes. Their content is verified; their judgments remain author statements.":"Se han reabierto el par capturado y las notas exactas del autor. Se ha verificado su contenido; sus valoraciones siguen siendo declaraciones del autor.",
+"Cannot reopen localization notes: {message}":"No se pueden reabrir las notas de localización: {message}",
+"Localization notes file exceeds the 20 MiB limit.":"El archivo de notas de localización supera el límite de 20 MiB.",
+"Localization notes must contain nonblank text of at most 20000 characters.":"Las notas de localización deben contener texto no vacío de un máximo de 20000 caracteres.",
+"Invalid localization notes comparison shape.":"El formato de la comparación de las notas de localización no es válido.",
+"Altered localization notes comparison.":"La comparación de las notas de localización está alterada.",
+"Invalid localization notes file schema.":"El formato del archivo de notas de localización no es válido.",
+"Altered localization notes evidence.":"Las declaraciones de las notas de localización están alteradas.",
+"Localization notes content digest mismatch.":"La huella del contenido de las notas de localización no coincide.",
 "The downloadable player is out of date or unavailable. You can keep editing, export checked JSON, or open a separate playtest. Ask the kit maintainer to refresh the player bundle, then try again.":"El reproductor descargable está desactualizado o no está disponible. Puedes seguir editando, exportar el JSON verificado o abrir una prueba independiente. Pide a la persona responsable del kit que actualice el paquete del reproductor y vuelve a intentarlo.",
 "Start an adaptation in another language":"Iniciar una adaptación en otro idioma",
 "Make a new copy of the current episode and keep this revision as its comparison source. All text starts unchanged; translate and review it yourself.":"Crea una copia del episodio actual y conserva esta revisión como origen de la comparación. Todo el texto se copia sin cambios; tradúcelo y revísalo tú.",
@@ -210,3 +235,4 @@ export function translateDiagnostic(locale, message) {
   if (field) return `${field[1]} debe ser texto no vacío.`;
   return text;
 }
+
