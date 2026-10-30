@@ -8,16 +8,18 @@ import { setupPlaytest } from './playtest-author.mjs';
 import { setupPortableAuthor } from './portable-author.mjs';
 import { setupPlaytestCohort } from './playtest-cohort.mjs';
 import { createFixtureDrafts } from './draft-controller.mjs';
+import { createDraftFile, readDraftFile, MAX_DRAFT_FILE_BYTES } from '../lib/draft-file.mjs';
 import { translate, translateDiagnostic, supportedLocale } from './i18n.mjs';
 
 const $ = id => document.getElementById(id);
 const clone = value => structuredClone(value);
 const names = { 'en-original': 'English · original episode', 'es-literal': 'Spanish · literal translation', 'es-adapted': 'Spanish · coordinated adaptation', 'es-frozen': 'Spanish · frozen-label challenge', 'en-ambiguous': 'English · incomplete clues', 'en-contradictory': 'English · conflicting clues' };
 const MAX_EXPORT_BYTES = 20_000_000;
-let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0;
+let episode, result = null, digest = '', version = 0, order = [], hintCount = 0, importSequence = 0, draftInputSequence = 0, checkedInputSequence = 0;
 let comparisonController, playtestController, playtestCohortController, authoringReceiver;
 let conflictFor = null, conflictExplanation = null;
 let importedEpisode = null, importedHintText = '', editingImport = false, editorHintText = '';
+let draftSourceEpisode = null, importedDraftSource = null;
 const handoffQuery = new URL(location.href).searchParams;
 let uiLocale = supportedLocale(handoffQuery.has('author-handoff') ? handoffQuery.get('author-ui') : (navigator.language ?? 'en').split('-')[0].toLowerCase());
 let noticeState = { key: '', error: false, values: {} }, digestKey = 'Checked source · SHA-256 {hash}';
@@ -200,10 +202,12 @@ function installEpisode(ep, hintText = ep.hints.join('\n')) {
   renderWording(); $('answer').lang = episode.locale; $('digest').textContent = ''; $('export-button').disabled = true;
   renderEditor(); renderResult(); resetPlayer(); comparisonController?.refreshTarget(true); notice('');
 }
-function selectEpisode(ep, detached = false, hintText = ep.hints.join('\n')) {
+function selectEpisode(ep, detached = false, hintText = ep.hints.join('\n'), sourceEpisode = ep) {
   editingImport = detached;
+  draftSourceEpisode = clone(sourceEpisode);
   if (detached) {
     importedEpisode = clone(ep); importedHintText = hintText;
+    importedDraftSource = clone(sourceEpisode);
     drafts.detach(); installEpisode(ep, hintText);
   } else {
     const restored = drafts.open(ep);
@@ -225,7 +229,7 @@ for (const ep of EPISODES) { const option = node('option', t(names[ep.id] ?? ep.
 $('case-select').addEventListener('change', () => {
   const detached = $('case-select').value === 'imported';
   const ep = detached ? importedEpisode : EPISODES.find(value => value.id === $('case-select').value);
-  if (ep) selectEpisode(ep, detached, detached ? importedHintText : undefined);
+  if (ep) selectEpisode(ep, detached, detached ? importedHintText : undefined, detached ? importedDraftSource : ep);
 });
 $('freeze-labels').addEventListener('change', () => { episode.constraints.labelsFrozen = $('freeze-labels').checked; changed(); renderEditor(); });
 $('required-action').addEventListener('input', () => { episode.action.expected = $('required-action').value; changed({ reviewHints: true }); });
@@ -272,10 +276,41 @@ $('export-button').addEventListener('click', async () => {
   const checkpoint = version, current = clone(episode);
   try { if (!result?.valid) throw new Error('Check the current revision before exporting.'); const data = await createExport(current); if (checkpoint !== version) throw new Error('The episode changed during export. Check the new revision first.'); const blob = new Blob([JSON.stringify(data, null, 2) + '\n'], { type: 'application/json' }); if (blob.size > MAX_EXPORT_BYTES) throw new Error('This export exceeds the 20 MB receiver limit. Reduce episode content before downloading.'); const url = URL.createObjectURL(blob); const a = node('a'); a.href = url; a.download = `ludolingua-${current.id.replace(/[^a-z0-9_-]/gi, '-')}-r${current.revision}.json`; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); notice('Exported revision {revision}, including its {outcome} result.', false, { revision: current.revision, outcome: result.outcome }); } catch (error) { notice(error.message, true); }
 });
+$('download-draft-button').addEventListener('click', async () => {
+  const checkpoint = version, current = clone(episode), source = clone(draftSourceEpisode), hintText = $('hint-editor').value;
+  try {
+    const data = await createDraftFile(source, current, crypto.randomUUID(), hintText);
+    if (checkpoint !== version) throw new Error('The episode changed while the draft was being prepared. Download the current draft again.');
+    const blob = new Blob([JSON.stringify(data, null, 2) + '\n'], { type: 'application/json' });
+    if (blob.size > MAX_DRAFT_FILE_BYTES) throw new Error('Author draft file exceeds the 20 MB limit.');
+    const url = URL.createObjectURL(blob), link = node('a');
+    link.href = url; link.download = `ludolingua-draft-${current.id.replace(/[^a-z0-9_-]/gi, '-')}-r${current.revision}.json`;
+    document.body.append(link); link.click(); link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    notice('Draft download prepared for revision {revision}. Reopen the file to continue unfinished work.', false, { revision: current.revision });
+  } catch (error) { notice('Cannot download draft: {message}', true, { message: error.message }); }
+});
+$('reopen-draft-button').addEventListener('click', () => $('draft-file').click());
+$('draft-file').addEventListener('change', async () => {
+  const file = $('draft-file').files[0]; if (!file) return;
+  const checkpoint = version, sequence = ++importSequence, inputSequence = ++draftInputSequence;
+  try {
+    if (file.size > MAX_DRAFT_FILE_BYTES) throw new Error('Author draft file exceeds the 20 MB limit.');
+    const received = await readDraftFile(await file.text());
+    if (sequence !== importSequence) return;
+    if (checkpoint !== version) throw new Error('The episode changed while the draft was being read. Reopen it again to replace the current revision.');
+    selectEpisode(received.episode, true, received.hintText, received.sourceEpisode);
+    rememberImportedEpisode(received.episode, 'Reopened · unfinished draft');
+    tab('author');
+    notice('Reopened unfinished revision {revision}. Review it, then run a fresh check.', false, { revision: episode.revision });
+    $('episode-title-input').focus({ preventScroll: true });
+  } catch (error) { if (sequence === importSequence) notice('Cannot reopen draft: {message}', true, { message: error.message }); }
+  finally { if (inputSequence === draftInputSequence) $('draft-file').value = ''; }
+});
 $('import-button').addEventListener('click', () => $('import-file').click());
 $('import-file').addEventListener('change', async () => {
   const file = $('import-file').files[0]; if (!file) return;
-  const checkpoint = version, sequence = ++importSequence;
+  const checkpoint = version, sequence = ++importSequence, inputSequence = ++checkedInputSequence;
   try {
     if (file.size > MAX_EXPORT_BYTES) throw new Error('The episode export exceeds the 20 MB receiver limit.');
     const received = await readExport(await file.text());
@@ -286,7 +321,7 @@ $('import-file').addEventListener('change', async () => {
     result = received.validation.result; digest = received.integrity.episodeSha256; renderResult(); $('export-button').disabled = false;
     digestKey = 'Reopened source · SHA-256 {hash}'; renderDigest(); tab('author'); notice('Reopened revision {revision}. Source digest and mechanical result verified.', false, { revision: episode.revision });
   } catch (error) { if (sequence === importSequence) notice('Cannot reopen: {message}', true, { message: error.message }); }
-  finally { if (sequence === importSequence) $('import-file').value = ''; }
+  finally { if (inputSequence === checkedInputSequence) $('import-file').value = ''; }
 });
 comparisonController = setupComparison({ getEpisode: () => episode, selectEpisode: ep => selectEpisode(ep, true), rememberImportedEpisode, notice, showAuthor: () => tab('author'), maxBytes: MAX_EXPORT_BYTES, t, diagnostic });
 playtestController = setupPlaytest({ getEpisode: () => episode, notice, maxBytes: MAX_EXPORT_BYTES, t, diagnostic, getUILocale: () => uiLocale });

@@ -68,7 +68,7 @@ export function receiveAuthoredEpisode({ onReceive, maxBytes = LIMIT, locale = '
   const deadline = Date.now() + LIFETIME;
   const words = {
     waiting: ['Receiving your original episode. Your other workbench stays unchanged.', 'Recibiendo tu episodio original. El otro taller no cambia.'],
-    opened: ['Your original episode is open. Add ordering clues, then check this revision. Export to keep this tab’s work.', 'Tu episodio original está abierto. Añade pistas de orden y comprueba esta revisión. Exporta para conservar el trabajo de esta pestaña.'],
+    opened: ['Your original episode is open. Add ordering clues, then check this revision. Download a draft to keep unfinished work.', 'Tu episodio original está abierto. Añade pistas de orden y comprueba esta revisión. Descarga un borrador para conservar el trabajo sin terminar.'],
     timeout: ['The original episode did not arrive in time. This workbench is ready to use. Download the starting episode from the creation page and reopen that file here.', 'El episodio original no llegó a tiempo. Este taller está disponible. Descarga el episodio inicial desde la página de creación y abre aquí ese archivo.'],
     unavailable: ['The creation window is unavailable. Download the starting episode and use Reopen an export in this workbench.', 'La ventana de creación no está disponible. Descarga el episodio inicial y usa Reabrir una exportación en este taller.'],
     rejected: ['The original episode could not be opened. This workbench is unchanged.', 'No se pudo abrir el episodio original. Este taller no ha cambiado.']

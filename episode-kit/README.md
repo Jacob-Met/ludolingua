@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.3.9-portable-guard.1b623a99
+# LUDOLINGUA episode, comparison and playtest kit — 0.4.0-drafts.a424427c
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -168,7 +168,8 @@ workbench narrows six possible orders to three, then one. Try the resulting
 puzzle in the player and export the checked episode to keep the complete work.
 
 New originals stay in their tab rather than becoming bundled fixture drafts.
-Export before closing or reloading. If the new window cannot open, choose
+Download an unfinished draft before closing or reloading; use a checked episode
+export when you want to retain mechanical results. If the new window cannot open, choose
 **Download starting episode**, open a workbench and use **Reopen an export**.
 The downloaded file carries the same starting episode and recomputable result.
 
@@ -189,6 +190,15 @@ checks popup fallback, English/Spanish controls, narrow layout, card-count
 boundaries, stale form results and one-time receiving under delayed or invalid
 messages. Read its receipt and inspect the screenshots after execution; the
 script itself is not a claim of completed browser or human acceptance.
+
+## Carry unfinished work to another browser
+
+Choose **Download unfinished draft** to keep the episode you are editing in a JSON file. A draft can contain unfinished or invalid words, an empty title or action, ordering clues, and your exact hint-editor text. It includes the original episode as well as your edits, so you can reopen it on another browser or computer without that browser having the same local draft.
+
+Choose **Reopen a draft** and select the downloaded file to continue editing. Reopening checks the file's structure and content digests, then restores its unfinished edits. It does not certify a playable puzzle or mark the episode as checked. Run the episode check again and use **Export checked episode** when you want the checked export.
+
+Draft files are manual snapshots: download a new file after further edits. Creating a new original episode does not add automatic local recovery; keep a draft file before closing its workbench. The file does not carry another tab's play session or the workbench's comparison state. Its content hashes detect mismatches, but do not authenticate an author.
+
 
 ## Recoverable author drafts
 
@@ -217,8 +227,8 @@ the current edits or discard that draft. Loading such data never grants approval
 
 Reopened exports retain full digest and mechanical verification. They are separate
 from bundled drafts even when episode IDs match; edits to reopened content remain
-in this tab when switching episodes. Export the checked revision to keep those
-changes after closing. Comparison sources and role maps still require a checked
+in this tab when switching episodes. Download an unfinished draft to keep those
+changes after closing, or check and export the revision to retain mechanical results. Comparison sources and role maps still require a checked
 comparison export to keep them after closing. Draft restoration clears both episode
 and comparison checks. Drafts do not change the CLI or exported episode format.
 
@@ -335,7 +345,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.3.9-portable-guard.1b623a99.
+the enclosing kit version is 0.4.0-drafts.a424427c.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -591,6 +601,23 @@ Hashes establish consistency with the supplied episode and events, not who
 authored them. A fully consistent replacement history can still be authored by
 a caller. The native fixtures record the exact historical engine/writer blobs
 and immutable old-record hashes in `tests/fixtures/playtest-v0.1-provenance.json`.
+
+## Portable unfinished-draft receiving
+
+The portable draft tests include incomplete original authoring, exact raw hint text,
+content corruption and source binding, a second saved revision, and input snapshots
+captured before asynchronous hashing. The browser course creates an original episode,
+downloads unfinished edits, reopens them in a fresh browser context, and checks delayed
+imports against newer edits, episode choices and competing file selections. It also
+receives the Spanish narrow layout and keyboard download.
+
+```sh
+node --test tests/draft-file-independent.test.mjs
+PLAYWRIGHT_PACKAGE=/absolute/path/to/node_modules/playwright \
+CHROME_PATH=/absolute/path/to/google-chrome \
+LUDO_EVIDENCE_DIR=/absolute/path/outside/episode-kit/draft-file-evidence \
+node tests/receiver-draft-file-independent.mjs
+```
 
 
 ### Runtime freshness of playable downloads
