@@ -1,5 +1,6 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"The downloadable player is out of date or unavailable. You can keep editing, export checked JSON, or open a separate playtest. Ask the kit maintainer to refresh the player bundle, then try again.":"El reproductor descargable está desactualizado o no está disponible. Puedes seguir editando, exportar el JSON verificado o abrir una prueba independiente. Pide a la persona responsable del kit que actualice el paquete del reproductor y vuelve a intentarlo.",
 "Download playable HTML":"Descargar HTML para jugar",
 "Open the downloaded HTML directly in a browser. It works offline. Later edits need a new download.":"Abre el HTML descargado directamente en un navegador. Funciona sin conexión. Si haces cambios, descarga una copia nueva.",
 "Preparing a playable copy of this revision…":"Preparando una copia para jugar de esta revisión…",

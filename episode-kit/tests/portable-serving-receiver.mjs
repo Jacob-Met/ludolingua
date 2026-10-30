@@ -16,6 +16,7 @@ const { chromium } = await import(pathToFileURL(resolve(process.env.PLAYWRIGHT_P
 const receipt = { schema: 'ludolingua.portable-serving-receiving.v1', startedAt: new Date().toISOString(),
   checks: [], downloads: [], pageErrors: [], consoleErrors: [], offlineRequests: [], passed: false, sandboxEnabled: true };
 const hash = bytes => createHash('sha256').update(bytes).digest('hex');
+const recoveryGuidance = {"en": "The downloadable player is out of date or unavailable. You can keep editing, export checked JSON, or open a separate playtest. Ask the kit maintainer to refresh the player bundle, then try again.", "es": "El reproductor descargable está desactualizado o no está disponible. Puedes seguir editando, exportar el JSON verificado o abrir una prueba independiente. Pide a la persona responsable del kit que actualice el paquete del reproductor y vuelve a intentarlo."};
 const engine = resolve(kit, 'lib/engine.mjs'), engineBytes = await readFile(engine);
 let browser, server, web, offline, lastPage;
 function observe(page) {
@@ -48,6 +49,25 @@ try {
   assert.equal(refusal.headers()['cache-control'], 'no-store');
   await author.waitForFunction(() => document.getElementById('notice').textContent.includes('Cannot download playable file:'));
   receipt.refusalNotice = await author.locator('#notice').textContent();
+  assert.equal(receipt.refusalNotice, 'Cannot download playable file: ' + recoveryGuidance.en);
+  await author.selectOption('#ui-language', 'es');
+  const expectedSpanish = 'No se puede descargar el archivo para jugar: ' + recoveryGuidance.es;
+  await author.waitForFunction(text => document.getElementById('notice').textContent === text, expectedSpanish);
+  receipt.switchedSpanishNotice = await author.locator('#notice').textContent();
+  await author.locator('#download-portable-player').focus();
+  const [spanishRefusal] = await Promise.all([
+    author.waitForResponse(r => r.url().endsWith('/web/portable-player-bundle.json')),
+    author.locator('#download-portable-player').press('Enter')
+  ]);
+  assert.equal(spanishRefusal.status(), 503);
+  await author.waitForFunction(text => document.getElementById('notice').textContent === text, expectedSpanish);
+  assert.equal(await author.locator('#download-portable-player').isEnabled(), true);
+  receipt.spanishRefusalNotice = await author.locator('#notice').textContent();
+  await author.screenshot({ path: resolve(out, 'portable-download-guidance-es.png'), fullPage: true });
+  await author.selectOption('#ui-language', 'en');
+  await author.waitForFunction(text => document.getElementById('notice').textContent === text, 'Cannot download playable file: ' + recoveryGuidance.en);
+  receipt.checks.push('Actual English and Spanish HTTP503 refusals explain available alternatives and maintainer recovery; switching language translates the active notice and keyboard retry remains available');
+
   assert.equal(unexpected, 0); author.off('download', onDownload);
   assert.equal(await author.locator('#download-portable-player').isEnabled(), true);
   assert.equal(await author.locator('#episode-title-input').inputValue(), title); assert.deepEqual(await storage(author), stored);
@@ -57,10 +77,41 @@ try {
   await writeFile(engine, engineBytes);
   const [goodResponse, html] = await Promise.all([author.waitForResponse(r => r.url().endsWith('/web/portable-player-bundle.json')), download(author, '#download-portable-player', 'recovered-player.html')]);
   assert.equal(goodResponse.status(), 200);
-  assert.deepEqual(html.bytes, initial.bytes); assert.deepEqual(runtimeResponses, [200, 503, 200]); receipt.runtimeResponses = runtimeResponses;
+  assert.deepEqual(html.bytes, initial.bytes); assert.deepEqual(runtimeResponses, [200, 503, 503, 200]); receipt.runtimeResponses = [...runtimeResponses];
   await author.waitForFunction(() => document.getElementById('notice').textContent.includes('playable HTML file'));
   const after = await download(author, '#export-button', 'episode-after.json'); assert.deepEqual(after.bytes, before.bytes);
   assert.deepEqual(await storage(author), stored); receipt.checks.push('Restoring exact source permits a fresh playable export on the same page and server without losing the episode');
+
+  // Only these two cases intercept the browser request; the preceding503 cases use the real checker.
+  const bundleRoute = '**/web/portable-player-bundle.json';
+  let failedDownloads = 0; const onFailedDownload = () => failedDownloads++;
+  author.on('download', onFailedDownload);
+  await author.route(bundleRoute, route => route.fulfill({ status: 404, contentType: 'text/html', body: '<h1>Untrusted replacement diagnostics</h1>' }));
+  const [notFound] = await Promise.all([author.waitForResponse(r => r.url().endsWith('/web/portable-player-bundle.json')), author.locator('#download-portable-player').click()]);
+  assert.equal(notFound.status(), 404);
+  await author.waitForFunction(() => document.getElementById('notice').textContent === 'Cannot download playable file: The portable player runtime could not be loaded.');
+  receipt.otherHttpNotice = await author.locator('#notice').textContent();
+  assert.equal(await author.locator('#notice h1').count(), 0);
+  assert.equal(await author.locator('#download-portable-player').isEnabled(), true);
+  await author.unroute(bundleRoute);
+  await author.route(bundleRoute, route => route.abort('failed'));
+  await Promise.all([
+    author.waitForEvent('requestfailed', { predicate: request => request.url().endsWith('/web/portable-player-bundle.json') }),
+    author.locator('#download-portable-player').click()
+  ]);
+  await author.waitForFunction(() => document.getElementById('notice').textContent.startsWith('Cannot download playable file: ') && !document.getElementById('download-portable-player').disabled);
+  receipt.networkFailureNotice = await author.locator('#notice').textContent();
+  assert.equal(receipt.networkFailureNotice.includes(recoveryGuidance.en), false);
+  assert.equal(receipt.networkFailureNotice.includes('Untrusted replacement'), false);
+  assert.equal(failedDownloads, 0); author.off('download', onFailedDownload);
+  assert.deepEqual(await storage(author), stored); assert.equal(await author.locator('#episode-title-input').inputValue(), title);
+  await author.unroute(bundleRoute);
+  const afterNetwork = await download(author, '#download-portable-player', 'after-network-player.html');
+  assert.deepEqual(afterNetwork.bytes, initial.bytes);
+  receipt.allRuntimeResponses = [...runtimeResponses];
+  assert.deepEqual(runtimeResponses, [200, 503, 503, 200, 404, 200]);
+  receipt.checks.push('Controlled404 and network failures retain accurate loading errors without injected body or maintainer guidance; no failed download or state change occurs and an actual fresh retry succeeds');
+
   await web.close(); web = null; await new Promise(done => { server.close(done); server.closeIdleConnections?.(); }); server = null;
   offline = await browser.newContext({ acceptDownloads: true }); await offline.setOffline(true);
   offline.setDefaultTimeout(10_000); offline.setDefaultNavigationTimeout(10_000);
@@ -77,8 +128,11 @@ try {
   assert.equal(value.validation.result.summary.attempts, 1); assert.equal(value.validation.result.summary.successfulAttempts, 1);
   assert.deepEqual(value.episode, episodeExport.episode); assert.equal(value.integrity.episodeSha256, episodeExport.validation.episodeSha256);
   assert.deepEqual(receipt.offlineRequests, [pathToFileURL(html.path).href]); assert.deepEqual(receipt.pageErrors, []);
-  assert.equal(receipt.consoleErrors.length, 1); assert.match(receipt.consoleErrors[0], /503/);
-  receipt.expectedResourceFailure = 'One browser console resource error corresponds to the intentionally refused503 bundle request.';
+  assert.equal(receipt.consoleErrors.length, 4);
+  assert.equal(receipt.consoleErrors.filter(text => text.includes('503')).length, 2);
+  assert.equal(receipt.consoleErrors.filter(text => text.includes('404')).length, 1);
+  assert.equal(receipt.consoleErrors.filter(text => text.includes('ERR_FAILED')).length, 1);
+  receipt.expectedResourceFailure = 'Four expected resource errors: two real checker503 refusals, one controlled404 response and one controlled network failure.';
   receipt.checks.push('Recovered HTML opens offline after actual server shutdown, solves and downloads a source-bound verified record');
   receipt.passed = true;
 } catch (error) {

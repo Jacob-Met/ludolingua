@@ -7,6 +7,7 @@ export function setupPortableAuthor({ getEpisode, getUILocale, notice, maxBytes 
   function loadBundle() {
     if (!bundlePromise) bundlePromise = (async () => {
       const response = await fetch(new URL('./portable-player-bundle.json', import.meta.url), { cache: 'no-store' });
+      if (response.status === 503) throw new Error("The downloadable player is out of date or unavailable. You can keep editing, export checked JSON, or open a separate playtest. Ask the kit maintainer to refresh the player bundle, then try again.");
       if (!response.ok) throw new Error('The portable player runtime could not be loaded.');
       const text = await response.text();
       if (new TextEncoder().encode(text).length > 2_000_000) throw new Error('The portable player runtime is too large.');
