@@ -1,10 +1,73 @@
 # LUDOLINGUA
 
+Adapt language-dependent puzzles across languages while preserving how they are solved.
+The puzzle here is an ordering-and-acrostic episode: arrange cards by the clues, read the first
+letter of each card, and the letters spell the action that opens the door. A literal translation
+breaks it (Otter, Pine, Eagle, Nest spell OPEN; their Spanish words spell NPÁN, not ABRE). A good
+adaptation changes the words and keeps the solution. LUDOLINGUA asks **NVIDIA Nemotron on Nebius
+Token Factory** to propose that adaptation, and the app's own deterministic checker decides whether
+the mechanic survived.
+
+Audience: puzzle and game localization teams, escape-room and educational-game authors.
+
+## Quick start
+
+Requires Node.js 22+. No npm install, no dependencies.
+
+```sh
+export NEBIUS_API_KEY=...        # Nebius Token Factory key; stays on the server, never sent to the browser
+cd episode-kit
+PORT=4410 node serve.mjs
+# open http://127.0.0.1:4410
+```
+
+Pick a source puzzle, press **Adapt with Nemotron**, read the checks, and download the verified export.
+Without a key the page says so and everything else (workbench, comparison, player, CLI) still works offline.
+
+```sh
+cd episode-kit && node --test tests/*.test.mjs     # all tests run without network or key
+```
+
+## How it uses NVIDIA Nemotron on Nebius Token Factory
+
+- **Runtime call.** `POST /api/adapt` on the local server calls
+  `https://api.tokenfactory.nebius.com/v1/chat/completions` (OpenAI-compatible, `lib/nebius.mjs`) with the
+  key from `NEBIUS_API_KEY`.
+- **Model.** Default `nvidia/nemotron-3-super-120b-a12b`. The task is a constraint puzzle (find words whose
+  first letters spell a target in a fixed order, keep the story coherent, write natural target-language
+  text), which small models often get wrong; the 120B-A12B reasoning model gets it right in one pass most
+  of the time while staying fast and cheap because only 12B parameters are active. Nemotron 3 Nano
+  (30B-A3B) and Ultra (550B-A55B) are selectable in the UI.
+- **What Nemotron does.** Given the source cards in solved order, the clues and the story, it proposes
+  new target-language labels, the localized action word, title, story and hints.
+- **How its output is checked.** The model never decides anything. `lib/nemotron-adapt.mjs` builds the
+  adapted episode and runs the existing engine and comparison code: the episode must be valid, have exactly
+  one clue-consistent order, that order's initials must spell the action, and the comparison engine must find the
+  same solution order as the source under the role mapping. A rejected proposal is sent back to Nemotron with
+  the checker's exact reasons (up to 3 attempts); if none pass, nothing is accepted. The browser re-runs the
+  same checks on the returned episode instead of trusting the server's verdict.
+- **Provenance.** Accepted episodes record in their change log that Nemotron proposed the wording. Mechanical
+  agreement is not human validation.
+
+## Honest limits
+
+- The checker proves the encoded mechanic (order set and initials). It does not judge whether the Spanish
+  reads naturally, whether hints leak the answer, or difficulty. Those need native-speaker playtests.
+- Only English and Spanish, first-letter acrostic episodes with 2 to 8 cards.
+- The interface of the adaptation bench is English only; the workbench has English and Spanish controls.
+- Model quality varies between runs; the retry loop and checker are what make the result trustworthy.
+
+## The rest of the kit
+
+The workbench (`/web/index.html`) compares a source and a target card by card with typed clue relations,
+inspects solution mechanics, edits labels, clues and hints, and exports digest-bound evidence. The player
+(`/web/playtest.html`) records playtest journals. Everything below is the original kit documentation.
+
 LUDOLINGUA explores puzzle localization that preserves encoded reasoning and discovery mechanics. This private repository contains an original English/Spanish first-episode contribution, with a local author/player receiver and a bounded mechanical verifier.
 
 ## Run the episode kit
 
-Requires Node.js 22 or newer. No dependency installation, credentials or inference service is needed.
+Requires Node.js 22 or newer. The kit needs no installation or credentials; only the Nemotron adaptation needs NEBIUS_API_KEY.
 
 ```sh
 node episode-kit/serve.mjs

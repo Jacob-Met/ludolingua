@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Adapt a first-letter ordering puzzle into another language with NVIDIA Nemotron, then let the checker prove the solution mechanic survived.">
+  <title>LUDOLINGUA · Adaptation bench</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="./adapt.css">
+  <script type="module" src="./adapt.mjs"></script>
+</head>
+<body>
+  <header class="bar">
+    <a class="brand" href="./adapt.html" aria-label="Ludolingua adaptation bench"><b>L</b>UDOLINGUA</a>
+    <nav aria-label="Other tools"><a href="./index.html">Workbench</a><a href="./playtest.html">Player</a><a href="./create.html">Create</a></nav>
+    <span id="model-status" class="status" role="status" aria-live="polite">Checking Nemotron…</span>
+  </header>
+
+  <main>
+    <form id="adapt-form" class="controls" aria-label="Adaptation request">
+      <label>Source puzzle<select id="source"></select></label>
+      <label>Adapt into<input id="target-lang" readonly value="Spanish" aria-readonly="true"></label>
+      <label>Action word <small>(optional)</small><input id="target-action" type="text" maxlength="40" autocomplete="off" placeholder="let Nemotron choose" spellcheck="false"></label>
+      <label>Model<select id="model"></select></label>
+      <button id="run" type="submit" class="go">Adapt with Nemotron</button>
+    </form>
+
+    <p id="notice" class="notice" role="status" aria-live="polite"></p>
+
+    <section class="bench" aria-label="Source and adapted puzzle">
+      <div class="lane" id="lane-source">
+        <h2><span id="source-name">Source</span><small id="source-meta"></small></h2>
+        <ol class="tiles" id="source-tiles" aria-label="Source cards in solved order"></ol>
+        <p class="word" id="source-word" aria-label="Source action"></p>
+        <ul class="clues" id="source-clues" aria-label="Source clues"></ul>
+      </div>
+      <div class="lane target" id="lane-target">
+        <h2><span id="target-name">Adaptation</span><small id="target-meta">waiting for a proposal</small></h2>
+        <ol class="tiles" id="target-tiles" aria-label="Adapted cards in solved order"></ol>
+        <p class="word" id="target-word" aria-label="Adapted action"></p>
+        <ul class="clues" id="target-clues" aria-label="Adapted clues"></ul>
+      </div>
+    </section>
+
+    <section class="verdict" id="verdict" aria-label="Checker results" hidden>
+      <h2 id="verdict-title"></h2>
+      <p class="why" id="verdict-why"></p>
+      <ul class="checks" id="checks"></ul>
+      <ol class="attempts" id="attempts" aria-label="Nemotron attempts"></ol>
+      <div class="story" id="story" lang="es"></div>
+      <div class="actions">
+        <button id="download" type="button" class="go" disabled>Download verified export</button>
+        <a href="./index.html">Open the workbench to compare, edit and playtest</a>
+      </div>
+      <p class="fine" id="fine"></p>
+    </section>
+  </main>
+</body>
+</html>

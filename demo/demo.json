@@ -1,0 +1,11 @@
+{"url":"http://127.0.0.1:4410/web/adapt.html","steps":[
+{"say":"This is Ludolingua, a bench for adapting word puzzles between languages. It is for game and puzzle localization teams, who know that translating the words of a puzzle can break the puzzle.","do":[{"wait":500}]},
+{"say":"Here is one. Four cards, ordered by three clues. Read the first letter of each card, left to right, and they spell open. That is how the player discovers the answer.","do":[{"wait":500}]},
+{"say":"A literal Spanish translation would spell something else entirely. So the words must change, while the order of the cards and the clues stay the same.","do":[{"scroll":0}]},
+{"say":"I press Adapt with Nemotron. The local server calls NVIDIA Nemotron three Super on Nebius Token Factory. It gets the cards in solved order, the clues and the story, and proposes new Spanish labels, the action word, and a translated story.","do":[{"click":"#run"},{"wait":15000}]},
+{"say":"Nemotron only proposes. The puzzle engine checks the result, and the browser checks it again. There is exactly one clue-consistent order, its initials spell abre, and it is the same order as the source, card for card. If a proposal fails, the exact reasons go back to Nemotron for another try, up to three times.","do":[{"scroll":"#verdict"},{"wait":2000}]},
+{"say":"The checks prove the mechanic survived. They do not prove the Spanish reads well. That still needs a native speaker, and the page says so.","do":[{"wait":500}]},
+{"say":"Now a larger puzzle, the five card signal panel, where the word is press.","do":[{"scroll":0},{"select":["#source","en-signal-original"]},{"wait":800}]},
+{"say":"Same loop. Nemotron proposes five new Spanish cards, and the engine verifies them.","do":[{"click":"#run"},{"wait":20000}]},
+{"say":"Verified again. I can download the checked episode, and open it in the workbench to compare, edit and playtest. Ludolingua lets the model do the language work, and the checker decide whether the puzzle still works.","do":[{"scroll":"#verdict"},{"wait":500}]}
+]}
