@@ -1,4 +1,4 @@
-# LUDOLINGUA episode, comparison and playtest kit — 0.4.0-drafts.a424427c
+# LUDOLINGUA episode, comparison and playtest kit — 0.4.1-portable-guidance.1b623a99
 
 Private authored English/Spanish ordering-and-acrostic fixture for task
 `ludolingua-first-episode-receiver-bd63af23`. Original product ownership remains
@@ -345,7 +345,7 @@ episodes. `sameOrderSet` alone is insufficient: two contradictory puzzles can
 have equal empty sets. Comparison export and receiving exit 0 for a valid
 negative comparison as well; their success is an integrity result. The episode
 engine and comparison engine each retain their own version, currently 0.1.0;
-the enclosing kit version is 0.4.0-drafts.a424427c.
+the enclosing kit version is 0.4.1-portable-guidance.1b623a99.
 
 Both the default mapping marker (`null` in an export) and any explicit mapping
 array are digest-bound. The result also includes the resolved canonical mapping.
@@ -634,6 +634,14 @@ on that next bundle request. Restore the exact recorded source bytes or rebuild 
 with the pinned development toolchain described above, then retry the download.
 The receiver prints the check diagnostic and never installs tools or rebuilds
 source automatically. Previously downloaded HTML remains a captured copy.
+
+When this runtime request returns HTTP 503, the existing author status explains
+that the downloadable player is out of date or unavailable, identifies the
+editing, checked JSON and separate playtest options that remain available, and
+asks the kit maintainer to refresh the bundle before retrying. The notice follows
+the selected English or Spanish interface language, including a language change
+after the refusal. Other HTTP and network failures retain their normal loading
+errors; no arbitrary server response body is shown.
 
 The focused server tests use disposable copies, including a controlled verifier
 fault to exercise a bundle replacement during checking. The real author refusal,

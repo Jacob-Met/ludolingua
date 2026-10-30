@@ -1,5 +1,6 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"The downloadable player is out of date or unavailable. You can keep editing, export checked JSON, or open a separate playtest. Ask the kit maintainer to refresh the player bundle, then try again.":"El reproductor descargable está desactualizado o no está disponible. Puedes seguir editando, exportar el JSON verificado o abrir una prueba independiente. Pide a la persona responsable del kit que actualice el paquete del reproductor y vuelve a intentarlo.",
 "Download unfinished draft":"Descargar borrador sin terminar",
 "Reopen a draft":"Reabrir un borrador",
 "A draft file keeps unfinished words, clues and hints. Reopen it to continue; check the episode before sharing.":"Un archivo de borrador conserva las palabras, pistas y ayudas sin terminar. Ábrelo para continuar; comprueba el episodio antes de compartirlo.",
