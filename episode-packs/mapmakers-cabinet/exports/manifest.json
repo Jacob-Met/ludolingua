@@ -1,0 +1,95 @@
+{
+  "schema": "ludolingua.authored-casepack.v1",
+  "id": "mapmakers-cabinet",
+  "version": "0.1.0",
+  "runtime": {
+    "commit": "c2f0637374cd8f33efbf3a085f9a6388a69194be",
+    "packageVersion": "0.3.9-portable-guard.1b623a99"
+  },
+  "files": [
+    {
+      "path": "episodes/01-en-source.json",
+      "bytes": 4586,
+      "sha256": "28eac25ccee4ec4d75930df921ef118ccb27c6371754307b981644d9db659d15"
+    },
+    {
+      "path": "episodes/02-es-literal-contrast.json",
+      "bytes": 5785,
+      "sha256": "b2db4a33c517f641c461b563f771f7611ceee62d6d1228d9a3f0d61ec90ccc92"
+    },
+    {
+      "path": "episodes/03-es-adapted.json",
+      "bytes": 5385,
+      "sha256": "551709547a4569dd2289f56b54f6e9ebbc75056bdb3984af081e97fd7441865d"
+    },
+    {
+      "path": "comparisons/source-vs-literal.json",
+      "bytes": 10808,
+      "sha256": "116dbe899f84671929795a3db00a7c139d641dc3cdd39648cfaa8b046a8c07a6"
+    },
+    {
+      "path": "comparisons/source-vs-adapted.json",
+      "bytes": 10994,
+      "sha256": "b7f77c05e73c4afa7e48ed9acedd20ecd3cd2b5dac614ecfd756c6a686593a90"
+    },
+    {
+      "path": "players/01-en-source.html",
+      "bytes": 112554,
+      "sha256": "23ef0635e208c5f9df4729f6cf0d8d3e93d98e32645e06b96d0e4e97d27f32cf"
+    },
+    {
+      "path": "players/03-es-adapted.html",
+      "bytes": 113301,
+      "sha256": "696c9dbd84f90326374c716e20e5557807127a36fe997439c1783d9f8b2034ff"
+    }
+  ],
+  "players": [
+    {
+      "file": "players/01-en-source.html",
+      "caseId": "mapmakers-cabinet-en-source",
+      "uiLocale": "en",
+      "episodeSha256": "2ad968c45527253e9db25a3ef1555bf0813e342f872356e03c1efe2cc103f407",
+      "bundleSha256": "748af399843512aab93ccc7cdea9c10c55f24d4db3d30108b8c31e7918a68063"
+    },
+    {
+      "file": "players/03-es-adapted.html",
+      "caseId": "mapmakers-cabinet-es-adapted",
+      "uiLocale": "es",
+      "episodeSha256": "ace4f74de75b4cd0a7d37ad23df7910b98b771116f4ebafbf274d9579470fbd7",
+      "bundleSha256": "748af399843512aab93ccc7cdea9c10c55f24d4db3d30108b8c31e7918a68063"
+    }
+  ],
+  "cases": [
+    {
+      "id": "mapmakers-cabinet-en-source",
+      "file": "episodes/01-en-source.json",
+      "locale": "en",
+      "intendedUse": "playable-authored-case",
+      "expectedExtraction": "COMPASS",
+      "requiredToken": "COMPASS",
+      "mechanicalSuccess": true
+    },
+    {
+      "id": "mapmakers-cabinet-es-literal",
+      "file": "episodes/02-es-literal-contrast.json",
+      "locale": "es",
+      "intendedUse": "intentional-negative-localization-contrast",
+      "expectedExtraction": "VREPMEC",
+      "requiredToken": "BRÚJULA",
+      "mechanicalSuccess": false
+    },
+    {
+      "id": "mapmakers-cabinet-es-adapted",
+      "file": "episodes/03-es-adapted.json",
+      "locale": "es",
+      "intendedUse": "playable-authored-case",
+      "expectedExtraction": "BRÚJULA",
+      "requiredToken": "BRÚJULA",
+      "mechanicalSuccess": true
+    }
+  ],
+  "limits": [
+    "Authored choices, not an automatic repair or model-inference result.",
+    "Mechanical checks do not establish native-language clarity, equal difficulty, human participation or semantic equivalence."
+  ]
+}
