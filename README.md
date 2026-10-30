@@ -133,3 +133,13 @@ clues and constraints carry over, while the target uses the chosen content langu
 All wording initially remains unchanged and requires the author's translation and
 review. Download unfinished target work as a draft; export a checked comparison to
 carry both full versions and their role mapping.
+
+## Explain localization decisions
+
+**Explain your localization choices** lets you write notes about changed referents,
+wording, clues or actions. Compare the pair and choose **Attach notes to checked pair**.
+Download the notes with both complete captured revisions and their role map. Reopening
+verifies the file and restores that pair and your exact notes; the explanations remain
+author statements. Later edits mark the notes as attached to an earlier pair. Compare
+and explicitly attach again to carry your notes with newer revisions. An unfinished
+episode draft does not save these notes; download them before closing the tab.

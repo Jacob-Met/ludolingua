@@ -53,3 +53,11 @@ textarea{font:inherit;resize:vertical;width:100%;min-height:110px;border:1px sol
 /* Begin a separate authored adaptation without hiding the copied-wording boundary. */
 .adaptation-start{margin:0 0 22px}.adaptation-start>summary{font-size:18px;font-weight:600;cursor:pointer;line-height:1.45}.adaptation-options{display:flex;gap:20px;align-items:end;flex-wrap:wrap}.adaptation-options>.case-picker{flex:1;min-width:160px}.adaptation-options button{white-space:normal;max-width:100%}.adaptation-start .notice:empty{display:none}
 @media(max-width:800px){.adaptation-options{flex-direction:column;align-items:stretch;gap:14px}.adaptation-options>.case-picker{min-width:0}.adaptation-options button{width:100%}}
+
+.localization-notes{margin-top:1.5rem;padding-top:1rem;border-top:1px solid #d3d8ca}
+.localization-notes summary{font-weight:700;cursor:pointer}
+.localization-notes textarea{width:100%;box-sizing:border-box;resize:vertical;min-height:8rem;font:inherit}
+.localization-notes label{display:block;margin:.8rem 0 .4rem;font-weight:600}
+.localization-notes-actions{display:flex;flex-wrap:wrap;gap:.6rem}
+.localization-notes-actions button{max-width:100%;white-space:normal}
+#localization-notes-pair{overflow-wrap:anywhere}
