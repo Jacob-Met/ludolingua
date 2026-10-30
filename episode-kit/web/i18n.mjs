@@ -1,5 +1,24 @@
 // UI copy only. Authored episodes, clues and provenance retain their source text.
 export const spanish = Object.freeze({
+"Download unfinished draft":"Descargar borrador sin terminar",
+"Reopen a draft":"Reabrir un borrador",
+"A draft file keeps unfinished words, clues and hints. Reopen it to continue; check the episode before sharing.":"Un archivo de borrador conserva las palabras, pistas y ayudas sin terminar. Ábrelo para continuar; comprueba el episodio antes de compartirlo.",
+"Reopened work stays in this tab. Download a draft to keep unfinished edits after closing.":"El trabajo reabierto permanece en esta pestaña. Descarga un borrador para conservar los cambios sin terminar al cerrarla.",
+"Reopened · unfinished draft":"Reabierto · borrador sin terminar",
+"Draft download prepared for revision {revision}. Reopen the file to continue unfinished work.":"La descarga del borrador de la revisión {revision} está preparada. Reabre el archivo para continuar el trabajo sin terminar.",
+"Cannot download draft: {message}":"No se puede descargar el borrador: {message}",
+"Cannot reopen draft: {message}":"No se puede reabrir el borrador: {message}",
+"Reopened unfinished revision {revision}. Review it, then run a fresh check.":"Se ha reabierto la revisión {revision} sin terminar. Revísala y vuelve a comprobarla.",
+"The episode changed while the draft was being prepared. Download the current draft again.":"El episodio cambió mientras se preparaba el borrador. Descarga de nuevo el borrador actual.",
+"The episode changed while the draft was being read. Reopen it again to replace the current revision.":"El episodio cambió mientras se leía el borrador. Ábrelo de nuevo para reemplazar la revisión actual.",
+"Author draft file exceeds the 20 MB limit.":"El archivo de borrador supera el límite de 20 MB.",
+"Invalid author draft file schema.":"El formato del archivo de borrador no es válido.",
+"Original episode digest mismatch.":"La huella del episodio original no coincide.",
+"Author draft content digest mismatch.":"La huella del contenido del borrador no coincide.",
+"Invalid or incompatible author draft record.":"El registro del borrador no es válido o no es compatible.",
+"Invalid author draft inputs.":"Los datos del borrador no son válidos.",
+"Invalid author draft hints or review.":"Las ayudas o la revisión del borrador no son válidas.",
+"Author draft changes immutable episode fields.":"El borrador modifica campos del episodio que deben conservarse.",
 "Download playable HTML":"Descargar HTML para jugar",
 "Open the downloaded HTML directly in a browser. It works offline. Later edits need a new download.":"Abre el HTML descargado directamente en un navegador. Funciona sin conexión. Si haces cambios, descarga una copia nueva.",
 "Preparing a playable copy of this revision…":"Preparando una copia para jugar de esta revisión…",
@@ -170,7 +189,7 @@ export function translateDiagnostic(locale, message) {
   if (supportedLocale(locale) === 'en') return text;
   if (Object.hasOwn(spanish, text)) return spanish[text];
   // Only parse explicitly emitted diagnostic prefixes; preserve unknown engine/browser text.
-  for (const [prefix, translated] of [['Invalid episode: ', 'Episodio no válido: '], ['Invalid comparison: ', 'Comparación no válida: '], ['Source: ', 'Origen: '], ['Target: ', 'Destino: ']]) {
+  for (const [prefix, translated] of [['Invalid original episode: ', 'Episodio original no válido: '], ['Invalid episode: ', 'Episodio no válido: '], ['Invalid comparison: ', 'Comparación no válida: '], ['Source: ', 'Origen: '], ['Target: ', 'Destino: ']]) {
     if (text.startsWith(prefix)) return translated + text.slice(prefix.length).split('; ').map(part => translateDiagnostic(locale, part)).join('; ');
   }
   const field = /^(id|title|story) must be nonempty text\.$/.exec(text);

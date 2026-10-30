@@ -35,7 +35,7 @@ export async function createFixtureDrafts(sources, onReplace, t = key => key) {
   function render(entry = active) {
     if (entry !== active) return;
     if (!entry) {
-      const message = t('Reopened exports stay in this tab. Export checked changes to keep them after closing.');
+      const message = t('Reopened work stays in this tab. Download a draft to keep unfinished edits after closing.');
       status.textContent = message;
       if (announcement.textContent !== message) announcement.textContent = message;
       status.dataset.state = 'detached';
